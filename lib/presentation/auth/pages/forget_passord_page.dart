@@ -1,34 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
-import 'package:maelys_imo/core/constants/app_colors.dart';
-import 'package:maelys_imo/core/extensions/context_extension.dart';
 import 'package:maelys_imo/core/extensions/text_style_ext.dart';
-import 'package:maelys_imo/core/manager/state/auth/auth_bloc.dart';
 import 'package:maelys_imo/shared/widgets/custom_button.dart';
+
 import '../../../shared/widgets/custom_input_text.dart';
-import '../pages/forget_passord_page.dart';
 
-class LoginPage extends StatefulWidget {
-  static const routeName = 'login';
-  static const routePath = '/login';
+class ForgetPasswordPage extends StatefulWidget {
+  static const routeName = 'forgetPassword';
+  static const routePath = '/forget-password';
 
-  const LoginPage({super.key});
+  const ForgetPasswordPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<ForgetPasswordPage> createState() => _ForgetPasswordPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  bool _obscureText = true;
+class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
+  final TextEditingController _emailController = TextEditingController();
 
   @override
   void dispose() {
-    _usernameController.dispose();
-    _passwordController.dispose();
+    _emailController.dispose();
     super.dispose();
   }
 
@@ -36,12 +28,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
-        children: [
-          _buildHeader(),
-          Expanded(
-            child: _buildLoginForm(),
-          ),
-        ],
+        children: [_buildHeader(), Expanded(child: _buildResetForm())],
       ),
     );
   }
@@ -62,17 +49,13 @@ class _LoginPageState extends State<LoginPage> {
           SizedBox(height: 8.r),
           IconButton(
             onPressed: () => Navigator.of(context).pop(),
-            icon: Icon(
-              Icons.chevron_left,
-              color: Colors.white,
-              size: 30.r,
-            ),
+            icon: Icon(Icons.chevron_left, color: Colors.white, size: 30.r),
             padding: EdgeInsets.zero,
             constraints: BoxConstraints(),
           ),
           SizedBox(height: 16.r),
           Text(
-            'Connexion',
+            'Réinitialisation du mot\nde passe',
             style: TextStyle(
               fontSize: 28.r,
               fontWeight: FontWeight.bold,
@@ -84,7 +67,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _buildLoginForm() {
+  Widget _buildResetForm() {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -100,7 +83,7 @@ class _LoginPageState extends State<LoginPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Bienvenue',
+            'Mot de passe oublié',
             style: TextStyle(
               fontSize: 24.r,
               fontWeight: FontWeight.bold,
@@ -109,7 +92,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
           SizedBox(height: 8.r),
           Text(
-            'Entrez vos informations de connexion',
+            'Renseignez votre email pour la réinitialisation',
             style: TextStyle(
               fontSize: 14.r,
               color: Colors.grey[700],
@@ -117,36 +100,12 @@ class _LoginPageState extends State<LoginPage> {
           ),
           SizedBox(height: 32.r),
           _buildInputField(
-            label: 'Identifiant',
-            controller: _usernameController,
-            hintText: 'Identifiant de connexion',
-          ),
-          SizedBox(height: 24.r),
-          _buildPasswordField(),
-          SizedBox(height: 8.r),
-          Align(
-            alignment: Alignment.centerRight,
-            child: TextButton(
-              onPressed: () {
-                // Navigate to forgot password page
-                context.goNamed(ForgetPasswordPage.routeName);
-              },
-              style: TextButton.styleFrom(
-                padding: EdgeInsets.zero,
-                minimumSize: Size(0, 0),
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              ),
-              child: Text(
-                'Mot de passe oublié',
-                style: TextStyle(
-                  fontSize: 14.r,
-                  color: Colors.blueGrey[700],
-                ).sourceSansProRegular,
-              ),
-            ),
+            label: 'Adresse email',
+            controller: _emailController,
+            hintText: 'Entrez votre adresse email de connexion',
           ),
           Spacer(),
-          _buildLoginButton(),
+          _buildSendLinkButton(),
           SizedBox(height: 24.r),
         ],
       ),
@@ -181,42 +140,12 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _buildPasswordField() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Mot de passe',
-          style: TextStyle(
-            fontSize: 16.r,
-            fontWeight: FontWeight.w600,
-            color: Colors.black87,
-          ).sourceSansProSemiBold,
-        ),
-        SizedBox(height: 8.r),
-        CustomInputTextFactory.createPasswordInput(
-          controller: _passwordController,
-          hintText: 'Mot de passe de connexion',
-          onTogglePasswordVisibility: () {
-            setState(() {
-              _obscureText = !_obscureText;
-            });
-          },
-          showPassword: _obscureText,
-          validator: (value) {
-            return null;
-          },
-        ),
-      ],
-    );
-  }
-
-  Widget _buildLoginButton() {
+  Widget _buildSendLinkButton() {
     return CustomButton(
-      text: 'Se connecter',
+      text: 'Envoyer le lien',
       showArrow: true,
       onPressed: () {
-        // Handle login
+        // Handle password reset
       },
       buttonVariant: ButtonVariant.primary,
       textStyle: TextStyle(

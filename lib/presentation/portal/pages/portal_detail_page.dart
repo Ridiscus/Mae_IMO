@@ -1,0 +1,271 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:maelys_imo/core/constants/app_colors.dart';
+import 'package:maelys_imo/core/extensions/context_extension.dart';
+import 'package:maelys_imo/core/extensions/text_style_ext.dart';
+import 'package:maelys_imo/shared/widgets/custom_button.dart';
+
+class PortalDetailPage extends StatefulWidget {
+  static const String routeName = 'portal-detail';
+  static const String routePath = '/portal-detail';
+
+  const PortalDetailPage({super.key});
+
+  @override
+  State<PortalDetailPage> createState() => _PortalDetailPageState();
+}
+
+class _PortalDetailPageState extends State<PortalDetailPage> {
+  @override
+  Widget build(BuildContext context) {
+    return AnnotatedRegion(
+      value: SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+      child: Scaffold(
+        backgroundColor: Color(0xFFF5F5F5),
+        body: SingleChildScrollView(
+          child: Container(
+            width: context.getSize.width,
+            height: context.getSize.height,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildImageHeader(),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.all(16.r),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildTitleAndPrice(),
+                        SizedBox(height: 20.r),
+                        _buildPropertyInfo(),
+                        SizedBox(height: 20.r),
+                        _buildAmenities(),
+                        SizedBox(height: 20.r),
+                        _buildDescription(),
+                        SizedBox(height: 32.r),
+                      ],
+                    ),
+                  ),
+                ),
+                _buildVisitButton(),
+
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildImageHeader() {
+    return Stack(
+      children: [
+        // Image
+        AspectRatio(
+          aspectRatio: 16 / 9,
+          child: Image.asset(
+            'assets/images/temps.png',
+            fit: BoxFit.cover,
+            width: double.infinity,
+          ),
+        ),
+        // Back button
+        Positioned(
+          top: 40.r,
+          left: 16.r,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.7),
+              shape: BoxShape.circle,
+            ),
+            child: IconButton(
+              icon: Icon(Icons.chevron_left, color: Colors.black, size: 30.r),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ),
+        ),
+        // Pagination indicators
+        Positioned(
+          bottom: 16.r,
+          left: 0,
+          right: 0,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _paginationDot(true),
+              _paginationDot(false),
+              _paginationDot(false),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _paginationDot(bool isActive) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 2.r),
+      width: isActive ? 16.r : 8.r,
+      height: 8.r,
+      decoration: BoxDecoration(
+        color: isActive ? AppColors.orange : Colors.white,
+        borderRadius: BorderRadius.circular(4.r),
+      ),
+    );
+  }
+
+  Widget _buildTitleAndPrice() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Text(
+            'Maison à abobo',
+            style:
+                TextStyle(
+                  fontSize: 22.r,
+                  fontWeight: FontWeight.bold,
+                ).sourceSansProBold,
+          ),
+        ),
+        Text(
+          '200 000 FCFA / Mois',
+          style:
+              TextStyle(
+                fontSize: 16.r,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ).sourceSansProBold,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPropertyInfo() {
+    return Row(
+      children: [
+        _buildInfoItem('Type : Villa', Icons.home_outlined),
+        SizedBox(width: 8.r),
+        Container(
+          width: 4.r,
+          height: 4.r,
+          decoration: BoxDecoration(
+            color: Colors.grey.withOpacity(0.5),
+            shape: BoxShape.circle,
+          ),
+        ),
+        SizedBox(width: 8.r),
+        _buildInfoItem('Garage : Oui', Icons.garage_outlined),
+        SizedBox(width: 8.r),
+        Container(
+          width: 4.r,
+          height: 4.r,
+          decoration: BoxDecoration(
+            color: Colors.grey.withOpacity(0.5),
+            shape: BoxShape.circle,
+          ),
+        ),
+        SizedBox(width: 8.r),
+        _buildInfoItem('Superficie : 100m²', Icons.square_foot_outlined),
+      ],
+    );
+  }
+
+  Widget _buildInfoItem(String text, IconData icon) {
+    return Row(
+      children: [
+        Icon(icon, size: 16.r, color: Colors.grey),
+        SizedBox(width: 4.r),
+        Text(
+          text,
+          style:
+              TextStyle(
+                fontSize: 14.r,
+                color: Colors.grey[700],
+              ).sourceSansProRegular,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAmenities() {
+    return Wrap(
+      spacing: 8.r,
+      runSpacing: 8.r,
+      children: List.generate(
+        3,
+        (index) => Container(
+          padding: EdgeInsets.symmetric(horizontal: 8.r, vertical: 4.r),
+          decoration: BoxDecoration(
+            color: Colors.grey.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8.r),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.shower_outlined, size: 14.r, color: Colors.grey),
+              SizedBox(width: 4.r),
+              Text(
+                '2 douches',
+                style:
+                    TextStyle(
+                      fontSize: 12.r,
+                      color: Colors.grey[700],
+                    ).sourceSansProRegular,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDescription() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Description',
+          style:
+              TextStyle(
+                fontSize: 18.r,
+                fontWeight: FontWeight.bold,
+              ).sourceSansProBold,
+        ),
+        SizedBox(height: 8.r),
+        Text(
+          'Le lorem ipsum est, en imprimerie, une suite de mots sans signification utilisée à titre provisoire Le lorem ipsum est, en imprimerie, une suite de mots sans signification utilisée à titre provisoire',
+          style:
+              TextStyle(
+                fontSize: 14.r,
+                color: Colors.grey[800],
+                height: 1.5,
+              ).sourceSansProRegular,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildVisitButton() {
+    return Padding(
+      padding: EdgeInsets.all(16.r),
+      child: CustomButton(
+        text: 'Visiter',
+        showArrow: true,
+        onPressed: () {
+          // Handle visit button press
+        },
+        buttonVariant: ButtonVariant.primary,
+        textStyle:
+            TextStyle(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ).sourceSansProBold,
+      ),
+    );
+  }
+}

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:maelys_imo/core/constants/app_colors.dart';
 import 'package:maelys_imo/core/extensions/text_style_ext.dart';
 
 class PortalPage extends StatefulWidget {
   static const String routeName = 'portal';
-  static const String routePath = '/';
+  static const String routePath = '/portal';
 
   const PortalPage({super.key});
 
@@ -15,42 +15,35 @@ class PortalPage extends StatefulWidget {
 }
 
 class _PortalPageState extends State<PortalPage> {
-  final List<String> _categories = ['Villa', 'Villa', 'Villa', 'Villa', 'Villa'];
-  
+  final List<String> _categories = [
+    'Villa',
+    'Villa',
+    'Villa',
+    'Villa',
+    'Villa',
+  ];
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Column(
+    return AnnotatedRegion(
+      value: SystemUiOverlayStyle(statusBarColor: AppColors.primary),
+      child: Scaffold(
+        backgroundColor: Color(0xFFF5F5F5),
+        body: Column(
           children: [
             _buildAppBar(),
+            SizedBox(height: 16.r),
+            _buildSearchBar(),
+            SizedBox(height: 16.r),
+            _buildCategoryList(),
+            SizedBox(height: 16.r),
             Expanded(
-              child: CustomScrollView(
-                slivers: [
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: EdgeInsets.all(16.0.r),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildSearchBar(),
-                          SizedBox(height: 16.r),
-                          _buildCategoryList(),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SliverPadding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.r),
-                    sliver: SliverList(
-                      delegate: SliverChildListDelegate([
-                        _buildPropertyCard(),
-                        SizedBox(height: 16.r),
-                        _buildPropertyCard(),
-                      ]),
-                    ),
-                  ),
+              child: ListView(
+                padding: EdgeInsets.symmetric(horizontal: 16.r),
+                children: [
+                  _buildPropertyCard(),
+                  SizedBox(height: 16.r),
+                  _buildPropertyCard(),
                 ],
               ),
             ),
@@ -64,30 +57,33 @@ class _PortalPageState extends State<PortalPage> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.r, vertical: 12.r),
       color: AppColors.orange,
-      child: Row(
-        children: [
-          Container(
-            padding: EdgeInsets.all(8.r),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.white,
+      child: SafeArea(
+        child: Row(
+          children: [
+            Container(
+              padding: EdgeInsets.all(8.r),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white,
+              ),
+              child: Icon(
+                Icons.person_outline,
+                color: Colors.black,
+                size: 20.r,
+              ),
             ),
-            child: Icon(
-              Icons.person_outline,
-              color: Colors.black,
-              size: 20.r,
+            SizedBox(width: 16.r),
+            Text(
+              'Maelys-imo',
+              style:
+                  TextStyle(
+                    fontSize: 24.r,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ).sourceSansProBold,
             ),
-          ),
-          SizedBox(width: 16.r),
-          Text(
-            'Maelys-imo',
-            style: TextStyle(
-              fontSize: 24.r,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ).sourceSansProBold,
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -95,6 +91,7 @@ class _PortalPageState extends State<PortalPage> {
   Widget _buildSearchBar() {
     return Container(
       height: 48.r,
+      margin: EdgeInsets.symmetric(horizontal: 16.r),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20.r),
@@ -109,22 +106,20 @@ class _PortalPageState extends State<PortalPage> {
       child: Row(
         children: [
           Padding(
-            padding: EdgeInsets.only(left: 16.r),
-            child: SvgPicture.asset(
-              'assets/icons/search.svg',
-              height: 20.r,
-              width: 20.r,
-            ),
+            padding: EdgeInsets.only(left: 8.0.r),
+            child: Icon(Icons.search, size: 20.r, color: Colors.grey),
           ),
           SizedBox(width: 8.r),
           Expanded(
             child: TextField(
               decoration: InputDecoration(
                 hintText: 'Rechercher, Appartement, Villa',
-                hintStyle: TextStyle(
-                  fontSize: 14.r,
-                  color: Colors.grey,
-                ).sourceSansProRegular,
+                fillColor: Colors.white,
+                hintStyle:
+                    TextStyle(
+                      fontSize: 14.r,
+                      color: Colors.grey,
+                    ).sourceSansProRegular,
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.symmetric(vertical: 12.r),
               ),
@@ -137,12 +132,7 @@ class _PortalPageState extends State<PortalPage> {
               color: AppColors.orange,
               borderRadius: BorderRadius.circular(16.r),
             ),
-            child: SvgPicture.asset(
-              'assets/icons/filter.svg',
-              height: 20.r,
-              width: 20.r,
-              colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
-            ),
+            child: Icon(Icons.tune, size: 20.r, color: Colors.white),
           ),
         ],
       ),
@@ -151,41 +141,41 @@ class _PortalPageState extends State<PortalPage> {
 
   Widget _buildCategoryList() {
     return SizedBox(
-      height: 50.r,
+      height: 35.h,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: _categories.length,
         itemBuilder: (context, index) {
           return Container(
-            margin: EdgeInsets.only(right: 8.r),
+            margin: EdgeInsets.only(left: 8.r),
             padding: EdgeInsets.symmetric(horizontal: 16.r, vertical: 8.r),
             decoration: BoxDecoration(
               color: index == 0 ? AppColors.orange : Colors.white,
               borderRadius: BorderRadius.circular(20.r),
               border: Border.all(
-                color: index == 0 ? Colors.transparent : Colors.grey.withOpacity(0.3),
+                color:
+                    index == 0
+                        ? Colors.transparent
+                        : Colors.grey.withOpacity(0.3),
               ),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                SvgPicture.asset(
-                  'assets/icons/place.svg',
-                  height: 16.r,
-                  width: 16.r,
-                  colorFilter: ColorFilter.mode(
-                    index == 0 ? Colors.white : Colors.grey,
-                    BlendMode.srcIn,
-                  ),
+                Icon(
+                  Icons.place_outlined,
+                  size: 16.r,
+                  color: index == 0 ? Colors.white : Colors.grey,
                 ),
                 SizedBox(width: 6.r),
                 Text(
                   _categories[index],
-                  style: TextStyle(
-                    fontSize: 14.r,
-                    fontWeight: FontWeight.w500,
-                    color: index == 0 ? Colors.white : Colors.grey,
-                  ).sourceSansProSemiBold,
+                  style:
+                      TextStyle(
+                        fontSize: 14.r,
+                        fontWeight: FontWeight.w500,
+                        color: index == 0 ? Colors.white : Colors.grey,
+                      ).sourceSansProSemiBold,
                 ),
               ],
             ),
@@ -249,10 +239,11 @@ class _PortalPageState extends State<PortalPage> {
               children: [
                 Text(
                   'Maison à abobo',
-                  style: TextStyle(
-                    fontSize: 16.r,
-                    fontWeight: FontWeight.bold,
-                  ).sourceSansProBold,
+                  style:
+                      TextStyle(
+                        fontSize: 18.r,
+                        fontWeight: FontWeight.bold,
+                      ).sourceSansProBold,
                 ),
                 SizedBox(height: 12.r),
                 _buildAmenities(),
@@ -291,18 +282,15 @@ class _PortalPageState extends State<PortalPage> {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                Icons.shower_outlined,
-                size: 14.r,
-                color: Colors.grey,
-              ),
+              Icon(Icons.shower_outlined, size: 14.r, color: Colors.grey),
               SizedBox(width: 4.r),
               Text(
                 '2 douches',
-                style: TextStyle(
-                  fontSize: 12.r,
-                  color: Colors.grey,
-                ).sourceSansProRegular,
+                style:
+                    TextStyle(
+                      fontSize: 12.r,
+                      color: Colors.grey,
+                    ).sourceSansProRegular,
               ),
             ],
           ),

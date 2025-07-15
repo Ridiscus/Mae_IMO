@@ -1,0 +1,164 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:maelys_imo/core/extensions/text_style_ext.dart';
+import 'package:maelys_imo/presentation/agent/pages/tenant_detail_page.dart';
+
+enum TenantListType { upToDate, late, pendingPayment }
+
+class TenantListPage extends StatefulWidget {
+  static const routeName = 'tenantList';
+  static const routePath = '/tenant-list/:type';
+
+  final TenantListType listType;
+
+  const TenantListPage({super.key, required this.listType});
+
+  @override
+  State<TenantListPage> createState() => _TenantListPageState();
+}
+
+class _TenantListPageState extends State<TenantListPage> {
+  String _getPageTitle() {
+    switch (widget.listType) {
+      case TenantListType.upToDate:
+        return 'Les locataires à jour';
+      case TenantListType.late:
+        return 'Les locataires en retard';
+      case TenantListType.pendingPayment:
+        return 'Les paiements en attente';
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Column(
+        children: [_buildHeader(), Expanded(child: _buildTenantList())],
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Container(
+      padding: EdgeInsets.only(
+        top: MediaQuery.of(context).padding.top + 8.sp,
+        left: 16.sp,
+        right: 16.sp,
+        bottom: 24.sp,
+      ),
+      width: double.infinity,
+      color: Color(0xFF0A2342),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          IconButton(
+            onPressed: () => Navigator.of(context).pop(),
+            icon: Icon(Icons.chevron_left, color: Colors.white, size: 30.sp),
+            padding: EdgeInsets.zero,
+            constraints: BoxConstraints(),
+          ),
+          SizedBox(height: 16.sp),
+          Text(
+            _getPageTitle(),
+            style: TextStyle(
+              fontSize: 28.sp,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ).sourceSansProBold,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTenantList() {
+    return Container(
+      width: double.infinity,
+      color: Color(0xFFF5F5F5),
+      child: ListView.builder(
+        padding: EdgeInsets.all(16.sp),
+        itemCount: 5, // Demo count, replace with actual data
+        itemBuilder: (context, index) {
+          return _buildTenantCard(index);
+        },
+      ),
+    );
+  }
+
+  Widget _buildTenantCard(int index) {
+    return InkWell(
+      onTap: () {
+        // Navigate to tenant detail page with dummy ID
+        context.goNamed(TenantDetailPage.routeName, pathParameters: {'id': '${index + 1}'});
+      },
+      child: Container(
+        margin: EdgeInsets.only(bottom: 16.sp),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 4,
+              offset: Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 80.w,
+              height: 80.h,
+              padding: EdgeInsets.all(10.sp),
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(16.r),
+                  bottomLeft: Radius.circular(16.r),
+                ),
+              ),
+              child: Center(
+                child: Icon(Icons.person, size: 36.sp, color: Colors.black45),
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.sp, vertical: 12.sp),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Nom du locataire',
+                      style: TextStyle(
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87,
+                      ).sourceSansProSemiBold,
+                    ),
+                    SizedBox(height: 6.sp),
+                    Text(
+                      'email@locataire.com',
+                      style: TextStyle(
+                        fontSize: 15.sp,
+                        color: Colors.grey[500],
+                      ).sourceSansProRegular,
+                    ),
+                    SizedBox(height: 4.sp),
+                    Text(
+                      '+225 0807676565',
+                      style: TextStyle(
+                        fontSize: 15.sp,
+                        color: Colors.grey[500],
+                      ).sourceSansProRegular,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

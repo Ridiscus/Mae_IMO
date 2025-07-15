@@ -1,5 +1,7 @@
 import 'package:go_router/go_router.dart';
+import 'package:maelys_imo/routes/agent_routes.dart';
 import 'package:maelys_imo/routes/starter_routes.dart';
+import 'package:maelys_imo/routes/tenant_routes.dart';
 
 import '../main.dart' show navigatorKey;
 import 'auth_routes.dart';
@@ -10,6 +12,7 @@ class AppRoute {
   GoRouter router = GoRouter(
     initialLocation: initialRoute,
     navigatorKey: navigatorKey,
+
     // Exit app when back is pressed on home page
     redirectLimit: 5,
     redirect: (context, state) {
@@ -21,6 +24,6 @@ class AppRoute {
       // }
       return null;
     },
-    routes: [...StarterRoutes.routes, ...AuthRoutes.routes],
+    routes: [...StarterRoutes.routes, ...AuthRoutes.routes, ...TenantRoutes.routes, ...AgentRoutes.routes],
   );
 }

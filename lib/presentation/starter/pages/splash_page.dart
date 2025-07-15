@@ -1,10 +1,15 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:maelys_imo/core/extensions/context_extension.dart';
+import 'package:maelys_imo/presentation/agent/pages/tenant_list_page.dart';
 import 'package:maelys_imo/shared/widgets/custom_scaffold.dart';
 
 import '../../../core/constants/assets.dart';
+import '../../agent/pages/home_agent_page.dart';
 
 class SplashPage extends StatefulWidget {
   static const String routeName = 'splash';
@@ -45,7 +50,9 @@ class _SplashPageState extends State<SplashPage> {
     // }
 
     // Navigate to onboarding page
-    // context.goNamed(OnboardingPage.routeName);
+    context.goNamed(
+      HomeAgentPage.routeName
+    );
   }
 
   @override

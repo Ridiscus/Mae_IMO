@@ -210,6 +210,41 @@ class CustomInputTextFactory {
     );
   }
 
+  static CustomInputText createTextAreaInput({
+    TextEditingController? controller,
+    String? hintText,
+    String? labelText,
+    IconData? prefixIcon,
+    IconData? suffixIcon,
+    VoidCallback? onSuffixIconTap,
+    ValueChanged<String>? onChanged,
+    ValueChanged<String>? onSubmitted,
+    FormFieldValidator<String>? validator,
+    bool isRequired = false,
+    String? initialValue,
+    bool readOnly = false,
+    TextInputAction? textInputAction,
+    FocusNode? focusNode,
+  }) {
+    return CustomInputText(
+      controller: controller,
+      hintText: hintText,
+      labelText: labelText,
+      prefixIcon: prefixIcon,
+      suffixIcon: suffixIcon,
+      onSuffixIconTap: onSuffixIconTap,
+      onChanged: onChanged,
+      onSubmitted: onSubmitted,
+      validator: validator,
+      isRequired: isRequired,
+      initialValue: initialValue,
+      readOnly: readOnly,
+      textInputAction: textInputAction,
+      focusNode: focusNode,
+      maxLines: 4,
+    );
+  }
+
   /// Crée un champ pour les mots de passe
   static CustomInputText createPasswordInput({
     TextEditingController? controller,
