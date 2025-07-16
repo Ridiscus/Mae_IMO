@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:maelys_imo/core/constants/app_colors.dart';
-import 'package:maelys_imo/core/extensions/context_extension.dart';
-import 'package:maelys_imo/core/extensions/text_style_ext.dart';
-import 'package:maelys_imo/core/manager/state/auth/auth_bloc.dart';
-import 'package:maelys_imo/shared/widgets/custom_button.dart';
-import '../../../shared/widgets/custom_input_text.dart';
+import 'package:maelys_imo/core/extensions/index.dart';
+import 'package:maelys_imo/shared/widgets/index.dart';
 import '../pages/forget_passord_page.dart';
 
 class LoginPage extends StatefulWidget {

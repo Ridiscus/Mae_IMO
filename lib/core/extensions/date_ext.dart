@@ -1,4 +1,5 @@
-import 'package:intl/intl.dart';
+part of 'index.dart';
+
 
 extension DateFormaterExt on DateTime {
   String time() {

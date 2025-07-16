@@ -1,8 +1,4 @@
-import 'package:maelys_imo/core/extensions/context_extension.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import '../../../core/constants/app_colors.dart';
+part of '../index.dart';
 
 class AuthLayout extends StatelessWidget {
   final Widget child;

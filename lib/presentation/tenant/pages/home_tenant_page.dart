@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:maelys_imo/core/extensions/text_style_ext.dart';
-import 'package:maelys_imo/presentation/tenant/pages/profile_tenant_page.dart';
+import 'package:maelys_imo/core/extensions/index.dart';
 import 'package:maelys_imo/presentation/tenant/pages/payment_page.dart'; // Added import
-import 'package:maelys_imo/presentation/tenant/pages/contact_agency_page.dart'; // Added import
-import 'package:maelys_imo/shared/widgets/custom_button.dart';
+import 'package:maelys_imo/presentation/tenant/pages/contact_agency_page.dart';
+import 'package:maelys_imo/presentation/tenant/pages/profile_tenant_page.dart'; // Added import
 
 class HomeTenantPage extends StatefulWidget {
   static const routeName = 'homeTenant';

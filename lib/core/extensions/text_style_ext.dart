@@ -1,7 +1,4 @@
-import 'package:flutter/widgets.dart';
-
-import 'package:flutter/material.dart';
-
+part of 'index.dart';
 extension SourceSansProTextStyleExtensions on TextStyle {
   // Source Sans Pro
   TextStyle get sourceSansProBlack => copyWith(fontFamily: 'SourceSansPro-Black');

@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+part of 'index.dart';
 
 class CustomScaffold extends StatelessWidget {
   const CustomScaffold({

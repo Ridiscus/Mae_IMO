@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:maelys_imo/core/extensions/text_style_ext.dart';
+import 'package:maelys_imo/core/extensions/index.dart';
 
 class ProfileTenantPage extends StatefulWidget {
   static const routeName = 'profileTenant';

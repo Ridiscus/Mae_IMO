@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
-import 'package:maelys_imo/core/extensions/text_style_ext.dart';
+import 'package:maelys_imo/core/extensions/index.dart';
 
 class PaymentPage extends StatefulWidget {
   static const routeName = 'payment';

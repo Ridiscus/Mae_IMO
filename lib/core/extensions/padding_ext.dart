@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+part of 'index.dart';
 
 extension PaddingExt on Widget {
   Widget padding(EdgeInsetsGeometry? padding) => Padding(

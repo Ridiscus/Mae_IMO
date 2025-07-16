@@ -1,4 +1,4 @@
-import 'package:intl/intl.dart' show DateFormat, NumberFormat;
+part of 'index.dart';
 
 extension CurrencyFormater on String {
   String formatCurrency({

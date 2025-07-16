@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:maelys_imo/core/extensions/text_style_ext.dart';
-import 'package:maelys_imo/shared/widgets/custom_input_text.dart';
+import 'package:maelys_imo/core/extensions/index.dart';
+import 'package:maelys_imo/shared/widgets/index.dart';
 
 class ContactAgencyPage extends StatefulWidget {
   static const routeName = 'contactAgency';

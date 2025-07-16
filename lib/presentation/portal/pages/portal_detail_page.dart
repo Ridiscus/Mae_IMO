@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:maelys_imo/core/constants/app_colors.dart';
-import 'package:maelys_imo/core/extensions/context_extension.dart';
-import 'package:maelys_imo/core/extensions/text_style_ext.dart';
-import 'package:maelys_imo/shared/widgets/custom_button.dart';
+import 'package:maelys_imo/shared/widgets/index.dart';
+import 'package:maelys_imo/core/extensions/index.dart';
 
 class PortalDetailPage extends StatefulWidget {
   static const String routeName = 'portal-detail';

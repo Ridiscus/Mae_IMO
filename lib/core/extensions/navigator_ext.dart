@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart' show BuildContext, MaterialPageRoute;
-import 'package:flutter/widgets.dart';
+part of 'index.dart';
+
 
 extension NavigatorExt on BuildContext {
   dynamic navigateTo(Widget page) =>

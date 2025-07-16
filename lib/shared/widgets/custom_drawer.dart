@@ -1,8 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:maelys_imo/core/constants/app_colors.dart';
-import 'package:maelys_imo/core/extensions/context_extension.dart';
-import 'package:maelys_imo/core/extensions/text_style_ext.dart';
+part of 'index.dart';
 
 class CustomDrawer extends StatelessWidget {
   final String name;
