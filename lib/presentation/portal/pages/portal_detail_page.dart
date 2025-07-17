@@ -23,13 +23,33 @@ class _PortalDetailPageState extends State<PortalDetailPage> {
       child: Scaffold(
         backgroundColor: Color(0xFFF5F5F5),
         body: SingleChildScrollView(
-          child: Container(
+          child: SizedBox(
             width: context.getSize.width,
             height: context.getSize.height,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildImageHeader(),
+                const CustomSpacer(),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.sp),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Maison à abobo',
+                        style:
+                            TextStyle(
+                              fontSize: 15.sp,
+                              fontWeight: FontWeight.bold,
+                            ).sourceSansProSemiBold,
+                      ),
+                      SizedBox(height: 12.r),
+                      _buildAmenities(),
+                    ],
+                  ),
+                ),
+
                 Expanded(
                   child: Padding(
                     padding: EdgeInsets.all(16.r),
@@ -49,7 +69,7 @@ class _PortalDetailPageState extends State<PortalDetailPage> {
                   ),
                 ),
                 _buildVisitButton(),
-
+                SpacerPlatform()
               ],
             ),
           ),
@@ -59,58 +79,43 @@ class _PortalDetailPageState extends State<PortalDetailPage> {
   }
 
   Widget _buildImageHeader() {
-    return Stack(
-      children: [
-        // Image
-        AspectRatio(
-          aspectRatio: 16 / 9,
-          child: Image.asset(
-            'assets/images/temps.png',
-            fit: BoxFit.cover,
-            width: double.infinity,
-          ),
-        ),
-        // Back button
-        Positioned(
-          top: 40.r,
-          left: 16.r,
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.7),
-              shape: BoxShape.circle,
-            ),
-            child: IconButton(
-              icon: Icon(Icons.chevron_left, color: Colors.black, size: 30.r),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ),
-        ),
-        // Pagination indicators
-        Positioned(
-          bottom: 16.r,
-          left: 0,
-          right: 0,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+    return SizedBox(
+      width: double.infinity,
+      height: context.getSize.height * 0.4,
+      child: Stack(
+        children: [
+          // Image
+          Stack(
             children: [
-              _paginationDot(true),
-              _paginationDot(false),
-              _paginationDot(false),
+              Positioned.fill(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(20.r)),
+                  child: Image.asset(
+                    'assets/images/temps.png',
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                  ),
+                ),
+              ),
+              // Pagination indicators
+              Positioned(
+                bottom: 10.h,
+                left: 0,
+                right: 0,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(
+                    3,
+                    (index) => PaginationDot(isActive: index == 0),
+                  ),
+                ),
+              ),
             ],
           ),
-        ),
-      ],
-    );
-  }
 
-  Widget _paginationDot(bool isActive) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 2.r),
-      width: isActive ? 16.r : 8.r,
-      height: 8.r,
-      decoration: BoxDecoration(
-        color: isActive ? AppColors.orange : Colors.white,
-        borderRadius: BorderRadius.circular(4.r),
+          // Back button
+          Positioned(top: 40.r, left: 16.r, child: CircularBackButton()),
+        ],
       ),
     );
   }
@@ -250,13 +255,14 @@ class _PortalDetailPageState extends State<PortalDetailPage> {
 
   Widget _buildVisitButton() {
     return Padding(
-      padding: EdgeInsets.all(16.r),
+      padding: EdgeInsets.all(16.sp),
       child: CustomButton(
         text: 'Visiter',
         showArrow: true,
         onPressed: () {
           // Handle visit button press
         },
+        
         buttonVariant: ButtonVariant.primary,
         textStyle:
             TextStyle(

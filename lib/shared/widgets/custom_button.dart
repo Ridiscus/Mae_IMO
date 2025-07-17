@@ -72,26 +72,22 @@ class CustomButton extends StatelessWidget {
               child:
                   isLoading
                       ? CircularProgressIndicator(color: Colors.white)
-                      : Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      : Stack(
                         children: [
-                          Expanded(
+                          Center(
                             child: Text(
                               text,
-                              textAlign: TextAlign.center,
                               style:
-                                  textStyle ??
                                   TextStyle(
                                     fontSize: 20.sp,
                                     fontWeight: FontWeight.w600,
                                     color: Colors.white,
-                                  ),
+                                  ).sourceSansProBold,
                             ),
                           ),
-                          if (showArrow) ...[
-                            SizedBox(width: 16.w),
-                            CircleAvatar(
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: CircleAvatar(
                               radius: 16.r,
                               backgroundColor: Colors.white,
                               child: Icon(
@@ -100,7 +96,7 @@ class CustomButton extends StatelessWidget {
                                 size: (iconSize ?? 40.w) * 0.6,
                               ),
                             ),
-                          ],
+                          ),
                         ],
                       ),
             ),

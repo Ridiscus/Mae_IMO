@@ -84,15 +84,7 @@ class PropertyCard extends StatelessWidget {
   }
 
   Widget _buildPaginationDot(bool isActive) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 2.sp),
-      width: isActive ? 20.w : 10.w,
-      height: 6.h,
-      decoration: BoxDecoration(
-        color: isActive ? AppColors.orange : Colors.white,
-        borderRadius: BorderRadius.circular(4.sp),
-      ),
-    );
+    return PaginationDot(isActive: isActive);
   }
 
   Widget _buildAmenities() {

@@ -23,3 +23,5 @@ part 'property_card.dart';
 part 'spacer_platform.dart';
 part 'scaffold_with_bottom_nav.dart';
 part 'latyout/auth_layout.dart';
+part 'pagination_dot.dart';
+part 'back_button.dart';

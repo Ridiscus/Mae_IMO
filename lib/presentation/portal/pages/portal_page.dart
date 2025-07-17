@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:maelys_imo/core/constants/app_colors.dart';
 import 'package:maelys_imo/core/constants/assets.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
+import 'package:maelys_imo/presentation/portal/pages/portal_detail_page.dart';
 import 'package:maelys_imo/shared/models/index.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
 
@@ -35,10 +37,7 @@ class _PortalPageState extends State<PortalPage> {
       imageUrl: 'assets/images/temps.png',
       amenities: List.generate(
         8,
-        (index) => AmenityModel(
-          text: '2 douches',
-          iconData: 'shower_outlined',
-        ),
+        (index) => AmenityModel(text: '2 douches', iconData: 'shower_outlined'),
       ),
     ),
     PropertyModel(
@@ -46,10 +45,15 @@ class _PortalPageState extends State<PortalPage> {
       imageUrl: 'assets/images/temps.png',
       amenities: List.generate(
         5,
-        (index) => AmenityModel(
-          text: '3 chambres',
-          iconData: 'bed_outlined',
-        ),
+        (index) => AmenityModel(text: '3 chambres', iconData: 'bed_outlined'),
+      ),
+    ),
+    PropertyModel(
+      title: 'Villa à Cocody',
+      imageUrl: 'assets/images/temps.png',
+      amenities: List.generate(
+        5,
+        (index) => AmenityModel(text: '3 chambres', iconData: 'bed_outlined'),
       ),
     ),
   ];
@@ -62,38 +66,51 @@ class _PortalPageState extends State<PortalPage> {
       value: SystemUiOverlayStyle(statusBarColor: AppColors.primary),
       child: Scaffold(
         backgroundColor: Color(0xFFF5F5F5),
-        body: Column(
-          children: [
-            _buildAppBar(),
-            CustomSpacer(),
-            CategoryList(
-              categories: _categories,
-              selectedIndex: _selectedIndex,
-              onCategorySelected: (index) {
-                setState(() {
-                  _selectedIndex = index;
-                });
-              },
-            ),
-            CustomSpacer(),
-            Expanded(
-              child: ListView(
-                padding: EdgeInsets.symmetric(horizontal: 16.r),
-                children: [
-                  ...List.generate(
-                    _properties.length,
-                    (index) => Padding(
-                      padding: EdgeInsets.only(bottom: index < _properties.length - 1 ? 16.h : 0),
-                      child: PropertyCard(
-                        property: _properties[index],
-                        onPressed: () => _onPropertyTap(_properties[index]),
+        body: SafeArea(
+          top: false,
+          child: Column(
+            children: [
+              _buildAppBar(),
+              Expanded(
+                child: Column(
+                  children: [
+                    CustomSpacer(),
+                    CategoryList(
+                      categories: _categories,
+                      selectedIndex: _selectedIndex,
+                      onCategorySelected: (index) {
+                        setState(() {
+                          _selectedIndex = index;
+                        });
+                      },
+                    ),
+                    CustomSpacer(),
+                    Expanded(
+                      child: ListView(
+                        padding: EdgeInsets.symmetric(horizontal: 16.r),
+                        children: [
+                          ...List.generate(
+                            _properties.length,
+                            (index) => Padding(
+                              padding: EdgeInsets.only(
+                                bottom:
+                                    index < _properties.length - 1 ? 16.h : 0,
+                              ),
+                              child: PropertyCard(
+                                property: _properties[index],
+                                onPressed:
+                                    () => _onPropertyTap(_properties[index]),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -101,7 +118,7 @@ class _PortalPageState extends State<PortalPage> {
 
   Widget _buildAppBar() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16.r),
+      padding: EdgeInsets.symmetric(horizontal: 16.sp).copyWith(bottom: 16.sp),
       decoration: BoxDecoration(
         color: AppColors.orange,
         borderRadius: BorderRadius.only(
@@ -205,6 +222,7 @@ class _PortalPageState extends State<PortalPage> {
   void _onPropertyTap(PropertyModel property) {
     // Action à effectuer quand une propriété est cliquée
     debugPrint('Property tapped: ${property.title}');
+    context.pushNamed(PortalDetailPage.routeName);
     // Naviguer vers la page de détails ou autre action
   }
 }
