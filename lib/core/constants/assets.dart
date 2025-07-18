@@ -11,5 +11,6 @@ class Assets {
   static const String user = "assets/icons/user.svg";
 
   static const String filter = "assets/icons/filter.svg";
+  static const String menu = "assets/icons/menu.svg";
 
 }

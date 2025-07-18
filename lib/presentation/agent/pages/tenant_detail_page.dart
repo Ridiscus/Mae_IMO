@@ -18,67 +18,26 @@ class TenantDetailPage extends StatefulWidget {
 class _TenantDetailPageState extends State<TenantDetailPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          _buildHeader(),
-          Expanded(child: _buildDetailContent()),
-          _buildCollectRentButton(),
-        ],
-      ),
+    return FormWithHeaderLayout(
+      headerTitle: 'Détails du locataire',
+      content: _buildDetailContent(),
     );
   }
 
-  Widget _buildHeader() {
-    return Container(
-      padding: EdgeInsets.only(
-        top: MediaQuery.of(context).padding.top + 8.sp,
-        left: 16.sp,
-        right: 16.sp,
-        bottom: 24.sp,
-      ),
-      width: double.infinity,
-      color: Color(0xFF0A2342),
+  // Header est désormais géré par FormWithHeaderLayout
+
+  Widget _buildDetailContent() {
+    return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          IconButton(
-            onPressed: () => Navigator.of(context).pop(),
-            icon: Icon(Icons.chevron_left, color: Colors.white, size: 30.sp),
-            padding: EdgeInsets.zero,
-            constraints: BoxConstraints(),
-          ),
-          SizedBox(height: 16.sp),
-          Text(
-            'Détails du locataire',
-            style:
-                TextStyle(
-                  fontSize: 28.sp,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ).sourceSansProBold,
-          ),
+          _buildTenantInfoCard(),
+          CustomSpacer(space: 1.5),
+          _buildPropertyInfoCard(),
+          CustomSpacer(space: 1.5),
+          _buildCollectRentButton(),
+          SizedBox(height: 24.sp),
         ],
-      ),
-    );
-  }
-
-  Widget _buildDetailContent() {
-    return Container(
-      width: double.infinity,
-      color: Color(0xFFF5F5F5),
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 24.sp, horizontal: 16.sp),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildTenantInfoCard(),
-              SizedBox(height: 24.sp),
-              _buildPropertyInfoCard(),
-            ],
-          ),
-        ),
       ),
     );
   }

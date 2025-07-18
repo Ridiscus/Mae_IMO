@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
 import 'package:maelys_imo/presentation/agent/pages/tenant_detail_page.dart';
+import 'package:maelys_imo/shared/widgets/index.dart';
 
 enum TenantListType { upToDate, late, pendingPayment }
 
@@ -32,57 +33,21 @@ class _TenantListPageState extends State<TenantListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [_buildHeader(), Expanded(child: _buildTenantList())],
-      ),
+    return FormWithHeaderLayout(
+      headerTitle: _getPageTitle(),
+      content: _buildTenantList(),
     );
   }
 
-  Widget _buildHeader() {
-    return Container(
-      padding: EdgeInsets.only(
-        top: MediaQuery.of(context).padding.top + 8.sp,
-        left: 16.sp,
-        right: 16.sp,
-        bottom: 24.sp,
-      ),
-      width: double.infinity,
-      color: Color(0xFF0A2342),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          IconButton(
-            onPressed: () => Navigator.of(context).pop(),
-            icon: Icon(Icons.chevron_left, color: Colors.white, size: 30.sp),
-            padding: EdgeInsets.zero,
-            constraints: BoxConstraints(),
-          ),
-          SizedBox(height: 16.sp),
-          Text(
-            _getPageTitle(),
-            style: TextStyle(
-              fontSize: 28.sp,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ).sourceSansProBold,
-          ),
-        ],
-      ),
-    );
-  }
+  // Header est désormais géré par FormWithHeaderLayout
 
   Widget _buildTenantList() {
-    return Container(
-      width: double.infinity,
-      color: Color(0xFFF5F5F5),
-      child: ListView.builder(
-        padding: EdgeInsets.all(16.sp),
-        itemCount: 5, // Demo count, replace with actual data
-        itemBuilder: (context, index) {
-          return _buildTenantCard(index);
-        },
-      ),
+    return ListView.builder(
+      padding: EdgeInsets.symmetric(vertical: 16.sp),
+      itemCount: 5, // Demo count, replace with actual data
+      itemBuilder: (context, index) {
+        return _buildTenantCard(index);
+      },
     );
   }
 

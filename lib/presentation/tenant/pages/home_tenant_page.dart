@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hive/hive.dart';
+import 'package:maelys_imo/core/constants/app_colors.dart';
+import 'package:maelys_imo/core/constants/assets.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
 import 'package:maelys_imo/presentation/tenant/pages/payment_page.dart'; // Added import
 import 'package:maelys_imo/presentation/tenant/pages/contact_agency_page.dart';
-import 'package:maelys_imo/presentation/tenant/pages/profile_tenant_page.dart'; // Added import
+import 'package:maelys_imo/presentation/tenant/pages/profile_tenant_page.dart';
+import 'package:maelys_imo/shared/widgets/index.dart'; // Added import
 
 class HomeTenantPage extends StatefulWidget {
   static const routeName = 'homeTenant';
@@ -21,167 +25,115 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
-        children: [
-          _buildHeader(),
-          Expanded(
-            child: _buildContent(),
-          ),
-        ],
+        children: [_buildHeader(), Expanded(child: _buildContent())],
       ),
-      bottomNavigationBar: _buildContactButton(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: _buildContactButton(),
     );
   }
 
   Widget _buildHeader() {
     return Container(
-      padding: EdgeInsets.only(
-        top: MediaQuery.of(context).padding.top + 8.r,
-        left: 16.r,
-        right: 16.r,
-        bottom: 24.r,
-      ),
+      padding: EdgeInsets.only(left: 16.r, right: 16.r),
       width: double.infinity,
-      color: Color(0xFF0A2342),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.menu,
-                  color: Colors.white,
-                  size: 30.r,
+      decoration: BoxDecoration(
+        color: AppColors.primary,
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(20.r),
+          bottomRight: Radius.circular(20.r),
+        ),
+      ),
+      child: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CircularIcon(
+                  onPressed: () {},
+                  iconAsset: Assets.menu,
+                  iconSize: 16.sp,
                 ),
-                padding: EdgeInsets.zero,
-                constraints: BoxConstraints(),
-              ),
-              Row(
-                children: [
-                  Text(
-                    'Juillet 2025',
-                    style: TextStyle(
-                      fontSize: 20.r,
-                      fontWeight: FontWeight.bold,
+                Row(
+                  children: [
+                    Text(
+                      'Juillet 2025',
+                      style:
+                          TextStyle(
+                            fontSize: 20.r,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ).sourceSansProBold,
+                    ),
+                    Icon(
+                      Icons.arrow_drop_down,
                       color: Colors.white,
-                    ).sourceSansProBold,
-                  ),
-                  Icon(
-                    Icons.arrow_drop_down,
-                    color: Colors.white,
-                    size: 24.r,
-                  ),
-                ],
-              ),
-              CircleAvatar(
-                backgroundColor: Colors.white,
-                radius: 16.r,
-                child: GestureDetector(
-                  onTap: () {
-                    context.goNamed(ProfileTenantPage.routeName);
-                  },
-                  child: Icon(
-                    Icons.person,
-                    color: Color(0xFF0A2342),
-                    size: 20.r,
-                  ),
+                      size: 24.r,
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
-          SizedBox(height: 24.r),
-          _buildRentInfo(),
-          SizedBox(height: 16.r),
-          _buildPayRentButton(),
-        ],
+                CircularIcon(
+                  iconAsset: Assets.user,
+                  onPressed: () {
+                    context.pushNamed(ProfileTenantPage.routeName);
+                  },
+                ),
+              ],
+            ),
+            CustomSpacer(),
+
+            _buildRentInfo(),
+            CustomSpacer(),
+            _buildPayRentButton(),
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildRentInfo() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
               'Loyer du mois',
-              style: TextStyle(
-                fontSize: 16.r,
-                color: Colors.white,
-              ).sourceSansProRegular,
+              style:
+                  TextStyle(
+                    fontSize: 16.r,
+                    color: Colors.white,
+                  ).sourceSansProRegular,
             ),
-            SizedBox(width: 8.r),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 8.r, vertical: 2.r),
-              decoration: BoxDecoration(
-                color: Colors.red,
-                borderRadius: BorderRadius.circular(4.r),
-              ),
-              child: Text(
-                'impayé',
-                style: TextStyle(
-                  fontSize: 12.r,
-                  color: Colors.white,
-                ).sourceSansProSemiBold,
-              ),
-            ),
+            CustomSpacer(space: .5, isVertical: false),
+
+            CustomTag(label: 'impayé', color: AppColors.redColor),
           ],
         ),
-        SizedBox(height: 8.r),
         Text(
           '200 000 FCFA',
-          style: TextStyle(
-            fontSize: 32.r,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ).sourceSansProBold,
+          style:
+              TextStyle(
+                fontSize: 32.r,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ).sourceSansProBold,
         ),
       ],
     );
   }
 
   Widget _buildPayRentButton() {
-    return Container(
-      width: double.infinity,
-      height: 56.r,
-      child: ElevatedButton(
-        onPressed: () {
-          // Navigate to payment page
-          context.goNamed(PaymentPage.routeName);
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.orange,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(28.r),
-          ),
-          padding: EdgeInsets.symmetric(horizontal: 16.r),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Payer mon loyer',
-              style: TextStyle(
-                fontSize: 18.r,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ).sourceSansProBold,
-            ),
-            CircleAvatar(
-              backgroundColor: Colors.white,
-              radius: 16.r,
-              child: Icon(
-                Icons.arrow_forward,
-                color: Colors.orange,
-                size: 20.r,
-              ),
-            ),
-          ],
-        ),
-      ),
+    return CustomButton(
+      text: "Payer mon loyer",
+      showArrow: true,
+      onPressed: () {
+        context.pushNamed(PaymentPage.routeName);
+      },
+      buttonVariant: ButtonVariant.orange,
     );
   }
 
@@ -197,27 +149,30 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
             children: [
               Text(
                 'Historique des paiements',
-                style: TextStyle(
-                  fontSize: 18.r,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ).sourceSansProBold,
+                style:
+                    TextStyle(
+                      fontSize: 20.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ).sourceSansProSemiBold,
               ),
-              SizedBox(height: 16.r),
+              CustomSpacer(),
               _buildPaymentHistoryItem(
                 month: 'juin',
                 amount: '200 000 FCFA',
                 date: '06 juin 2025',
                 isPaid: true,
               ),
-              SizedBox(height: 12.r),
+              CustomSpacer(),
+
               _buildPaymentHistoryItem(
                 month: 'mai',
                 amount: '200 000 FCFA',
                 date: '06 juin 2025',
                 isPaid: true,
               ),
-              SizedBox(height: 12.r),
+              CustomSpacer(),
+
               _buildPaymentHistoryItem(
                 month: 'avril',
                 amount: '150 000 FCFA',
@@ -239,15 +194,9 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 4,
-            offset: Offset(0, 2),
-          ),
-        ],
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(20.r),
+        border: Border.all(color: AppColors.borderColor),
       ),
       padding: EdgeInsets.all(16.r),
       child: Row(
@@ -259,10 +208,7 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
               color: Colors.grey[200],
               borderRadius: BorderRadius.circular(8.r),
             ),
-            child: Icon(
-              Icons.image,
-              color: Colors.grey[600],
-            ),
+            child: Icon(Icons.image, color: Colors.grey[600]),
           ),
           SizedBox(width: 16.r),
           Expanded(
@@ -271,49 +217,43 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
               children: [
                 Text(
                   'Loyer du mois de $month',
-                  style: TextStyle(
-                    fontSize: 16.r,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black87,
-                  ).sourceSansProSemiBold,
+                  style:
+                      TextStyle(
+                        fontSize: 16.r,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87,
+                      ).sourceSansProSemiBold,
                 ),
-                SizedBox(height: 4.r),
+                CustomSpacer(space: .2),
                 Text(
                   amount,
-                  style: TextStyle(
-                    fontSize: 18.r,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ).sourceSansProBold,
+                  style:
+                      TextStyle(
+                        fontSize: 18.r,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ).sourceSansProBold,
                 ),
               ],
             ),
           ),
           Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 12.r, vertical: 4.r),
-                decoration: BoxDecoration(
-                  color: isPaid ? Colors.green : Colors.red,
-                  borderRadius: BorderRadius.circular(4.r),
-                ),
-                child: Text(
-                  isPaid ? 'Payé' : 'Impayé',
-                  style: TextStyle(
-                    fontSize: 12.r,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                  ).sourceSansProSemiBold,
-                ),
+              CustomTag(
+                label: isPaid ? 'Payé' : 'Impayé',
+                color: isPaid ? AppColors.success : AppColors.redColor,
               ),
-              SizedBox(height: 4.r),
+
+              CustomSpacer(space: .2),
               Text(
                 date,
-                style: TextStyle(
-                  fontSize: 12.r,
-                  color: Colors.grey[600],
-                ).sourceSansProRegular,
+                style:
+                    TextStyle(
+                      fontSize: 12.sp,
+                      color: Colors.grey[600],
+                    ).sourceSansProRegular,
               ),
             ],
           ),
@@ -324,57 +264,18 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
 
   Widget _buildContactButton() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16.r, vertical: 8.r),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 4,
-            offset: Offset(0, -2),
+      margin: EdgeInsets.symmetric(horizontal: 16.sp),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          CustomButton(
+            text: "Contacter l'agence",
+            showArrow: true,
+            onPressed: () {},
+            buttonVariant: ButtonVariant.primary,
           ),
         ],
-      ),
-      child: SafeArea(
-        child: Container(
-          width: double.infinity,
-          height: 56.r,
-          child: ElevatedButton(
-            onPressed: () {
-              // Navigate to contact agency page
-              context.goNamed(ContactAgencyPage.routeName);
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xFF0A2342),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(28.r),
-              ),
-              padding: EdgeInsets.symmetric(horizontal: 16.r),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Contacter l\'agence',
-                  style: TextStyle(
-                    fontSize: 18.r,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ).sourceSansProBold,
-                ),
-                CircleAvatar(
-                  backgroundColor: Colors.white,
-                  radius: 16.r,
-                  child: Icon(
-                    Icons.phone,
-                    color: Color(0xFF0A2342),
-                    size: 20.r,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
       ),
     );
   }

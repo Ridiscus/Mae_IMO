@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:maelys_imo/core/constants/app_colors.dart';
 import 'package:maelys_imo/core/constants/assets.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
+import 'package:maelys_imo/presentation/auth/pages/login_page.dart';
 import 'package:maelys_imo/presentation/portal/pages/portal_detail_page.dart';
 import 'package:maelys_imo/shared/models/index.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
@@ -133,17 +134,11 @@ class _PortalPageState extends State<PortalPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Container(
-                  padding: EdgeInsets.all(8.sp),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.white,
-                  ),
-                  child: SvgPicture.asset(
-                    Assets.user,
-                    width: 24.sp,
-                    height: 24.sp,
-                  ),
+                CircularIcon(
+                  iconAsset: Assets.user,
+                  onPressed: () {
+                    context.pushNamed(LoginPage.routeName);
+                  },
                 ),
                 SizedBox(width: 16.w),
                 Expanded(

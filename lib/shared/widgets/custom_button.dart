@@ -51,58 +51,52 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final buttonColor = _getButtonColor();
 
-    return Row(
-      children: [
-        Flexible(
-          child: Container(
-            alignment: Alignment.center,
-            child: ElevatedButton(
-              onPressed: isDisabled || isLoading ? null : onPressed,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: buttonColor,
-                disabledBackgroundColor: Color.fromRGBO(239, 230, 235, 1),
-                padding:
-                    buttonPadding ??
-                    EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50.r),
-                ),
-                minimumSize: Size(width ?? double.infinity, 30.h),
-              ),
-              child:
-                  isLoading
-                      ? CircularProgressIndicator(color: Colors.white)
-                      : Stack(
-                        children: [
-                          Center(
-                            child: Text(
-                              text,
-                              style:
-                                  TextStyle(
-                                    fontSize: 20.sp,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white,
-                                  ).sourceSansProBold,
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: CircleAvatar(
-                              radius: 16.r,
-                              backgroundColor: Colors.white,
-                              child: Icon(
-                                Icons.arrow_forward,
-                                color: buttonColor,
-                                size: (iconSize ?? 40.w) * 0.6,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-            ),
+    return Container(
+      alignment: Alignment.center,
+      child: ElevatedButton(
+        onPressed: isDisabled || isLoading ? null : onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: buttonColor,
+          disabledBackgroundColor: Color.fromRGBO(239, 230, 235, 1),
+          padding:
+              buttonPadding ??
+              EdgeInsets.symmetric(horizontal: 24.w, vertical: 10.h),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.r),
           ),
+          minimumSize: Size(width ?? double.infinity, 30.h),
         ),
-      ],
+        child:
+            isLoading
+                ? CircularProgressIndicator(color: Colors.white)
+                : Stack(
+                  children: [
+                    Center(
+                      child: Text(
+                        text,
+                        style:
+                            TextStyle(
+                              fontSize: 20.sp,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ).sourceSansProBold,
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: CircleAvatar(
+                        radius: 16.r,
+                        backgroundColor: Colors.white,
+                        child: Icon(
+                          Icons.arrow_forward,
+                          color: buttonColor,
+                          size: (iconSize ?? 40.w) * 0.6,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+      ),
     );
   }
 }
