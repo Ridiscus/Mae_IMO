@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:maelys_imo/core/constants/app_colors.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
 import 'package:maelys_imo/presentation/agent/pages/tenant_list_page.dart';
 import 'package:maelys_imo/presentation/agent/pages/profile_agent_page.dart';
@@ -59,7 +60,7 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
         bottom: 16.sp,
       ),
       width: double.infinity,
-      color: Color(0xFF0A2342),
+      color: AppColors.primary,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -93,7 +94,7 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
               backgroundColor: Colors.white,
               child: Icon(
                 Icons.person,
-                color: Color(0xFF0A2342),
+                color: AppColors.primary,
                 size: 20.sp,
               ),
             ),
@@ -132,7 +133,7 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
       width: double.infinity,
       padding: EdgeInsets.all(24.sp),
       decoration: BoxDecoration(
-        color: Color(0xFF0A2342),
+        color: AppColors.primary,
         borderRadius: BorderRadius.circular(16.r),
       ),
       child: Column(
@@ -178,7 +179,7 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
       title: 'Nombre de locataire à jours',
       value: '20',
       iconData: Icons.calendar_today,
-      iconBackgroundColor: Color(0xFF0A2342),
+      iconBackgroundColor: AppColors.primary,
       arrowColor: Colors.green,
       valueColor: Colors.green,
       onTap: () {
@@ -196,7 +197,7 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
       title: 'Nombre de locataire en retard',
       value: '20',
       iconData: Icons.warning_amber_rounded,
-      iconBackgroundColor: Color(0xFF0A2342),
+      iconBackgroundColor: AppColors.primary,
       arrowColor: Colors.red,
       valueColor: Colors.red,
       onTap: () {
@@ -214,7 +215,7 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
       title: 'Nombre de paiement en attente',
       value: '20',
       iconData: Icons.watch_later_outlined,
-      iconBackgroundColor: Color(0xFF0A2342),
+      iconBackgroundColor: AppColors.primary,
       arrowColor: Colors.orange,
       valueColor: Colors.orange,
       onTap: () {

@@ -18,6 +18,8 @@ class CustomButton extends StatelessWidget {
     this.iconSize,
     this.buttonPadding,
     this.buttonVariant = ButtonVariant.primary,
+    this.iconData,
+    this.assetPath,
   });
 
   final void Function()? onPressed;
@@ -32,6 +34,8 @@ class CustomButton extends StatelessWidget {
   final double? iconSize;
   final EdgeInsetsGeometry? buttonPadding;
   final ButtonVariant buttonVariant;
+  final IconData? iconData;
+  final String? assetPath;
 
   /// Get the button color based on the variant
   Color _getButtonColor() {
@@ -60,7 +64,10 @@ class CustomButton extends StatelessWidget {
           disabledBackgroundColor: Color.fromRGBO(239, 230, 235, 1),
           padding:
               buttonPadding ??
-              EdgeInsets.symmetric(horizontal: 24.w, vertical: 10.h),
+              EdgeInsets.symmetric(
+                horizontal: 24.w,
+                vertical: 10.h,
+              ).copyWith(right: 10.w),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20.r),
           ),
@@ -82,18 +89,30 @@ class CustomButton extends StatelessWidget {
                             ).sourceSansProBold,
                       ),
                     ),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: CircleAvatar(
-                        radius: 16.r,
-                        backgroundColor: Colors.white,
-                        child: Icon(
-                          Icons.arrow_forward,
-                          color: buttonColor,
-                          size: (iconSize ?? 40.w) * 0.6,
+                    if (showArrow)
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: CircleAvatar(
+                          radius: 16.r,
+                          backgroundColor: Colors.white,
+                          child:
+                              assetPath != null
+                                  ? SvgPicture.asset(
+                                    assetPath!,
+                                    width: (iconSize ?? 24.w) * 0.6,
+                                    height: (iconSize ?? 24.w) * 0.6,
+                                    colorFilter: ColorFilter.mode(
+                                      buttonColor,
+                                      BlendMode.srcIn,
+                                    ),
+                                  )
+                                  : Icon(
+                                    iconData ?? Icons.adaptive.arrow_forward,
+                                    color: buttonColor,
+                                    size: (iconSize ?? 40.w) * 0.6,
+                                  ),
                         ),
                       ),
-                    ),
                   ],
                 ),
       ),

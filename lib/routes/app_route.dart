@@ -24,6 +24,11 @@ class AppRoute {
       // }
       return null;
     },
-    routes: [...StarterRoutes.routes, ...AuthRoutes.routes, ...TenantRoutes.routes, ...AgentRoutes.routes],
+    routes: [
+      ...StarterRoutes.routes,
+      ...AuthRoutes.routes,
+      ...TenantRoutes.routes,
+      ...AgentRoutes.routes,
+    ],
   );
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:maelys_imo/core/constants/app_colors.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
 
@@ -78,12 +77,12 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
           label,
           style:
               TextStyle(
-                fontSize: 16.r,
+                fontSize: 16.sp,
                 fontWeight: FontWeight.w600,
                 color: Colors.black87,
               ).sourceSansProSemiBold,
         ),
-        SizedBox(height: 8.r),
+       SizedBox(height: 8.h),
         CustomInputTextFactory.createTextInput(
           controller: controller,
           hintText: hintText,

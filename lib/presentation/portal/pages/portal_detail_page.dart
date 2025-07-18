@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:maelys_imo/core/constants/app_colors.dart';
+import 'package:go_router/go_router.dart';
+import 'package:maelys_imo/presentation/portal/pages/visit_request_page.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
 
 class PortalDetailPage extends StatefulWidget {
-  static const String routeName = 'portal-detail';
+  static const String routeName = 'portalDetail';
   static const String routePath = '/portal-detail';
 
   const PortalDetailPage({super.key});
@@ -260,7 +261,7 @@ class _PortalDetailPageState extends State<PortalDetailPage> {
         text: 'Visiter',
         showArrow: true,
         onPressed: () {
-          // Handle visit button press
+          context.pushNamed(VisitRequestPage.routeName);
         },
         
         buttonVariant: ButtonVariant.primary,

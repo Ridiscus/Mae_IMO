@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:maelys_imo/core/constants/app_colors.dart';
+import 'package:maelys_imo/core/constants/assets.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
+import 'package:maelys_imo/presentation/portal/pages/portal_page.dart';
+import 'package:maelys_imo/shared/widgets/index.dart';
 
 class ProfileTenantPage extends StatefulWidget {
   static const routeName = 'profileTenant';
@@ -19,11 +24,7 @@ class _ProfileTenantPageState extends State<ProfileTenantPage> {
       body: Column(
         children: [
           _buildHeader(),
-          Expanded(
-            child: SingleChildScrollView(
-              child: _buildProfileContent(),
-            ),
-          ),
+          Expanded(child: SingleChildScrollView(child: _buildProfileContent())),
         ],
       ),
     );
@@ -31,28 +32,25 @@ class _ProfileTenantPageState extends State<ProfileTenantPage> {
 
   Widget _buildHeader() {
     return Container(
-      padding: EdgeInsets.only(
-        top: MediaQuery.of(context).padding.top + 8.r,
-        left: 16.r,
-        right: 16.r,
-        bottom: 0.r,
-      ),
+      padding: EdgeInsets.only(left: 16.r, right: 16.r),
       width: double.infinity,
-      color: Color(0xFF0A2342),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          IconButton(
-            onPressed: () => Navigator.of(context).pop(),
-            icon: Icon(
-              Icons.chevron_left,
-              color: Colors.white,
-              size: 30.r,
+      color: AppColors.primary,
+      alignment: Alignment.centerLeft,
+      child: SafeArea(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            CircularBackButton(),
+
+            CircularIcon(
+              iconAsset: Assets.logout,
+              onPressed: () {
+                context.goNamed(PortalPage.routeName);
+              },
             ),
-            padding: EdgeInsets.zero,
-            constraints: BoxConstraints(),
-          ),
-        ],
+          ],
+
+        ),
       ),
     );
   }
@@ -60,23 +58,17 @@ class _ProfileTenantPageState extends State<ProfileTenantPage> {
   Widget _buildProfileContent() {
     return Container(
       width: double.infinity,
-      color: Color(0xFF0A2342),
-      child: Column(
-        children: [
-          _buildProfileInfo(),
-          _buildEditOptions(),
-        ],
-      ),
+      color: AppColors.primary,
+      child: Column(children: [_buildProfileInfo(), _buildEditOptions()]),
     );
   }
 
   Widget _buildProfileInfo() {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(vertical: 24.r, horizontal: 16.r),
-      decoration: BoxDecoration(
-        color: Color(0xFF0A2342),
-      ),
+      padding: EdgeInsets.symmetric(horizontal: 16.r),
+
+      decoration: BoxDecoration(color: AppColors.primary),
       child: Column(
         children: [
           Container(
@@ -84,10 +76,7 @@ class _ProfileTenantPageState extends State<ProfileTenantPage> {
             height: 120.r,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(
-                color: Colors.orange,
-                width: 2.r,
-              ),
+              border: Border.all(color: Colors.orange, width: 2.r),
             ),
             child: Center(
               child: Container(
@@ -97,30 +86,28 @@ class _ProfileTenantPageState extends State<ProfileTenantPage> {
                   color: Colors.grey[300],
                   shape: BoxShape.circle,
                 ),
-                child: Icon(
-                  Icons.person,
-                  size: 60.r,
-                  color: Colors.black54,
-                ),
+                child: Icon(Icons.person, size: 60.r, color: Colors.black54),
               ),
             ),
           ),
           SizedBox(height: 16.r),
           Text(
             'Nom de l\'agent',
-            style: TextStyle(
-              fontSize: 24.r,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ).sourceSansProBold,
+            style:
+                TextStyle(
+                  fontSize: 24.r,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ).sourceSansProBold,
           ),
           SizedBox(height: 4.r),
           Text(
             'ID : 132Mo7E',
-            style: TextStyle(
-              fontSize: 16.r,
-              color: Colors.grey[300],
-            ).sourceSansProRegular,
+            style:
+                TextStyle(
+                  fontSize: 16.r,
+                  color: Colors.grey[300],
+                ).sourceSansProRegular,
           ),
           SizedBox(height: 24.r),
           _buildContactInfo(
@@ -141,18 +128,15 @@ class _ProfileTenantPageState extends State<ProfileTenantPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(
-          icon,
-          size: 24.r,
-          color: Colors.grey[300],
-        ),
+        Icon(icon, size: 24.r, color: Colors.grey[300]),
         SizedBox(width: 16.r),
         Text(
           text,
-          style: TextStyle(
-            fontSize: 16.r,
-            color: Colors.white,
-          ).sourceSansProRegular,
+          style:
+              TextStyle(
+                fontSize: 16.r,
+                color: Colors.white,
+              ).sourceSansProRegular,
         ),
       ],
     );
@@ -162,6 +146,7 @@ class _ProfileTenantPageState extends State<ProfileTenantPage> {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(16.r),
+      margin: EdgeInsets.only(top: 16.sp),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
@@ -211,27 +196,20 @@ class _ProfileTenantPageState extends State<ProfileTenantPage> {
         padding: EdgeInsets.symmetric(vertical: 16.r),
         child: Row(
           children: [
-            Icon(
-              icon,
-              size: 24.r,
-              color: Colors.black87,
-            ),
+            Icon(icon, size: 24.r, color: Colors.black87),
             SizedBox(width: 16.r),
             Expanded(
               child: Text(
                 title,
-                style: TextStyle(
-                  fontSize: 18.r,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black87,
-                ).sourceSansProSemiBold,
+                style:
+                    TextStyle(
+                      fontSize: 18.r,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ).sourceSansProSemiBold,
               ),
             ),
-            Icon(
-              Icons.edit,
-              size: 24.r,
-              color: Colors.black87,
-            ),
+            Icon(Icons.edit, size: 24.r, color: Colors.black87),
           ],
         ),
       ),
@@ -239,10 +217,6 @@ class _ProfileTenantPageState extends State<ProfileTenantPage> {
   }
 
   Widget _buildDivider() {
-    return Divider(
-      color: Colors.grey[300],
-      thickness: 1,
-    );
+    return Divider(color: Colors.grey[300], thickness: 1);
   }
 }
-

@@ -12,7 +12,7 @@ extension DateFormaterExt on DateTime {
         return "Aujourd’hui, ${formatTime.format(this)}";
       }
 
-      if ((now.day - this.day) == 1) {
+      if ((now.day - day) == 1) {
         return "Hier, ${formatTime.format(this)}";
       }
 

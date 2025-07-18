@@ -40,9 +40,9 @@ class CircularBackButton extends StatelessWidget {
       ),
       child: IconButton(
         icon: Icon(
-          Icons.chevron_left,
+          Icons.adaptive.arrow_back_sharp,
           color: iconColor,
-          size: iconSize ?? 30.r,
+          size: iconSize ?? 22.r,
         ),
         onPressed: onPressed ?? () => Navigator.of(context).pop(),
       ),

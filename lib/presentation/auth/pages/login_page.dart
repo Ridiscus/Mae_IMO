@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:maelys_imo/core/constants/app_colors.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
+import 'package:maelys_imo/presentation/agent/pages/home_agent_page.dart';
 import 'package:maelys_imo/presentation/tenant/pages/home_tenant_page.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
 import '../pages/forget_passord_page.dart';
@@ -110,12 +110,12 @@ class _LoginPageState extends State<LoginPage> {
           label,
           style:
               TextStyle(
-                fontSize: 16.r,
+                fontSize: 16.sp,
                 fontWeight: FontWeight.w600,
                 color: Colors.black87,
               ).sourceSansProSemiBold,
         ),
-        SizedBox(height: 8.r),
+        SizedBox(height: 8.h),
         CustomInputTextFactory.createTextInput(
           controller: controller,
           hintText: hintText,
@@ -135,12 +135,12 @@ class _LoginPageState extends State<LoginPage> {
           'Mot de passe',
           style:
               TextStyle(
-                fontSize: 16.r,
+                fontSize: 16.sp,
                 fontWeight: FontWeight.w600,
                 color: Colors.black87,
               ).sourceSansProSemiBold,
         ),
-        SizedBox(height: 8.r),
+        SizedBox(height: 8.h),
         CustomInputTextFactory.createPasswordInput(
           controller: _passwordController,
           hintText: 'Mot de passe de connexion',
@@ -163,15 +163,9 @@ class _LoginPageState extends State<LoginPage> {
       text: 'Se connecter',
       showArrow: true,
       onPressed: () {
-        context.goNamed(HomeTenantPage.routeName);
+        context.goNamed(HomeAgentPage.routeName);
       },
       buttonVariant: ButtonVariant.primary,
-      textStyle:
-          TextStyle(
-            fontSize: 16.sp,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ).sourceSansProBold,
     );
   }
 }

@@ -1,31 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:maelys_imo/core/constants/app_colors.dart';
-import 'package:maelys_imo/core/constants/assets.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
 
-class PaymentPage extends StatefulWidget {
-  static const routeName = 'payment';
-  static const routePath = '/payment';
+class VisitRequestPage extends StatefulWidget {
+  static const routeName = 'visitRequest';
+  static const routePath = '/visit-request';
 
-  const PaymentPage({super.key});
+  const VisitRequestPage({super.key});
 
   @override
-  State<PaymentPage> createState() => _PaymentPageState();
+  State<VisitRequestPage> createState() => _VisitRequestPageState();
 }
 
-class _PaymentPageState extends State<PaymentPage> {
+class _VisitRequestPageState extends State<VisitRequestPage> {
   String selectedDate = 'Date picker';
-  String selectedPaymentMethod = 'Option 1';
+  String selectedTime = 'Matin';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
-        children: [_buildHeader(), Expanded(child: _buildPaymentForm())],
+        children: [_buildHeader(), Expanded(child: _buildVisitForm())],
       ),
-      floatingActionButton: _buildPaymentButton(),
+      floatingActionButton: _buildRequestButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
@@ -48,7 +47,7 @@ class _PaymentPageState extends State<PaymentPage> {
             CircularBackButton(),
             CustomSpacer(),
             Text(
-              'Payer mon loyer',
+              'Demande de visite',
               style:
                   TextStyle(
                     fontSize: 32.sp,
@@ -62,7 +61,7 @@ class _PaymentPageState extends State<PaymentPage> {
     );
   }
 
-  Widget _buildPaymentForm() {
+  Widget _buildVisitForm() {
     return Container(
       width: double.infinity,
       color: Color(0xFFF5F5F5),
@@ -72,11 +71,13 @@ class _PaymentPageState extends State<PaymentPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildSummarySection(),
+              _buildPropertySummary(),
               CustomSpacer(space: 2),
               _buildDatePicker(),
               CustomSpacer(),
-              _buildPaymentMethodPicker(),
+              _buildTimePicker(),
+              CustomSpacer(),
+              _buildAdditionalInfo(),
             ],
           ),
         ),
@@ -84,12 +85,12 @@ class _PaymentPageState extends State<PaymentPage> {
     );
   }
 
-  Widget _buildSummarySection() {
+  Widget _buildPropertySummary() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Récapitulatif',
+          'Détails de la propriété',
           style:
               TextStyle(
                 fontSize: 20.r,
@@ -97,18 +98,23 @@ class _PaymentPageState extends State<PaymentPage> {
                 color: Colors.black,
               ).sourceSansProBold,
         ),
-        SizedBox(height: 16.r),
-        _buildSummaryItem(icon: Icons.home_outlined, label: 'Type : villa'),
-        SizedBox(height: 12.r),
+        CustomSpacer(),
+        _buildSummaryItem(
+          icon: Icons.home_outlined,
+          label: 'Type : Appartement',
+        ),
+        CustomSpacer(),
         _buildSummaryItem(
           icon: Icons.location_on_outlined,
-          label: 'Localisation : Marcory',
+          label: 'Localisation : Cocody',
         ),
-        SizedBox(height: 12.r),
+        CustomSpacer(),
         _buildSummaryItem(
           icon: Icons.payments_outlined,
-          label: 'loyer : 200 000 FCFA',
+          label: 'Prix : 150 000 FCFA',
         ),
+        CustomSpacer(),
+        _buildSummaryItem(icon: Icons.hotel_outlined, label: 'Chambres : 2'),
       ],
     );
   }
@@ -135,7 +141,7 @@ class _PaymentPageState extends State<PaymentPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Choix de la période',
+          'Date de visite souhaitée',
           style:
               TextStyle(
                 fontSize: 18.r,
@@ -143,28 +149,28 @@ class _PaymentPageState extends State<PaymentPage> {
                 color: Colors.black,
               ).sourceSansProSemiBold,
         ),
-        SizedBox(height: 12.r),
+        SizedBox(height: 8.h),
         CustomDatePickerFactory.createDatePicker(
           displayText: selectedDate,
           onDateSelected: (DateTime date) {
             setState(() {
               // Format the date as needed
               selectedDate =
-                  '${date.month.toString().padLeft(2, '0')}/${date.year}';
+                  '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
             });
           },
-          hintText: 'Sélectionnez une période',
+          hintText: 'Sélectionnez une date',
         ),
       ],
     );
   }
 
-  Widget _buildPaymentMethodPicker() {
+  Widget _buildTimePicker() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Choix de la méthode de paiement',
+          'Heure de visite préférée',
           style:
               TextStyle(
                 fontSize: 18.r,
@@ -172,37 +178,78 @@ class _PaymentPageState extends State<PaymentPage> {
                 color: Colors.black,
               ).sourceSansProSemiBold,
         ),
-
-        SizedBox(height: 8.r),
-
+        SizedBox(height: 8.h),
         CustomDropdownFactory.createDropdown<String>(
-          value: selectedPaymentMethod,
-          items: <String>['Option 1', 'Option 2', 'Option 3'],
+          value: selectedTime,
+          items: <String>['Matin', 'Après-midi', 'Soirée'],
           onChanged: (String? newValue) {
             if (newValue != null) {
               setState(() {
-                selectedPaymentMethod = newValue;
+                selectedTime = newValue;
               });
             }
           },
           itemLabelBuilder: (String value) => value,
-          hintText: 'Sélectionnez une option',
+          hintText: 'Sélectionnez une plage horaire',
         ),
       ],
     );
   }
 
-  Widget _buildPaymentButton() {
+  Widget _buildAdditionalInfo() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Informations supplémentaires',
+          style:
+              TextStyle(
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w600,
+                color: Colors.black,
+              ).sourceSansProSemiBold,
+        ),
+        SizedBox(height: 8.h),
+        CustomInputTextFactory.createTextAreaInput(
+          hintText: 'Commentaires ou questions spécifiques...',
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRequestButton() {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 16.sp),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           CustomButton(
-            text: 'Payer mon loyer',
-            onPressed: () {},
+            text: 'Demander une visite',
+            onPressed: () {
+              // Handle visit request
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('Demande envoyée'),
+                    content: Text(
+                      'Votre demande de visite a été envoyée avec succès. Un agent vous contactera prochainement pour confirmation.',
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
+                        },
+                        child: Text('OK'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
             showArrow: true,
-            assetPath: Assets.monney,
+            iconData: Icons.calendar_month,
           ),
         ],
       ),

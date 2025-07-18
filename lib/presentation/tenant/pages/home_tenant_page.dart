@@ -48,31 +48,18 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                CircularIcon(
-                  onPressed: () {},
-                  iconAsset: Assets.menu,
-                  iconSize: 16.sp,
+                Text(
+                  'Juillet 2025',
+                  style:
+                      TextStyle(
+                        fontSize: 20.r,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ).sourceSansProBold,
                 ),
-                Row(
-                  children: [
-                    Text(
-                      'Juillet 2025',
-                      style:
-                          TextStyle(
-                            fontSize: 20.r,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ).sourceSansProBold,
-                    ),
-                    Icon(
-                      Icons.arrow_drop_down,
-                      color: Colors.white,
-                      size: 24.r,
-                    ),
-                  ],
-                ),
+                Icon(Icons.arrow_drop_down, color: Colors.white, size: 24.r),
+                Spacer(),
                 CircularIcon(
                   iconAsset: Assets.user,
                   onPressed: () {
@@ -81,7 +68,8 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
                 ),
               ],
             ),
-            CustomSpacer(),
+
+            CustomSpacer(space: 2),
 
             _buildRentInfo(),
             CustomSpacer(),
@@ -275,6 +263,7 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
             onPressed: () {
               context.pushNamed(ContactAgencyPage.routeName);
             },
+            assetPath: Assets.phone,
             buttonVariant: ButtonVariant.primary,
           ),
         ],

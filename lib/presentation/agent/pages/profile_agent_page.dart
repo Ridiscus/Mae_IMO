@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:maelys_imo/core/constants/app_colors.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
 
 class ProfileAgentPage extends StatefulWidget {
@@ -38,7 +39,7 @@ class _ProfileAgentPageState extends State<ProfileAgentPage> {
         bottom: 0.sp,
       ),
       width: double.infinity,
-      color: Color(0xFF0A2342),
+      color: AppColors.primary,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -60,7 +61,7 @@ class _ProfileAgentPageState extends State<ProfileAgentPage> {
   Widget _buildProfileContent() {
     return Container(
       width: double.infinity,
-      color: Color(0xFF0A2342),
+      color: AppColors.primary,
       child: Column(
         children: [
           _buildProfileInfo(),
@@ -75,7 +76,7 @@ class _ProfileAgentPageState extends State<ProfileAgentPage> {
       width: double.infinity,
       padding: EdgeInsets.symmetric(vertical: 24.sp, horizontal: 16.sp),
       decoration: BoxDecoration(
-        color: Color(0xFF0A2342),
+        color: AppColors.primary,
       ),
       child: Column(
         children: [
