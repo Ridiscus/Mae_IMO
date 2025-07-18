@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:maelys_imo/core/constants/app_colors.dart';
+import 'package:maelys_imo/core/constants/assets.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
 import 'package:maelys_imo/presentation/agent/pages/tenant_detail_page.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
@@ -42,83 +45,98 @@ class _TenantListPageState extends State<TenantListPage> {
   // Header est désormais géré par FormWithHeaderLayout
 
   Widget _buildTenantList() {
-    return ListView.builder(
-      padding: EdgeInsets.symmetric(vertical: 16.sp),
+    return ListView.separated(
+      padding: EdgeInsets.symmetric(vertical: 0.sp),
       itemCount: 5, // Demo count, replace with actual data
       itemBuilder: (context, index) {
         return _buildTenantCard(index);
+      },
+      separatorBuilder: (context, index) {
+        return CustomSpacer();
       },
     );
   }
 
   Widget _buildTenantCard(int index) {
-    return InkWell(
+    return GestureDetector(
       onTap: () {
         // Navigate to tenant detail page with dummy ID
-        context.goNamed(TenantDetailPage.routeName, pathParameters: {'id': '${index + 1}'});
+        context.pushNamed(
+          TenantDetailPage.routeName,
+          pathParameters: {'id': '${index + 1}'},
+        );
       },
       child: Container(
-        margin: EdgeInsets.only(bottom: 16.sp),
+        padding: EdgeInsets.all(16.sp),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16.r),
+          color: Color.fromRGBO(2, 36, 91, 0.06),
+          borderRadius: BorderRadius.circular(20.r),
+          border: Border.all(color: Color.fromRGBO(2, 36, 91, 0.25)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 4,
-              offset: Offset(0, 2),
+              color: Colors.black.withValues(alpha: 0.02),
+              blurRadius: 2,
+              offset: Offset(0, 1),
             ),
           ],
         ),
         child: Row(
           children: [
             Container(
-              width: 80.w,
-              height: 80.h,
-              padding: EdgeInsets.all(10.sp),
+              width: 90.r,
+              height: 90.r,
+              padding: EdgeInsets.all(8.sp),
               decoration: BoxDecoration(
-                color: Colors.grey[100],
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(16.r),
-                  bottomLeft: Radius.circular(16.r),
-                ),
+                color: Colors.white,
+                shape: BoxShape.rectangle,
+
+                borderRadius: BorderRadius.circular(20.r),
               ),
               child: Center(
-                child: Icon(Icons.person, size: 36.sp, color: Colors.black45),
+                child: SvgPicture.asset(
+                  Assets.user,
+                  width: 40.r,
+                  height: 40.r,
+                  colorFilter: ColorFilter.mode(
+                    AppColors.black,
+                    BlendMode.srcIn,
+                  ),
+                ),
               ),
             ),
+            CustomSpacer(isVertical: false),
             Expanded(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.sp, vertical: 12.sp),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Nom du locataire',
-                      style: TextStyle(
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black87,
-                      ).sourceSansProSemiBold,
-                    ),
-                    SizedBox(height: 6.sp),
-                    Text(
-                      'email@locataire.com',
-                      style: TextStyle(
-                        fontSize: 15.sp,
-                        color: Colors.grey[500],
-                      ).sourceSansProRegular,
-                    ),
-                    SizedBox(height: 4.sp),
-                    Text(
-                      '+225 0807676565',
-                      style: TextStyle(
-                        fontSize: 15.sp,
-                        color: Colors.grey[500],
-                      ).sourceSansProRegular,
-                    ),
-                  ],
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Nom du locataire',
+                    style:
+                        TextStyle(
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black,
+                        ).sourceSansProSemiBold,
+                  ),
+                  CustomSpacer(space: .5),
+                  Text(
+                    'email@locataire.com',
+                    style:
+                        TextStyle(
+                          fontSize: 16.sp,
+                          color: Colors.grey,
+                        ).sourceSansProRegular,
+                  ),
+                  CustomSpacer(space: .2),
+                  Text(
+                    '+225 0807676565',
+                    style:
+                        TextStyle(
+                          fontSize: 16.sp,
+                          color: Colors.grey,
+                        ).sourceSansProRegular,
+                  ),
+                ],
               ),
             ),
           ],

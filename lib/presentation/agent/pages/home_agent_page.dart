@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:maelys_imo/core/constants/app_colors.dart';
+import 'package:maelys_imo/core/constants/assets.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
 import 'package:maelys_imo/presentation/agent/pages/tenant_list_page.dart';
 import 'package:maelys_imo/presentation/agent/pages/profile_agent_page.dart';
+import 'package:maelys_imo/presentation/tenant/pages/profile_tenant_page.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
- 
+
 class HomeAgentPage extends StatefulWidget {
   static const routeName = 'homeAgent';
   static const routePath = '/home-agent';
@@ -41,65 +43,60 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
         selectedIndex: 0, // Home is selected
       ),
       body: Column(
-        children: [
-          _buildHeader(),
-          Expanded(
-            child: _buildContent(),
-          ),
-        ],
+        children: [_buildHeader(), Expanded(child: _buildContent())],
       ),
     );
   }
 
   Widget _buildHeader() {
     return Container(
-      padding: EdgeInsets.only(
-        top: MediaQuery.of(context).padding.top + 16.sp,
-        left: 16.sp,
-        right: 16.sp,
-        bottom: 16.sp,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: 16.sp),
       width: double.infinity,
-      color: AppColors.primary,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          IconButton(
-            onPressed: () {
-              _scaffoldKey.currentState?.openDrawer();
-            },
-            icon: Icon(
-              Icons.menu,
-              color: Colors.white,
-              size: 30.sp,
-            ),
-            padding: EdgeInsets.zero,
-            constraints: BoxConstraints(),
-          ),
-          Text(
-            'Statistiques',
-            style: TextStyle(
-              fontSize: 20.sp,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ).sourceSansProBold,
-          ),
-          InkWell(
-            onTap: () {
-              // Navigate to agent profile page
-              context.goNamed(ProfileAgentPage.routeName);
-            },
-            child: CircleAvatar(
-              radius: 16.r,
-              backgroundColor: Colors.white,
-              child: Icon(
-                Icons.person,
-                color: AppColors.primary,
-                size: 20.sp,
+      decoration: BoxDecoration(
+        color: AppColors.primary,
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(20.r),
+          bottomRight: Radius.circular(20.r),
+        ),
+      ),
+      child: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: double.infinity,
+              color: AppColors.primary,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  CircularIcon(
+                    iconAsset: Assets.menu,
+                    iconSize: 16.sp,
+                    onPressed: () {
+                      _scaffoldKey.currentState?.openDrawer();
+                    },
+                  ),
+                  Text(
+                    'Statistiques',
+                    style:
+                        TextStyle(
+                          fontSize: 32.sp,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ).sourceSansProBold,
+                  ),
+                  CircularIcon(
+                    iconAsset: Assets.user,
+
+                    onPressed: () {
+                      context.pushNamed(ProfileTenantPage.routeName);
+                    },
+                  ),
+                ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -107,7 +104,7 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
   Widget _buildContent() {
     return Container(
       width: double.infinity,
-      color: Color(0xFFF5F5F5),
+      color: AppColors.scaffold,
       child: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(16.sp),
@@ -115,11 +112,11 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildTotalRentCard(),
-              SizedBox(height: 24.sp),
+              CustomSpacer(),
               _buildTenantsUpToDateCard(),
-              SizedBox(height: 16.sp),
+              CustomSpacer(),
               _buildTenantsInArrearsCard(),
-              SizedBox(height: 16.sp),
+              CustomSpacer(),
               _buildPendingPaymentsCard(),
             ],
           ),
@@ -141,31 +138,34 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
         children: [
           Text(
             'Montant total des loyers réçu',
-            style: TextStyle(
-              fontSize: 18.sp,
-              color: Colors.white,
-            ).sourceSansProRegular,
+            style:
+                TextStyle(
+                  fontSize: 18.sp,
+                  color: Colors.white,
+                ).sourceSansProRegular,
           ),
-          SizedBox(height: 16.sp),
+          CustomSpacer(),
           Row(
             crossAxisAlignment: CrossAxisAlignment.baseline,
             textBaseline: TextBaseline.alphabetic,
             children: [
               Text(
                 '500 000',
-                style: TextStyle(
-                  fontSize: 40.sp,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ).sourceSansProBold,
+                style:
+                    TextStyle(
+                      fontSize: 40.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ).sourceSansProBold,
               ),
               SizedBox(width: 8.sp),
               Text(
                 'FCFA',
-                style: TextStyle(
-                  fontSize: 20.sp,
-                  color: Colors.white,
-                ).sourceSansProRegular,
+                style:
+                    TextStyle(
+                      fontSize: 20.sp,
+                      color: Colors.white,
+                    ).sourceSansProRegular,
               ),
             ],
           ),
@@ -180,11 +180,11 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
       value: '20',
       iconData: Icons.calendar_today,
       iconBackgroundColor: AppColors.primary,
-      arrowColor: Colors.green,
-      valueColor: Colors.green,
+      arrowColor: AppColors.success,
+      valueColor: AppColors.success,
       onTap: () {
         // Navigate to tenants up to date list
-        context.goNamed(
+        context.pushNamed(
           TenantListPage.routeName,
           pathParameters: {'type': 'up-to-date'},
         );
@@ -198,11 +198,11 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
       value: '20',
       iconData: Icons.warning_amber_rounded,
       iconBackgroundColor: AppColors.primary,
-      arrowColor: Colors.red,
-      valueColor: Colors.red,
+      arrowColor: AppColors.redColor,
+      valueColor: AppColors.redColor,
       onTap: () {
         // Navigate to tenants in arrears list
-        context.goNamed(
+        context.pushNamed(
           TenantListPage.routeName,
           pathParameters: {'type': 'late'},
         );
@@ -216,11 +216,11 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
       value: '20',
       iconData: Icons.watch_later_outlined,
       iconBackgroundColor: AppColors.primary,
-      arrowColor: Colors.orange,
-      valueColor: Colors.orange,
+      arrowColor: AppColors.orange,
+      valueColor: AppColors.orange,
       onTap: () {
         // Navigate to pending payments list
-        context.goNamed(
+        context.pushNamed(
           TenantListPage.routeName,
           pathParameters: {'type': 'pending'},
         );
@@ -237,72 +237,80 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
     required Color valueColor,
     required VoidCallback onTap,
   }) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.symmetric(vertical: 16.sp, horizontal: 16.sp),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: Colors.grey.withOpacity(0.2)),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 64.r,
-            height: 64.r,
-            decoration: BoxDecoration(
-              color: iconBackgroundColor,
-              borderRadius: BorderRadius.circular(8.r),
-            ),
-            child: Center(
-              child: Icon(
-                iconData,
-                color: Colors.white,
-                size: 30.sp,
-              ),
-            ),
-          ),
-          SizedBox(width: 16.sp),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16.r),
+          border: Border.all(color: Colors.grey.withValues(alpha: 0.2)),
+        ),
+        child: Row(
+          children: [
+            Column(
               children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    color: Colors.black87,
-                  ).sourceSansProRegular,
-                ),
-                SizedBox(height: 4.sp),
-                Text(
-                  value,
-                  style: TextStyle(
-                    fontSize: 30.sp,
-                    fontWeight: FontWeight.bold,
-                    color: valueColor,
-                  ).sourceSansProBold,
+                Container(
+                  width: 64.r,
+                  decoration: BoxDecoration(
+                    color: iconBackgroundColor,
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
+                  child: Icon(iconData, color: Colors.white, size: 30.sp),
                 ),
               ],
             ),
-          ),
-          InkWell(
-            onTap: onTap,
-            child: Container(
-              width: 40.r,
-              height: 40.r,
-              decoration: BoxDecoration(
-                color: arrowColor,
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.arrow_forward,
-                color: Colors.white,
-                size: 24.sp,
+            CustomSpacer(),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.all(16.sp),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          style:
+                              TextStyle(
+                                fontSize: 16.sp,
+                                color: Colors.black87,
+                              ).sourceSansProRegular,
+                        ),
+                        SizedBox(height: 4.sp),
+                        Text(
+                          value,
+                          style:
+                              TextStyle(
+                                fontSize: 30.sp,
+                                fontWeight: FontWeight.bold,
+                                color: valueColor,
+                              ).sourceSansProBold,
+                        ),
+                      ],
+                    ),
+
+                    Container(
+                      width: 40.r,
+                      height: 40.r,
+                      decoration: BoxDecoration(
+                        color: arrowColor,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.adaptive.arrow_forward,
+                        color: Colors.white,
+                        size: 24.sp,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

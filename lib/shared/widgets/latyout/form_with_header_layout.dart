@@ -12,6 +12,8 @@ class FormWithHeaderLayout extends StatelessWidget {
   /// The content to display in the form section.
   final Widget content;
 
+  final Color? contentColor;
+
   /// Optional action to execute when the back button is pressed.
   /// If null, it will use the default Navigator.pop behavior.
   final VoidCallback? onBackPressed;
@@ -21,6 +23,7 @@ class FormWithHeaderLayout extends StatelessWidget {
     super.key,
     required this.headerTitle,
     required this.content,
+    this.contentColor,
     this.onBackPressed,
   });
 
@@ -74,7 +77,8 @@ class FormWithHeaderLayout extends StatelessWidget {
       width: double.infinity,
       margin: EdgeInsets.only(top: 16.sp),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: contentColor??  Colors.white,
+        
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(30.sp),
           topRight: Radius.circular(30.sp),

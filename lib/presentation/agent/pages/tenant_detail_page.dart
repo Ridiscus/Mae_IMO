@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:maelys_imo/core/constants/app_colors.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
 
@@ -20,6 +21,7 @@ class _TenantDetailPageState extends State<TenantDetailPage> {
   Widget build(BuildContext context) {
     return FormWithHeaderLayout(
       headerTitle: 'Détails du locataire',
+      contentColor: AppColors.scaffold,
       content: _buildDetailContent(),
     );
   }
@@ -32,11 +34,10 @@ class _TenantDetailPageState extends State<TenantDetailPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildTenantInfoCard(),
-          CustomSpacer(space: 1.5),
+          CustomSpacer(),
           _buildPropertyInfoCard(),
-          CustomSpacer(space: 1.5),
+          CustomSpacer(space: 3),
           _buildCollectRentButton(),
-          SizedBox(height: 24.sp),
         ],
       ),
     );
@@ -74,6 +75,7 @@ class _TenantDetailPageState extends State<TenantDetailPage> {
             Icons.money_outlined,
             'Montant dû : 200 000 FCFA',
             textColor: Colors.red[800],
+            fontWeight: FontWeight.bold,
           ),
         ],
       ),
@@ -81,20 +83,8 @@ class _TenantDetailPageState extends State<TenantDetailPage> {
   }
 
   Widget _buildInfoCard({required String title, required Widget child}) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
-      padding: EdgeInsets.all(24.sp),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 4,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -107,17 +97,36 @@ class _TenantDetailPageState extends State<TenantDetailPage> {
                   color: Colors.black,
                 ).sourceSansProBold,
           ),
-          SizedBox(height: 16.sp),
-          child,
+          CustomSpacer(space: .5),
+          Container(
+            padding: EdgeInsets.all(16.sp),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16.r),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 4,
+                  offset: Offset(0, 2),
+                ),
+              ],
+            ),
+            child: child,
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildInfoRow(IconData icon, String text, {Color? textColor}) {
+  Widget _buildInfoRow(
+    IconData icon,
+    String text, {
+    Color? textColor,
+    FontWeight? fontWeight,
+  }) {
     return Row(
       children: [
-        Icon(icon, size: 24.sp, color: Colors.black87),
+        Icon(icon, size: 24.sp, color: textColor ?? Colors.black87),
         SizedBox(width: 16.sp),
         Text(
           text,
@@ -125,6 +134,7 @@ class _TenantDetailPageState extends State<TenantDetailPage> {
               TextStyle(
                 fontSize: 16.sp,
                 color: textColor ?? Colors.black87,
+                fontWeight: fontWeight ?? FontWeight.normal,
               ).sourceSansProRegular,
         ),
       ],
@@ -132,20 +142,17 @@ class _TenantDetailPageState extends State<TenantDetailPage> {
   }
 
   Widget _buildCollectRentButton() {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 24.sp, horizontal: 16.sp),
-      child: CustomButton(
-        text: 'Encaisser le loyer',
-        onPressed: () {},
-        showArrow: true,
-        buttonVariant: ButtonVariant.red,
-        textStyle:
-            TextStyle(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ).sourceSansProBold,
-      ),
+    return CustomButton(
+      text: 'Encaisser le loyer',
+      onPressed: () {},
+      showArrow: true,
+      buttonVariant: ButtonVariant.red,
+      textStyle:
+          TextStyle(
+            fontSize: 16.sp,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ).sourceSansProBold,
     );
   }
 }

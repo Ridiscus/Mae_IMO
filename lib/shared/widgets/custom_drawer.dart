@@ -14,7 +14,7 @@ class CustomDrawer extends StatelessWidget {
   final int selectedIndex;
 
   const CustomDrawer({
-    Key? key,
+    super.key,
     required this.name,
     required this.email,
     this.profileImage,
@@ -26,7 +26,7 @@ class CustomDrawer extends StatelessWidget {
     this.onLogoutTap,
     this.onCloseTap,
     this.selectedIndex = 0,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +43,7 @@ class CustomDrawer extends StatelessWidget {
         child: Column(
           children: [
             _buildProfileSection(),
-            SizedBox(height: 32.sp),
+            CustomSpacer(space: 3),
             _buildMenuItems(),
           ],
         ),
@@ -64,10 +64,7 @@ class CustomDrawer extends StatelessWidget {
                 height: 72.r,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(
-                    color: Colors.orange,
-                    width: 2.r,
-                  ),
+                  border: Border.all(color: Colors.orange, width: 2.r),
                 ),
                 child: Center(
                   child: Container(
@@ -77,24 +74,24 @@ class CustomDrawer extends StatelessWidget {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       image:
-                      profileImage != null
-                          ? DecorationImage(
-                        image: NetworkImage(profileImage!),
-                        fit: BoxFit.cover,
-                      )
-                          : null,
+                          profileImage != null
+                              ? DecorationImage(
+                                image: NetworkImage(profileImage!),
+                                fit: BoxFit.cover,
+                              )
+                              : null,
                     ),
                     child:
-                    profileImage == null
-                        ? CircleAvatar(
-                      backgroundColor: AppColors.primary,
-                      child: Icon(
-                        Icons.person,
-                        size: 36.sp,
-                        color: Colors.white,
-                      ),
-                    )
-                        : null,
+                        profileImage == null
+                            ? CircleAvatar(
+                              backgroundColor: AppColors.primary,
+                              child: Icon(
+                                Icons.person,
+                                size: 36.sp,
+                                color: Colors.white,
+                              ),
+                            )
+                            : null,
                   ),
                 ),
               ),
