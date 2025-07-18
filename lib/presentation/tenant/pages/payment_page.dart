@@ -71,8 +71,9 @@ class _PaymentPageState extends State<PaymentPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              
               _buildSummarySection(),
-              CustomSpacer(),
+              CustomSpacer(space: 2,),
               _buildDatePicker(),
               CustomSpacer(),
               _buildPaymentMethodPicker(),
@@ -143,36 +144,15 @@ class _PaymentPageState extends State<PaymentPage> {
               ).sourceSansProSemiBold,
         ),
         SizedBox(height: 12.r),
-        GestureDetector(
-          onTap: () {
-            // Show date picker
+        CustomDatePickerFactory.createDatePicker(
+          displayText: selectedDate,
+          onDateSelected: (DateTime date) {
+            setState(() {
+              // Format the date as needed
+              selectedDate = '${date.month.toString().padLeft(2, '0')}/${date.year}';
+            });
           },
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 16.r, vertical: 16.r),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(8.r),
-              border: Border.all(color: Colors.grey[300]!),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  selectedDate,
-                  style:
-                      TextStyle(
-                        fontSize: 16.r,
-                        color: Colors.grey[600],
-                      ).sourceSansProRegular,
-                ),
-                Icon(
-                  Icons.keyboard_arrow_down,
-                  color: Colors.grey[600],
-                  size: 24.r,
-                ),
-              ],
-            ),
-          ),
+          hintText: 'Sélectionnez une période',
         ),
       ],
     );
@@ -193,57 +173,20 @@ class _PaymentPageState extends State<PaymentPage> {
         ),
 
         SizedBox(height: 8.r),
-       // CustomInputTextFactory.createTextInput(
-        //  controller: TextEditingController(),
-        //  hintText: 'Entrez votre adresse email de connexion',
-        //  validator: (value) {
-        //    return null;
-        //  },
-       // ),
+  
         
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 16.r, vertical: 0),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(8.r),
-            border: Border.all(color: Colors.grey[300]!),
-          ),
-          child: DropdownButtonHideUnderline(
-            child: DropdownButton<String>(
-              isExpanded: true,
-              value: selectedPaymentMethod,
-              onChanged: (String? newValue) {
-                if (newValue != null) {
-                  setState(() {
-                    selectedPaymentMethod = newValue;
-                  });
-                }
-              },
-              items:
-                  <String>[
-                    'Option 1',
-                    'Option 2',
-                    'Option 3',
-                  ].map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(
-                        value,
-                        style:
-                            TextStyle(
-                              fontSize: 16.r,
-                              color: Colors.grey[600],
-                            ).sourceSansProRegular,
-                      ),
-                    );
-                  }).toList(),
-              icon: Icon(
-                Icons.keyboard_arrow_down,
-                color: Colors.grey[600],
-                size: 24.r,
-              ),
-            ),
-          ),
+        CustomDropdownFactory.createDropdown<String>(
+          value: selectedPaymentMethod,
+          items: <String>['Option 1', 'Option 2', 'Option 3'],
+          onChanged: (String? newValue) {
+            if (newValue != null) {
+              setState(() {
+                selectedPaymentMethod = newValue;
+              });
+            }
+          },
+          itemLabelBuilder: (String value) => value,
+          hintText: 'Sélectionnez une option',
         ),
       ],
     );

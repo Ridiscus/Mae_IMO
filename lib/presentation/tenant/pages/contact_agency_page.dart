@@ -56,27 +56,30 @@ class _ContactAgencyPageState extends State<ContactAgencyPage> {
       children: [
         Text(
           'Maelys Immobilier',
-          style: TextStyle(
-            fontSize: 20.sp,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ).sourceSansProBold,
+          style:
+              TextStyle(
+                fontSize: 20.sp,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ).sourceSansProBold,
         ),
         SizedBox(height: 8.r),
         Text(
           'contact@maelys-immobilier.fr',
-          style: TextStyle(
-            fontSize: 16.sp,
-            color: Color(0xFF0A2342),
-          ).sourceSansProRegular,
+          style:
+              TextStyle(
+                fontSize: 16.sp,
+                color: Color(0xFF0A2342),
+              ).sourceSansProRegular,
         ),
         SizedBox(height: 4.r),
         Text(
           '+33 6 12 34 56 78',
-          style: TextStyle(
-            fontSize: 16.sp,
-            color: Colors.black54,
-          ).sourceSansProRegular,
+          style:
+              TextStyle(
+                fontSize: 16.sp,
+                color: Colors.black54,
+              ).sourceSansProRegular,
         ),
       ],
     );
@@ -88,35 +91,20 @@ class _ContactAgencyPageState extends State<ContactAgencyPage> {
       children: [
         Text(
           'Sujet',
-          style: TextStyle(
-            fontSize: 16.sp,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ).sourceSansProBold,
+          style:
+              TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ).sourceSansProBold,
         ),
         SizedBox(height: 8.r),
-        Container(
-          height: 56.r,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8.r),
-            color: Color(0xFFF5F5F5),
-          ),
-          child: TextField(
-            controller: _subjectController,
-            decoration: InputDecoration(
-              hintText: 'Indiquez le sujet de votre message',
-              hintStyle: TextStyle(
-                color: Colors.grey,
-                fontSize: 14.sp,
-              ).sourceSansProRegular,
-              contentPadding: EdgeInsets.symmetric(horizontal: 16.r),
-              border: InputBorder.none,
-            ),
-            style: TextStyle(
-              fontSize: 14.sp,
-              color: Colors.black,
-            ).sourceSansProRegular,
-          ),
+        CustomInputTextFactory.createTextInput(
+          controller: _subjectController,
+          hintText: 'Indiquez le sujet de votre message',
+          validator: (value) {
+            return null;
+          },
         ),
       ],
     );
@@ -128,37 +116,21 @@ class _ContactAgencyPageState extends State<ContactAgencyPage> {
       children: [
         Text(
           'Message',
-          style: TextStyle(
-            fontSize: 16.sp,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ).sourceSansProBold,
+          style:
+              TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ).sourceSansProBold,
         ),
         SizedBox(height: 8.r),
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8.r),
-            color: Color(0xFFF5F5F5),
-          ),
-          child: TextField(
-            controller: _messageController,
-            maxLines: 5,
-            decoration: InputDecoration(
-              hintText: 'Entrez votre message',
-              hintStyle: TextStyle(
-                color: Colors.grey,
-                fontSize: 14.sp,
-              ).sourceSansProRegular,
-              contentPadding: EdgeInsets.symmetric(horizontal: 16.r, vertical: 12.r),
-              border: InputBorder.none,
-            ),
-            style: TextStyle(
-              fontSize: 14.sp,
-              color: Colors.black,
-            ).sourceSansProRegular,
-          ),
+        CustomInputTextFactory.createTextAreaInput(
+          controller: _messageController,
+          hintText: 'Entrez votre message',
+          validator: (value) {
+            return null;
+          },
         ),
-
       ],
     );
   }
@@ -172,11 +144,12 @@ class _ContactAgencyPageState extends State<ContactAgencyPage> {
         // Could show a success dialog and then pop back
       },
       buttonVariant: ButtonVariant.primary,
-      textStyle: TextStyle(
-        fontSize: 18.sp,
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
-      ).sourceSansProBold,
+      textStyle:
+          TextStyle(
+            fontSize: 18.sp,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ).sourceSansProBold,
     );
   }
 }

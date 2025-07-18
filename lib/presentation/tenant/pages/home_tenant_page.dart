@@ -272,7 +272,9 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
           CustomButton(
             text: "Contacter l'agence",
             showArrow: true,
-            onPressed: () {},
+            onPressed: () {
+              context.pushNamed(ContactAgencyPage.routeName);
+            },
             buttonVariant: ButtonVariant.primary,
           ),
         ],
