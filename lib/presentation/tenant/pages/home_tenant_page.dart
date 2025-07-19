@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -51,8 +49,11 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [_buildHeader(), Expanded(child: _buildContent())],
+      body: SafeArea(
+        top: false,
+        child: Column(
+          children: [_buildHeader(), Expanded(child: _buildContent())],
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: _buildContactButton(),
@@ -61,7 +62,7 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
 
   Widget _buildHeader() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16.sp).copyWith(bottom: Platform.isIOS ? 1.sp : 16.sp),
+      padding: EdgeInsets.symmetric(horizontal: 16.sp).copyWith(bottom: 16.sp),
       width: double.infinity,
       decoration: BoxDecoration(
         color: AppColors.primary,
@@ -95,12 +96,10 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
                 ),
               ],
             ),
-
             CustomSpacer(),
             _buildRentInfo(),
             CustomSpacer(),
             _buildPayRentButton(),
-
           ],
         ),
       ),
