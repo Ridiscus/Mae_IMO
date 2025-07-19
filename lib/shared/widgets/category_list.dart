@@ -32,22 +32,23 @@ class CategoryList extends StatelessWidget {
                 border: Border.all(
                   color: isSelected 
                       ? Colors.transparent
-                      : Colors.grey.withOpacity(0.3),
+                      : Colors.grey.withValues(alpha: 0.3),
                 ),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Icon(
                     Icons.place_outlined,
-                    size: 16.r,
+                    size: 16.sp,
                     color: isSelected ? Colors.white : Colors.grey,
                   ),
-                  SizedBox(width: 6.r),
+                  SizedBox(width: 6.w),
                   Text(
                     categories[index],
                     style: TextStyle(
-                      fontSize: 14.r,
+                      fontSize: 14.sp,
                       fontWeight: FontWeight.w500,
                       color: isSelected ? Colors.white : Colors.grey,
                     ).sourceSansProSemiBold,

@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:maelys_imo/core/constants/app_colors.dart';
+import 'package:maelys_imo/core/constants/assets.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
+import 'package:maelys_imo/presentation/portal/pages/portal_page.dart';
+import 'package:maelys_imo/shared/widgets/index.dart';
 
 class ProfileAgentPage extends StatefulWidget {
   static const routeName = 'profileAgent';
-  static const routePath = '/agent-profile';
+  static const routePath = '/profile-agent';
 
   const ProfileAgentPage({super.key});
 
@@ -20,11 +24,7 @@ class _ProfileAgentPageState extends State<ProfileAgentPage> {
       body: Column(
         children: [
           _buildHeader(),
-          Expanded(
-            child: SingleChildScrollView(
-              child: _buildProfileContent(),
-            ),
-          ),
+          Expanded(child: SingleChildScrollView(child: _buildProfileContent())),
         ],
       ),
     );
@@ -32,28 +32,24 @@ class _ProfileAgentPageState extends State<ProfileAgentPage> {
 
   Widget _buildHeader() {
     return Container(
-      padding: EdgeInsets.only(
-        top: MediaQuery.of(context).padding.top + 8.sp,
-        left: 16.sp,
-        right: 16.sp,
-        bottom: 0.sp,
-      ),
+      padding: EdgeInsets.only(left: 16.r, right: 16.r),
       width: double.infinity,
       color: AppColors.primary,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          IconButton(
-            onPressed: () => Navigator.of(context).pop(),
-            icon: Icon(
-              Icons.chevron_left,
-              color: Colors.white,
-              size: 30.sp,
+      alignment: Alignment.centerLeft,
+      child: SafeArea(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            CircularBackButton(),
+
+            CircularIcon(
+              iconAsset: Assets.logout,
+              onPressed: () {
+                context.goNamed(PortalPage.routeName);
+              },
             ),
-            padding: EdgeInsets.zero,
-            constraints: BoxConstraints(),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -62,73 +58,47 @@ class _ProfileAgentPageState extends State<ProfileAgentPage> {
     return Container(
       width: double.infinity,
       color: AppColors.primary,
-      child: Column(
-        children: [
-          _buildProfileInfo(),
-          _buildEditOptions(),
-        ],
-      ),
+      child: Column(children: [_buildProfileInfo(), _buildEditOptions()]),
     );
   }
 
   Widget _buildProfileInfo() {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(vertical: 24.sp, horizontal: 16.sp),
-      decoration: BoxDecoration(
-        color: AppColors.primary,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: 16.r),
+
+      decoration: BoxDecoration(color: AppColors.primary),
       child: Column(
         children: [
-          Container(
-            width: 120.w,
-            height: 120.h,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: Colors.orange,
-                width: 2.sp,
-              ),
-            ),
-            child: Center(
-              child: Container(
-                width: 100.w,
-                height: 100.h,
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.person,
-                  size: 60.sp,
-                  color: Colors.black54,
-                ),
-              ),
-            ),
+          CustomCircleAvatarUser(
+            backgroundColor: Colors.grey[300]!,
+            size: 120,
+            iconColor: AppColors.black,
+            iconSize: 60,
           ),
-          SizedBox(height: 16.sp),
+
+          CustomSpacer(),
           Text(
             'Nom de l\'agent',
-            style: TextStyle(
-              fontSize: 24.sp,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ).sourceSansProBold,
+            style:
+                TextStyle(
+                  fontSize: 24.r,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ).sourceSansProBold,
           ),
-          SizedBox(height: 4.sp),
+          SizedBox(height: 4.r),
           Text(
             'ID : 132Mo7E',
-            style: TextStyle(
-              fontSize: 16.sp,
-              color: Colors.grey[300],
-            ).sourceSansProRegular,
+            style:
+                TextStyle(
+                  fontSize: 16.r,
+                  color: Colors.grey[300],
+                ).sourceSansProRegular,
           ),
-          SizedBox(height: 24.sp),
-          _buildContactInfo(
-            icon: Icons.email_outlined,
-            text: 'agent@gmail.com',
-          ),
-          SizedBox(height: 16.sp),
+          SizedBox(height: 24.r),
+          _buildContactInfo(icon: Icons.email_outlined, text: 'user@gmail.com'),
+          SizedBox(height: 16.r),
           _buildContactInfo(
             icon: Icons.phone_outlined,
             text: '+225 0578687749',
@@ -142,18 +112,15 @@ class _ProfileAgentPageState extends State<ProfileAgentPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(
-          icon,
-          size: 24.sp,
-          color: Colors.grey[300],
-        ),
-        SizedBox(width: 16.sp),
+        Icon(icon, size: 24.r, color: Colors.grey[300]),
+        SizedBox(width: 16.r),
         Text(
           text,
-          style: TextStyle(
-            fontSize: 16.sp,
-            color: Colors.white,
-          ).sourceSansProRegular,
+          style:
+              TextStyle(
+                fontSize: 16.r,
+                color: Colors.white,
+              ).sourceSansProRegular,
         ),
       ],
     );
@@ -162,7 +129,8 @@ class _ProfileAgentPageState extends State<ProfileAgentPage> {
   Widget _buildEditOptions() {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(16.sp),
+      padding: EdgeInsets.all(16.r),
+      margin: EdgeInsets.only(top: 16.sp),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
@@ -195,7 +163,6 @@ class _ProfileAgentPageState extends State<ProfileAgentPage> {
               // Handle password edit
             },
           ),
-          _buildDivider(),
         ],
       ),
     );
@@ -209,30 +176,23 @@ class _ProfileAgentPageState extends State<ProfileAgentPage> {
     return InkWell(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 16.sp),
+        padding: EdgeInsets.symmetric(vertical: 16.r),
         child: Row(
           children: [
-            Icon(
-              icon,
-              size: 24.sp,
-              color: Colors.black87,
-            ),
-            SizedBox(width: 16.sp),
+            Icon(icon, size: 24.r, color: Colors.black87),
+            SizedBox(width: 16.r),
             Expanded(
               child: Text(
                 title,
-                style: TextStyle(
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black87,
-                ).sourceSansProSemiBold,
+                style:
+                    TextStyle(
+                      fontSize: 18.r,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ).sourceSansProSemiBold,
               ),
             ),
-            Icon(
-              Icons.edit,
-              size: 24.sp,
-              color: Colors.black87,
-            ),
+            Icon(Icons.edit, size: 24.r, color: Colors.black87),
           ],
         ),
       ),
@@ -240,9 +200,6 @@ class _ProfileAgentPageState extends State<ProfileAgentPage> {
   }
 
   Widget _buildDivider() {
-    return Divider(
-      color: Colors.grey[300],
-      thickness: 1,
-    );
+    return Divider(color: Colors.grey[300], thickness: 1);
   }
 }

@@ -20,7 +20,11 @@ class StarterRoutes {
     GoRoute(
       name: PortalDetailPage.routeName,
       path: PortalDetailPage.routePath,
-      builder: (context, state) => const PortalDetailPage(),
+      builder: (context, state) {
+        final id = state.pathParameters['id'];
+        final type = state.pathParameters['type'];
+        return PortalDetailPage(id: id, type: type);
+      },
     ),
     GoRoute(
       name: VisitRequestPage.routeName,

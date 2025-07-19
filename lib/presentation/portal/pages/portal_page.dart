@@ -64,7 +64,10 @@ class _PortalPageState extends State<PortalPage> {
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion(
-      value: SystemUiOverlayStyle(statusBarColor: AppColors.primary),
+      value: SystemUiOverlayStyle(
+        statusBarColor: AppColors.orange,
+        statusBarIconBrightness: Brightness.light,
+      ),
       child: Scaffold(
         backgroundColor: Color(0xFFF5F5F5),
         body: SafeArea(
@@ -217,7 +220,10 @@ class _PortalPageState extends State<PortalPage> {
   void _onPropertyTap(PropertyModel property) {
     // Action à effectuer quand une propriété est cliquée
     debugPrint('Property tapped: ${property.title}');
-    context.pushNamed(PortalDetailPage.routeName);
+    context.pushNamed(
+      PortalDetailPage.routeName,
+      pathParameters: {'id': "1", 'type': 'prospect'},
+    );
     // Naviguer vers la page de détails ou autre action
   }
 }

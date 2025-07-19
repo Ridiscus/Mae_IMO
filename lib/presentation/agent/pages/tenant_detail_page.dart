@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:maelys_imo/core/constants/app_colors.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
+import 'package:maelys_imo/shared/widgets/modals/index.dart';
 
 class TenantDetailPage extends StatefulWidget {
   static const routeName = 'tenantDetail';
@@ -144,7 +145,18 @@ class _TenantDetailPageState extends State<TenantDetailPage> {
   Widget _buildCollectRentButton() {
     return CustomButton(
       text: 'Encaisser le loyer',
-      onPressed: () {},
+      onPressed: () {
+        showModalBottomSheet(
+          showDragHandle: true,
+          backgroundColor: Colors.white,
+          isScrollControlled: true,
+          context: context,
+          
+          builder:
+              (context) =>
+                  ModalCollectingTheRent(onValidated: () {}, onCancel: () {}),
+        );
+      },
       showArrow: true,
       buttonVariant: ButtonVariant.red,
       textStyle:

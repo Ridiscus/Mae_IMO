@@ -35,15 +35,30 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
         },
         onProfileTap: () {
           _scaffoldKey.currentState?.closeDrawer();
-          context.goNamed(ProfileAgentPage.routeName);
+          context.pushNamed(ProfileAgentPage.routeName);
         },
         onCloseTap: () {
           _scaffoldKey.currentState?.closeDrawer();
         },
         selectedIndex: 0, // Home is selected
       ),
-      body: Column(
-        children: [_buildHeader(), Expanded(child: _buildContent())],
+      body: Stack(
+        children: [
+          Positioned(child: _buildHeader()),
+
+          Positioned.fill(
+            top: MediaQuery.of(context).size.height * .22,
+
+            child: _buildContent(),
+          ),
+
+          Positioned(
+            left: 16.sp,
+            right: 16.sp,
+            top: MediaQuery.of(context).size.height * .14,
+            child: _buildTotalRentCard(),
+          ),
+        ],
       ),
     );
   }
@@ -89,7 +104,7 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
                     iconAsset: Assets.user,
 
                     onPressed: () {
-                      context.pushNamed(ProfileTenantPage.routeName);
+                      context.pushNamed(ProfileAgentPage.routeName);
                     },
                   ),
                 ],
@@ -104,15 +119,21 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
   Widget _buildContent() {
     return Container(
       width: double.infinity,
-      color: AppColors.scaffold,
+      height: double.infinity,
+      padding: EdgeInsets.only(top: (150 / 1.8).h),
+      decoration: BoxDecoration(
+        color: AppColors.scaffold,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20.r),
+          topRight: Radius.circular(20.r),
+        ),
+      ),
       child: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(16.sp),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildTotalRentCard(),
-              CustomSpacer(),
               _buildTenantsUpToDateCard(),
               CustomSpacer(),
               _buildTenantsInArrearsCard(),
@@ -129,9 +150,15 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(24.sp),
+      height: 150.h,
       decoration: BoxDecoration(
         color: AppColors.primary,
         borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(
+          color: AppColors.scaffold.withValues(alpha: .12),
+          width: 1.sp,
+          style: BorderStyle.solid,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -241,69 +268,60 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
       onTap: onTap,
       child: Container(
         width: double.infinity,
+        constraints: BoxConstraints(maxHeight: 120.h),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(16.r),
-          border: Border.all(color: Colors.grey.withValues(alpha: 0.2)),
+          borderRadius: BorderRadius.circular(20.r),
+          border: Border.all(color: arrowColor.withValues(alpha: 0.3)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 10,
+              offset: Offset(0, 2),
+            ),
+          ],
         ),
         child: Row(
           children: [
-            Column(
-              children: [
-                Container(
-                  width: 64.r,
-                  decoration: BoxDecoration(
-                    color: iconBackgroundColor,
-                    borderRadius: BorderRadius.circular(8.r),
-                  ),
-                  child: Icon(iconData, color: Colors.white, size: 30.sp),
+            Container(
+              width: 60.w,
+              decoration: BoxDecoration(
+                color: arrowColor.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20.r),
+                  bottomLeft: Radius.circular(20.r),
                 ),
-              ],
+              ),
+              child: Center(
+                child: Icon(iconData, color: arrowColor, size: 30.sp),
+              ),
             ),
-            CustomSpacer(),
             Expanded(
               child: Padding(
-                padding: EdgeInsets.all(16.sp),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
+                padding: EdgeInsets.symmetric(horizontal: 15.sp),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          title,
-                          style:
-                              TextStyle(
-                                fontSize: 16.sp,
-                                color: Colors.black87,
-                              ).sourceSansProRegular,
-                        ),
-                        SizedBox(height: 4.sp),
-                        Text(
-                          value,
-                          style:
-                              TextStyle(
-                                fontSize: 30.sp,
-                                fontWeight: FontWeight.bold,
-                                color: valueColor,
-                              ).sourceSansProBold,
-                        ),
-                      ],
+                    Text(
+                      title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style:
+                          TextStyle(
+                            fontSize: 20.sp,
+                            color: AppColors.black,
+                          ).sourceSansProSemiBold,
                     ),
 
-                    Container(
-                      width: 40.r,
-                      height: 40.r,
-                      decoration: BoxDecoration(
-                        color: arrowColor,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Icons.adaptive.arrow_forward,
-                        color: Colors.white,
-                        size: 24.sp,
-                      ),
+                    Text(
+                      value,
+                      style:
+                          TextStyle(
+                            fontSize: 38.sp,
+                            fontWeight: FontWeight.bold,
+                            color: valueColor,
+                          ).sourceSansProBold,
                     ),
                   ],
                 ),

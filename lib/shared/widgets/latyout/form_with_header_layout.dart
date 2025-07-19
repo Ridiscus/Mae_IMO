@@ -33,11 +33,9 @@ class FormWithHeaderLayout extends StatelessWidget {
       body: Stack(
         children: [
           _buildHeader(context),
-
           Positioned.fill(
             top: MediaQuery.of(context).size.height * .22,
-
-            child: _buildFormContainer(),
+            child: _buildFormContainer(context),
           ),
         ],
       ),
@@ -72,13 +70,12 @@ class FormWithHeaderLayout extends StatelessWidget {
   }
 
   /// Builds the white rounded container for the form.
-  Widget _buildFormContainer() {
+  Widget _buildFormContainer(BuildContext context) {
     return Container(
       width: double.infinity,
       margin: EdgeInsets.only(top: 16.sp),
       decoration: BoxDecoration(
-        color: contentColor??  Colors.white,
-        
+        color: contentColor ?? Colors.white,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(30.sp),
           topRight: Radius.circular(30.sp),

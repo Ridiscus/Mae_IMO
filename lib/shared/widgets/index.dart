@@ -8,6 +8,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart' show GoogleFonts;
 import 'package:maelys_imo/core/extensions/index.dart';
+import 'package:maelys_imo/presentation/agent/pages/profile_agent_page.dart';
+import 'package:maelys_imo/presentation/portal/pages/portal_page.dart' show PortalPage;
 import 'package:maelys_imo/shared/models/index.dart';
 
 import 'package:go_router/go_router.dart';
@@ -17,6 +19,7 @@ import '../../core/constants/app_colors.dart' show AppColors;
 part 'category_list.dart';
 part 'circular_icon.dart';
 part 'custom_button.dart';
+part 'custom_circle_avatar_user.dart';
 part 'custom_date_picker.dart';
 part 'custom_drawer.dart';
 part 'custom_dropdown.dart';

@@ -5,10 +5,11 @@ import 'package:hive/hive.dart';
 import 'package:maelys_imo/core/constants/app_colors.dart';
 import 'package:maelys_imo/core/constants/assets.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
-import 'package:maelys_imo/presentation/tenant/pages/payment_page.dart'; // Added import
+import 'package:maelys_imo/presentation/tenant/pages/payment_page.dart';
 import 'package:maelys_imo/presentation/tenant/pages/contact_agency_page.dart';
 import 'package:maelys_imo/presentation/tenant/pages/profile_tenant_page.dart';
-import 'package:maelys_imo/shared/widgets/index.dart'; // Added import
+import 'package:maelys_imo/shared/widgets/index.dart';
+import 'package:maelys_imo/shared/widgets/modals/index.dart';
 
 class HomeTenantPage extends StatefulWidget {
   static const routeName = 'homeTenant';
@@ -21,6 +22,23 @@ class HomeTenantPage extends StatefulWidget {
 }
 
 class _HomeTenantPageState extends State<HomeTenantPage> {
+  /// Affiche le modal avec les détails du paiement
+  void _showPaymentDetails(String month, String amount, String date, bool isPaid) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => ModalPaymentInfo(
+        month: month,
+        amount: amount,
+        date: date,
+        isPaid: isPaid,
+        reference: 'REF-${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}',
+        paymentMethod: isPaid ? 'Carte bancaire' : null,
+        recipientName: isPaid ? 'Agence Maelys Immo' : null,
+      ),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -180,72 +198,71 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
     required String date,
     required bool isPaid,
   }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(color: AppColors.borderColor),
-      ),
-      padding: EdgeInsets.all(16.r),
-      child: Row(
-        children: [
-          Container(
-            width: 48.r,
-            height: 48.r,
-            decoration: BoxDecoration(
-              color: Colors.grey[200],
-              borderRadius: BorderRadius.circular(8.r),
+    return GestureDetector(
+      onTap: () => _showPaymentDetails(month, amount, date, isPaid),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(20.r),
+          border: Border.all(color: AppColors.borderColor),
+        ),
+        padding: EdgeInsets.all(16.r),
+        child: Row(
+          children: [
+            Container(
+              width: 48.r,
+              height: 48.r,
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(8.r),
+              ),
+              child: Icon(Icons.image, color: Colors.grey[600]),
             ),
-            child: Icon(Icons.image, color: Colors.grey[600]),
-          ),
-          SizedBox(width: 16.r),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            SizedBox(width: 16.r),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Loyer du mois de $month',
+                    style: TextStyle(
+                      fontSize: 16.r,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ).sourceSansProSemiBold,
+                  ),
+                  CustomSpacer(space: .2),
+                  Text(
+                    amount,
+                    style: TextStyle(
+                      fontSize: 18.r,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ).sourceSansProBold,
+                  ),
+                ],
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'Loyer du mois de $month',
-                  style:
-                      TextStyle(
-                        fontSize: 16.r,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black87,
-                      ).sourceSansProSemiBold,
+                CustomTag(
+                  label: isPaid ? 'Payé' : 'Impayé',
+                  color: isPaid ? AppColors.success : AppColors.redColor,
                 ),
                 CustomSpacer(space: .2),
                 Text(
-                  amount,
-                  style:
-                      TextStyle(
-                        fontSize: 18.r,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ).sourceSansProBold,
+                  date,
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    color: Colors.grey[600],
+                  ).sourceSansProRegular,
                 ),
               ],
             ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              CustomTag(
-                label: isPaid ? 'Payé' : 'Impayé',
-                color: isPaid ? AppColors.success : AppColors.redColor,
-              ),
-
-              CustomSpacer(space: .2),
-              Text(
-                date,
-                style:
-                    TextStyle(
-                      fontSize: 12.sp,
-                      color: Colors.grey[600],
-                    ).sourceSansProRegular,
-              ),
-            ],
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

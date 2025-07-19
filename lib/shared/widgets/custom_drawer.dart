@@ -44,7 +44,7 @@ class CustomDrawer extends StatelessWidget {
           children: [
             _buildProfileSection(),
             CustomSpacer(space: 3),
-            _buildMenuItems(),
+            _buildMenuItems(context),
           ],
         ),
       ),
@@ -59,41 +59,10 @@ class CustomDrawer extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                width: 72.r,
-                height: 72.r,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.orange, width: 2.r),
-                ),
-                child: Center(
-                  child: Container(
-                    width: double.infinity,
-                    height: double.infinity,
-                    padding: EdgeInsets.all(4.r),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      image:
-                          profileImage != null
-                              ? DecorationImage(
-                                image: NetworkImage(profileImage!),
-                                fit: BoxFit.cover,
-                              )
-                              : null,
-                    ),
-                    child:
-                        profileImage == null
-                            ? CircleAvatar(
-                              backgroundColor: AppColors.primary,
-                              child: Icon(
-                                Icons.person,
-                                size: 36.sp,
-                                color: Colors.white,
-                              ),
-                            )
-                            : null,
-                  ),
-                ),
+              CustomCircleAvatarUser(
+                profileImage: profileImage,
+                size: 72,
+                backgroundColor: AppColors.primary,
               ),
 
               Container(
@@ -142,43 +111,46 @@ class CustomDrawer extends StatelessWidget {
     );
   }
 
-  Widget _buildMenuItems() {
+  Widget _buildMenuItems(BuildContext context) {
     final menuItems = [
       _MenuItem(
         icon: Icons.home_outlined,
-        title: 'Home',
-        onTap: onHomeTap,
+        title: 'Accueil',
+        onTap: onHomeTap ?? onCloseTap,
         isSelected: selectedIndex == 0,
       ),
-      _MenuItem(
+      /* _MenuItem(
         icon: Icons.account_balance_wallet_outlined,
         title: 'Wallet',
         onTap: onWalletTap,
         isSelected: selectedIndex == 1,
-      ),
-      _MenuItem(
+      ), */
+      /* _MenuItem(
         icon: Icons.swap_horiz_outlined,
         title: 'Transactions',
         onTap: onTransactionsTap,
         isSelected: selectedIndex == 2,
-      ),
+      ), */
       _MenuItem(
         icon: Icons.person_outline,
-        title: 'Profile',
+        title: 'Profil',
         onTap: onProfileTap,
-        isSelected: selectedIndex == 3,
+        isSelected: selectedIndex == 1,
       ),
       _MenuItem(
         icon: Icons.settings_outlined,
-        title: 'Setting',
+        title: 'Paramètres',
         onTap: onSettingsTap,
-        isSelected: selectedIndex == 4,
+        isSelected: selectedIndex == 2,
       ),
+      CustomSpacer(space: 20),
       _MenuItem(
         icon: Icons.power_settings_new_outlined,
-        title: 'Logout',
-        onTap: onLogoutTap,
-        isSelected: selectedIndex == 5,
+        title: 'Se deconnecter',
+        onTap: onLogoutTap ?? () {
+          context.goNamed(PortalPage.routeName);
+        },
+        isSelected: selectedIndex == 3,
       ),
     ];
 
@@ -186,7 +158,7 @@ class CustomDrawer extends StatelessWidget {
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       itemCount: menuItems.length,
-      separatorBuilder: (context, index) => SizedBox(height: 8.sp),
+      separatorBuilder: (context, index) => CustomSpacer(),
       itemBuilder: (context, index) => menuItems[index],
     );
   }
@@ -222,7 +194,7 @@ class _MenuItem extends StatelessWidget {
     return ListTile(
       leading: Icon(
         icon,
-        color: isSelected ? Colors.black : Colors.black54,
+        color: AppColors.black,
         size: 24.sp,
       ),
       title: Text(

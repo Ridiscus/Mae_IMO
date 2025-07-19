@@ -7,10 +7,13 @@ import 'package:maelys_imo/shared/widgets/index.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
 
 class PortalDetailPage extends StatefulWidget {
-  static const String routeName = 'portalDetail';
-  static const String routePath = '/portal-detail';
+  static const String routeName = 'portalDetail/:id/:type';
+  static const String routePath = '/portal-detail/:id/:type';
 
-  const PortalDetailPage({super.key});
+  final String? id;
+  final String? type;
+
+  const PortalDetailPage({super.key, this.id, this.type});
 
   @override
   State<PortalDetailPage> createState() => _PortalDetailPageState();
@@ -31,26 +34,6 @@ class _PortalDetailPageState extends State<PortalDetailPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildImageHeader(),
-                const CustomSpacer(),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.sp),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Maison à abobo',
-                        style:
-                            TextStyle(
-                              fontSize: 15.sp,
-                              fontWeight: FontWeight.bold,
-                            ).sourceSansProSemiBold,
-                      ),
-                      SizedBox(height: 12.r),
-                      _buildAmenities(),
-                    ],
-                  ),
-                ),
-
                 Expanded(
                   child: Padding(
                     padding: EdgeInsets.all(16.r),
@@ -69,8 +52,10 @@ class _PortalDetailPageState extends State<PortalDetailPage> {
                     ),
                   ),
                 ),
-                _buildVisitButton(),
-                SpacerPlatform()
+                if (widget.type?.toLowerCase() == 'prospect') ...[
+                  _buildVisitButton(),
+                  SpacerPlatform(),
+                ],
               ],
             ),
           ),
@@ -263,7 +248,7 @@ class _PortalDetailPageState extends State<PortalDetailPage> {
         onPressed: () {
           context.pushNamed(VisitRequestPage.routeName);
         },
-        
+
         buttonVariant: ButtonVariant.primary,
         textStyle:
             TextStyle(

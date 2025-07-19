@@ -163,7 +163,11 @@ class _LoginPageState extends State<LoginPage> {
       text: 'Se connecter',
       showArrow: true,
       onPressed: () {
-        context.goNamed(HomeAgentPage.routeName);
+        if (_usernameController.text == 'agent') {
+          context.goNamed(HomeAgentPage.routeName);
+        } else {
+          context.goNamed(HomeTenantPage.routeName);
+        }
       },
       buttonVariant: ButtonVariant.primary,
     );

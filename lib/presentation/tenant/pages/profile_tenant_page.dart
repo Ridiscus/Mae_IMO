@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:maelys_imo/core/constants/app_colors.dart';
 import 'package:maelys_imo/core/constants/assets.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
+import 'package:maelys_imo/presentation/portal/pages/portal_detail_page.dart';
 import 'package:maelys_imo/presentation/portal/pages/portal_page.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
 
@@ -49,7 +50,6 @@ class _ProfileTenantPageState extends State<ProfileTenantPage> {
               },
             ),
           ],
-
         ),
       ),
     );
@@ -71,26 +71,14 @@ class _ProfileTenantPageState extends State<ProfileTenantPage> {
       decoration: BoxDecoration(color: AppColors.primary),
       child: Column(
         children: [
-          Container(
-            width: 120.r,
-            height: 120.r,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.orange, width: 2.r),
-            ),
-            child: Center(
-              child: Container(
-                width: 100.r,
-                height: 100.r,
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(Icons.person, size: 60.r, color: Colors.black54),
-              ),
-            ),
+          CustomCircleAvatarUser(
+            backgroundColor: Colors.grey[300]!,
+            size: 120,
+            iconColor: AppColors.black,
+            iconSize: 60,
           ),
-          SizedBox(height: 16.r),
+
+          CustomSpacer(),
           Text(
             'Nom de l\'agent',
             style:
@@ -110,10 +98,7 @@ class _ProfileTenantPageState extends State<ProfileTenantPage> {
                 ).sourceSansProRegular,
           ),
           SizedBox(height: 24.r),
-          _buildContactInfo(
-            icon: Icons.email_outlined,
-            text: 'agent@gmail.com',
-          ),
+          _buildContactInfo(icon: Icons.email_outlined, text: 'user@gmail.com'),
           SizedBox(height: 16.r),
           _buildContactInfo(
             icon: Icons.phone_outlined,
@@ -157,6 +142,18 @@ class _ProfileTenantPageState extends State<ProfileTenantPage> {
       child: Column(
         children: [
           _buildEditOption(
+            icon: Icons.home,
+            title: 'Mon bien loué',
+            iconData: Icons.remove_red_eye_outlined,
+            onTap: () {
+              context.pushNamed(
+                PortalDetailPage.routeName,
+                pathParameters: {'id': '1', 'type': 'tenant'},
+              );
+            },
+          ),
+          _buildDivider(),
+          _buildEditOption(
             icon: Icons.camera_alt_outlined,
             title: 'Modifier ma photo',
             onTap: () {
@@ -179,7 +176,6 @@ class _ProfileTenantPageState extends State<ProfileTenantPage> {
               // Handle password edit
             },
           ),
-          _buildDivider(),
         ],
       ),
     );
@@ -189,6 +185,7 @@ class _ProfileTenantPageState extends State<ProfileTenantPage> {
     required IconData icon,
     required String title,
     required VoidCallback onTap,
+    IconData? iconData,
   }) {
     return InkWell(
       onTap: onTap,
@@ -209,7 +206,7 @@ class _ProfileTenantPageState extends State<ProfileTenantPage> {
                     ).sourceSansProSemiBold,
               ),
             ),
-            Icon(Icons.edit, size: 24.r, color: Colors.black87),
+             Icon(iconData ?? Icons.edit, size: 24.r, color: Colors.black87),
           ],
         ),
       ),
