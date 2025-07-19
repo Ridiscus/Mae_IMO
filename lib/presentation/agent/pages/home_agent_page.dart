@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:maelys_imo/core/constants/app_colors.dart';
 import 'package:maelys_imo/core/constants/assets.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
-import 'package:maelys_imo/presentation/agent/pages/tenant_list_page.dart';
 import 'package:maelys_imo/presentation/agent/pages/profile_agent_page.dart';
-import 'package:maelys_imo/presentation/tenant/pages/profile_tenant_page.dart';
+import 'package:maelys_imo/presentation/agent/pages/tenant_list_page.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
 
 class HomeAgentPage extends StatefulWidget {
@@ -24,41 +24,47 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      drawer: CustomDrawer(
-        name: 'Nom de l\'utilisateur',
-        email: 'utilsateur@gmail.com',
-        onHomeTap: () {
-          _scaffoldKey.currentState?.closeDrawer();
-          // Already on home page
-        },
-        onProfileTap: () {
-          _scaffoldKey.currentState?.closeDrawer();
-          context.pushNamed(ProfileAgentPage.routeName);
-        },
-        onCloseTap: () {
-          _scaffoldKey.currentState?.closeDrawer();
-        },
-        selectedIndex: 0, // Home is selected
+    return AnnotatedRegion(
+      value: SystemUiOverlayStyle(
+        statusBarColor: AppColors.primary,
+        statusBarIconBrightness: Brightness.light,
       ),
-      body: Stack(
-        children: [
-          Positioned(child: _buildHeader()),
+      child: Scaffold(
+        key: _scaffoldKey,
+        drawer: CustomDrawer(
+          name: 'Nom de l\'utilisateur',
+          email: 'utilsateur@gmail.com',
+          onHomeTap: () {
+            _scaffoldKey.currentState?.closeDrawer();
+            // Already on home page
+          },
+          onProfileTap: () {
+            _scaffoldKey.currentState?.closeDrawer();
+            context.pushNamed(ProfileAgentPage.routeName);
+          },
+          onCloseTap: () {
+            _scaffoldKey.currentState?.closeDrawer();
+          },
+          selectedIndex: 0, // Home is selected
+        ),
+        body: Stack(
+          children: [
+            Positioned(child: _buildHeader()),
 
-          Positioned.fill(
-            top: MediaQuery.of(context).size.height * .22,
+            Positioned.fill(
+              top: MediaQuery.of(context).size.height * .22,
 
-            child: _buildContent(),
-          ),
+              child: _buildContent(),
+            ),
 
-          Positioned(
-            left: 16.sp,
-            right: 16.sp,
-            top: MediaQuery.of(context).size.height * .14,
-            child: _buildTotalRentCard(),
-          ),
-        ],
+            Positioned(
+              left: 16.sp,
+              right: 16.sp,
+              top: MediaQuery.of(context).size.height * .14,
+              child: _buildTotalRentCard(),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -150,7 +156,6 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(24.sp),
-      constraints: BoxConstraints(maxHeight: 160.h),
       decoration: BoxDecoration(
         color: AppColors.primary,
         borderRadius: BorderRadius.circular(16.r),
@@ -162,6 +167,7 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Text(
             'Montant total des loyers réçu',
@@ -171,7 +177,6 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
                   color: Colors.white,
                 ).sourceSansProRegular,
           ),
-          CustomSpacer(),
           Row(
             crossAxisAlignment: CrossAxisAlignment.baseline,
             textBaseline: TextBaseline.alphabetic,
@@ -268,7 +273,7 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
       onTap: onTap,
       child: Container(
         width: double.infinity,
-        constraints: BoxConstraints(maxHeight: 120.h),
+        constraints: BoxConstraints(maxHeight: 110.h),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(20.r),
@@ -309,7 +314,7 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
                       overflow: TextOverflow.ellipsis,
                       style:
                           TextStyle(
-                            fontSize: 20.sp,
+                            fontSize: 16.sp,
                             color: AppColors.black,
                           ).sourceSansProSemiBold,
                     ),

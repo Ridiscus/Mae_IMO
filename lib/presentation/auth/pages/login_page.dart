@@ -45,20 +45,20 @@ class _LoginPageState extends State<LoginPage> {
         Text(
           'Bienvenue',
           style:
-          TextStyle(
-            fontSize: 24.r,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ).sourceSansProBold,
+              TextStyle(
+                fontSize: 24.r,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ).sourceSansProBold,
         ),
         CustomSpacer(space: .5),
         Text(
           'Entrez vos informations de connexion',
           style:
-          TextStyle(
-            fontSize: 14.r,
-            color: Colors.grey[700],
-          ).sourceSansProRegular,
+              TextStyle(
+                fontSize: 14.r,
+                color: Colors.grey[700],
+              ).sourceSansProRegular,
         ),
         CustomSpacer(space: 2),
 
@@ -85,10 +85,10 @@ class _LoginPageState extends State<LoginPage> {
             child: Text(
               'Mot de passe oublié',
               style:
-              TextStyle(
-                fontSize: 14.r,
-                color: Colors.blueGrey[700],
-              ).sourceSansProRegular,
+                  TextStyle(
+                    fontSize: 14.r,
+                    color: Colors.blueGrey[700],
+                  ).sourceSansProRegular,
             ),
           ),
         ),
@@ -97,7 +97,6 @@ class _LoginPageState extends State<LoginPage> {
         SpacerPlatform(),
       ],
     );
-
   }
 
   Widget _buildInputField({
@@ -165,7 +164,7 @@ class _LoginPageState extends State<LoginPage> {
       text: 'Se connecter',
       showArrow: true,
       onPressed: () {
-        if (_usernameController.text == 'agent') {
+        if (_usernameController.text.trim().toLowerCase() == 'agent') {
           context.goNamed(HomeAgentPage.routeName);
         } else {
           context.goNamed(HomeTenantPage.routeName);

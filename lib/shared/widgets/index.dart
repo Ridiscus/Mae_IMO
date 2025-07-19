@@ -14,6 +14,7 @@ import 'package:maelys_imo/shared/models/index.dart';
 
 import 'package:go_router/go_router.dart';
 import '../../core/constants/app_colors.dart' show AppColors;
+import '../../core/constants/assets.dart';
 
 
 part 'category_list.dart';

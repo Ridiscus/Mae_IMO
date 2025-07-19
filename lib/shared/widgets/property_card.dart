@@ -1,6 +1,6 @@
 part of 'index.dart';
 
-class PropertyCard extends StatelessWidget {
+class PropertyCard extends StatefulWidget {
   final PropertyModel property;
   final VoidCallback onPressed;
 
@@ -11,9 +11,16 @@ class PropertyCard extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<PropertyCard> createState() => _PropertyCardState();
+}
+
+class _PropertyCardState extends State<PropertyCard> {
+  int _currentImageIndex = 0;
+  
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onPressed,
+      onTap: widget.onPressed,
       child: Container(
         padding: EdgeInsets.all(10.sp),
         decoration: BoxDecoration(
@@ -30,7 +37,7 @@ class PropertyCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Property image with rounded corners at top
+            // Property image carousel with rounded corners at top
             AspectRatio(
               aspectRatio: 16 / 9,
               child: Stack(
@@ -38,11 +45,22 @@ class PropertyCard extends StatelessWidget {
                   Positioned.fill(
                     child: ClipRRect(
                       borderRadius: BorderRadius.all(Radius.circular(20.r)),
-                      child: Image.asset(
-                        property.imageUrl,
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                        
+                      child: PageView.builder(
+                        itemCount: widget.property.imageCount,
+                        onPageChanged: (index) {
+                          setState(() {
+                            _currentImageIndex = index;
+                          });
+                        },
+                        itemBuilder: (context, index) {
+                          // Pour l'instant, nous utilisons la même image pour toutes les pages
+                          // Dans une implémentation réelle, vous utiliseriez une liste d'images
+                          return Image.asset(
+                            widget.property.imageUrl,
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                          );
+                        },
                       ),
                     ),
                   ),
@@ -54,8 +72,8 @@ class PropertyCard extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: List.generate(
-                        property.imageCount,
-                        (index) => _buildPaginationDot(index == 0),
+                        widget.property.imageCount,
+                        (index) => _buildPaginationDot(index == _currentImageIndex),
                       ),
                     ),
                   ),
@@ -92,7 +110,7 @@ class PropertyCard extends StatelessWidget {
     return Wrap(
       spacing: 8.r,
       runSpacing: 8.r,
-      children: property.amenities.map((amenity) {
+      children: widget.property.amenities.map((amenity) {
         return Container(
           padding: EdgeInsets.symmetric(horizontal: 8.r, vertical: 4.r),
           decoration: BoxDecoration(

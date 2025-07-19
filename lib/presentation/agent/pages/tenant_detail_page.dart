@@ -30,17 +30,15 @@ class _TenantDetailPageState extends State<TenantDetailPage> {
   // Header est désormais géré par FormWithHeaderLayout
 
   Widget _buildDetailContent() {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildTenantInfoCard(),
-          CustomSpacer(),
-          _buildPropertyInfoCard(),
-          CustomSpacer(space: 3),
-          _buildCollectRentButton(),
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildTenantInfoCard(),
+        CustomSpacer(),
+        _buildPropertyInfoCard(),
+        Spacer(),
+        _buildCollectRentButton(),
+      ],
     );
   }
 
@@ -151,7 +149,7 @@ class _TenantDetailPageState extends State<TenantDetailPage> {
           backgroundColor: Colors.white,
           isScrollControlled: true,
           context: context,
-          
+
           builder:
               (context) =>
                   ModalCollectingTheRent(onValidated: () {}, onCancel: () {}),

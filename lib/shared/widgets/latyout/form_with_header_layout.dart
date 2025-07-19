@@ -13,6 +13,7 @@ class FormWithHeaderLayout extends StatelessWidget {
   final Widget content;
 
   final Color? contentColor;
+  final EdgeInsets? padding;
 
   /// Optional action to execute when the back button is pressed.
   /// If null, it will use the default Navigator.pop behavior.
@@ -25,6 +26,7 @@ class FormWithHeaderLayout extends StatelessWidget {
     required this.content,
     this.contentColor,
     this.onBackPressed,
+    this.padding,
   });
 
   @override
@@ -51,23 +53,39 @@ class FormWithHeaderLayout extends StatelessWidget {
       padding: EdgeInsets.only(left: 16.sp, right: 16.sp, bottom: 24.sp),
       width: double.infinity,
       color: AppColors.primary,
-      child: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CircularBackButton(onPressed: onBackPressed),
-            CustomSpacer(),
-            Text(
-              headerTitle,
-              style:
-                  TextStyle(
-                    fontSize: 32.sp,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ).sourceSansProBold,
+      child: Stack(
+        children: [
+          Positioned(
+            top: 0,
+            left: 0,
+            child: CircleAvatar(
+              backgroundColor: Colors.white,
+              radius: 32.sp,
+              
             ),
-          ],
-        ),
+          ),
+
+          Positioned.fill(
+            child: SafeArea(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CircularBackButton(onPressed: onBackPressed),
+                  CustomSpacer(),
+                  Text(
+                    headerTitle,
+                    style:
+                        TextStyle(
+                          fontSize: 32.sp,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ).sourceSansProBold,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -84,7 +102,7 @@ class FormWithHeaderLayout extends StatelessWidget {
           topRight: Radius.circular(30.sp),
         ),
       ),
-      padding: EdgeInsets.all(24.sp),
+      padding: this.padding ?? EdgeInsets.all(16.sp),
       child: LayoutBuilder(
         builder: (context, constraints) {
           return SingleChildScrollView(

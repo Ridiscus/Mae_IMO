@@ -30,28 +30,36 @@ class CustomDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Drawer(
-      backgroundColor: Colors.white,
-      width: context.getSize.width / 1.1,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topRight: Radius.circular(32.r),
-          bottomRight: Radius.circular(32.r),
-        ),
+    return AnnotatedRegion(
+      value: SystemUiOverlayStyle(
+        statusBarColor: Colors.white,
+        statusBarIconBrightness: Brightness.dark,
       ),
-      child: SafeArea(
-        child: Column(
-          children: [
-            _buildProfileSection(),
-            CustomSpacer(space: 3),
-            _buildMenuItems(context),
-          ],
+      child: Drawer(
+        backgroundColor: Colors.white,
+        width: context.getSize.width / 1.3,
+        elevation: 30,
+        shadowColor: AppColors.black,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(32.r),
+            bottomRight: Radius.circular(32.r),
+          ),
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              _buildProfileSection(context),
+              CustomSpacer(space: 3),
+              _buildMenuItems(context),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildProfileSection() {
+  Widget _buildProfileSection(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(top: 24.sp, left: 24.sp, right: 24.sp),
       child: Column(
@@ -65,19 +73,13 @@ class CustomDrawer extends StatelessWidget {
                 backgroundColor: AppColors.primary,
               ),
 
-              Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AppColors.primary,
-                ),
-                child: IconButton(
-                  icon: Icon(
-                    Icons.arrow_back,
-                    color: Colors.white,
-                    size: 20.sp,
-                  ),
-                  onPressed: onCloseTap ?? () {},
-                ),
+              CircularIcon(
+                iconAsset: Assets.logout,
+                backgroundColor: AppColors.redColor,
+                iconColor: Colors.white,
+                onPressed: () {
+                  context.goNamed(PortalPage.routeName);
+                },
               ),
             ],
           ),
@@ -143,34 +145,14 @@ class CustomDrawer extends StatelessWidget {
         onTap: onSettingsTap,
         isSelected: selectedIndex == 2,
       ),
-      CustomSpacer(space: 20),
-      _MenuItem(
-        icon: Icons.power_settings_new_outlined,
-        title: 'Se deconnecter',
-        onTap: onLogoutTap ?? () {
-          context.goNamed(PortalPage.routeName);
-        },
-        isSelected: selectedIndex == 3,
-      ),
     ];
 
     return ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       itemCount: menuItems.length,
-      separatorBuilder: (context, index) => CustomSpacer(),
+      separatorBuilder: (context, index) => CustomSpacer(space: .1),
       itemBuilder: (context, index) => menuItems[index],
-    );
-  }
-
-  Widget _buildBottomIndicator() {
-    return Container(
-      width: 48.w,
-      height: 4.h,
-      decoration: BoxDecoration(
-        color: Colors.grey[300],
-        borderRadius: BorderRadius.circular(2.r),
-      ),
     );
   }
 }
@@ -192,11 +174,7 @@ class _MenuItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Icon(
-        icon,
-        color: AppColors.black,
-        size: 24.sp,
-      ),
+      leading: Icon(icon, color: AppColors.black, size: 24.sp),
       title: Text(
         title,
         style:

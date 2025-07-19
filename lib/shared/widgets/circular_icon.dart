@@ -14,7 +14,8 @@ class CircularIcon extends StatelessWidget {
   
   /// Couleur du cercle de fond
   final Color backgroundColor;
-  
+  final Color? iconColor;
+
   /// Padding autour de l'icône
   final double? padding;
 
@@ -24,6 +25,7 @@ class CircularIcon extends StatelessWidget {
     this.onPressed,
     this.iconSize,
     this.backgroundColor = Colors.white,
+    this.iconColor,
     this.padding,
   });
 
@@ -41,6 +43,7 @@ class CircularIcon extends StatelessWidget {
           iconAsset,
           width: iconSize ?? 24.sp,
           height: iconSize ?? 24.sp,
+          colorFilter: iconColor == null ? null : ColorFilter.mode(iconColor!, BlendMode.srcIn),
         ),
       ),
     );

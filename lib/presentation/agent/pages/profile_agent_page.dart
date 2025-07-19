@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:maelys_imo/core/constants/app_colors.dart';
@@ -20,12 +21,20 @@ class ProfileAgentPage extends StatefulWidget {
 class _ProfileAgentPageState extends State<ProfileAgentPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          _buildHeader(),
-          Expanded(child: SingleChildScrollView(child: _buildProfileContent())),
-        ],
+    return AnnotatedRegion(
+      value: SystemUiOverlayStyle(
+        statusBarColor: AppColors.primary,
+        statusBarIconBrightness: Brightness.light,
+      ),
+      child: Scaffold(
+        body: Column(
+          children: [
+            _buildHeader(),
+            Expanded(
+              child: SingleChildScrollView(child: _buildProfileContent()),
+            ),
+          ],
+        ),
       ),
     );
   }

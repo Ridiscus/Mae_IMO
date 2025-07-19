@@ -38,6 +38,7 @@ class _TenantListPageState extends State<TenantListPage> {
   Widget build(BuildContext context) {
     return FormWithHeaderLayout(
       headerTitle: _getPageTitle(),
+      padding: EdgeInsets.symmetric(horizontal: 16.sp),
       content: _buildTenantList(),
     );
   }
@@ -45,15 +46,14 @@ class _TenantListPageState extends State<TenantListPage> {
   // Header est désormais géré par FormWithHeaderLayout
 
   Widget _buildTenantList() {
-    return ListView.separated(
-      padding: EdgeInsets.symmetric(vertical: 0.sp),
-      itemCount: 5, // Demo count, replace with actual data
-      itemBuilder: (context, index) {
-        return _buildTenantCard(index);
-      },
-      separatorBuilder: (context, index) {
-        return CustomSpacer();
-      },
+    return Column(
+      children: [
+        ...List.generate(
+          5,
+          (index) => _buildTenantCard(index),
+        ).expand((element) => [CustomSpacer(), element]),
+        SpacerPlatform(),
+      ],
     );
   }
 
