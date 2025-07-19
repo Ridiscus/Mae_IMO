@@ -28,9 +28,12 @@ part 'custom_input_text.dart';
 part 'custom_scaffold.dart';
 part 'custom_spacer.dart';
 part 'custom_tag.dart';
+part 'latyout/form_with_header_layout.dart';
+part 'back_button.dart';
 part 'property_card.dart';
 part 'spacer_platform.dart';
 part 'scaffold_with_bottom_nav.dart';
-part 'latyout/form_with_header_layout.dart';
 part 'pagination_dot.dart';
-part 'back_button.dart';
+
+// Widgets exportés directement (non-part)
+part 'illustration_header.dart';

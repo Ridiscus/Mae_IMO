@@ -50,40 +50,42 @@ class FormWithHeaderLayout extends StatelessWidget {
   /// Builds the colored header section with a back button and title.
   Widget _buildHeader(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(left: 16.sp, right: 16.sp, bottom: 24.sp),
       width: double.infinity,
       color: AppColors.primary,
       child: Stack(
         children: [
-          Positioned(
-            top: 0,
-            left: 0,
-            child: CircleAvatar(
-              backgroundColor: Colors.white,
-              radius: 32.sp,
-              
-            ),
-          ),
-
           Positioned.fill(
+            left: 12.sp,
+            right: 12.sp,
             child: SafeArea(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CircularBackButton(onPressed: onBackPressed),
                   CustomSpacer(),
-                  Text(
-                    headerTitle,
-                    style:
-                        TextStyle(
-                          fontSize: 32.sp,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ).sourceSansProBold,
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.sp),
+                    child: Text(
+                      headerTitle,
+                      style:
+                          TextStyle(
+                            fontSize: 32.sp,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ).sourceSansProBold,
+                    ),
                   ),
                 ],
               ),
             ),
+          ),
+
+          // Utiliser le nouveau composant IllustrationHeader
+          IllustrationHeader(
+            color: Colors.white,
+            primaryAlpha: 0.07,
+            secondaryAlpha: 0.03,
+            alignRight: true,
           ),
         ],
       ),
@@ -94,7 +96,7 @@ class FormWithHeaderLayout extends StatelessWidget {
   Widget _buildFormContainer(BuildContext context) {
     return Container(
       width: double.infinity,
-      margin: EdgeInsets.only(top: 16.sp),
+      margin: EdgeInsets.only(top: 20.sp),
       decoration: BoxDecoration(
         color: contentColor ?? Colors.white,
         borderRadius: BorderRadius.only(
@@ -102,7 +104,7 @@ class FormWithHeaderLayout extends StatelessWidget {
           topRight: Radius.circular(30.sp),
         ),
       ),
-      padding: this.padding ?? EdgeInsets.all(16.sp),
+      padding: padding ?? EdgeInsets.all(16.sp),
       child: LayoutBuilder(
         builder: (context, constraints) {
           return SingleChildScrollView(

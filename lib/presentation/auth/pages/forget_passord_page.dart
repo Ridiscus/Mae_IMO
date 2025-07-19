@@ -82,7 +82,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
                 color: Colors.black87,
               ).sourceSansProSemiBold,
         ),
-       SizedBox(height: 8.h),
+        SizedBox(height: 8.h),
         CustomInputTextFactory.createTextInput(
           controller: controller,
           hintText: hintText,

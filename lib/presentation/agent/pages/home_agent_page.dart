@@ -80,13 +80,18 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
           bottomRight: Radius.circular(20.r),
         ),
       ),
-      child: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
+      child: Stack(
+        children: [
+          // Ajout des illustrations décoratives
+          IllustrationHeader(
+            color: Colors.white,
+            primaryAlpha: 0.07,
+            secondaryAlpha: 0.03,
+          ),
+
+          SafeArea(
+            child: SizedBox(
               width: double.infinity,
-              color: AppColors.primary,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -116,8 +121,8 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
                 ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
