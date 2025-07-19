@@ -150,7 +150,7 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(24.sp),
-      height: 150.h,
+      constraints: BoxConstraints(maxHeight: 160.h),
       decoration: BoxDecoration(
         color: AppColors.primary,
         borderRadius: BorderRadius.circular(16.r),

@@ -1,4 +1,4 @@
-
+part of 'index.dart';
 class Failure {
   final String message;
   final String? code;

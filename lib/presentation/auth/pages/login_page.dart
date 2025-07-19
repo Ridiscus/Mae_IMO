@@ -5,6 +5,7 @@ import 'package:maelys_imo/core/extensions/index.dart';
 import 'package:maelys_imo/presentation/agent/pages/home_agent_page.dart';
 import 'package:maelys_imo/presentation/tenant/pages/home_tenant_page.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
+
 import '../pages/forget_passord_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -44,20 +45,20 @@ class _LoginPageState extends State<LoginPage> {
         Text(
           'Bienvenue',
           style:
-              TextStyle(
-                fontSize: 24.r,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ).sourceSansProBold,
+          TextStyle(
+            fontSize: 24.r,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ).sourceSansProBold,
         ),
         CustomSpacer(space: .5),
         Text(
           'Entrez vos informations de connexion',
           style:
-              TextStyle(
-                fontSize: 14.r,
-                color: Colors.grey[700],
-              ).sourceSansProRegular,
+          TextStyle(
+            fontSize: 14.r,
+            color: Colors.grey[700],
+          ).sourceSansProRegular,
         ),
         CustomSpacer(space: 2),
 
@@ -84,18 +85,19 @@ class _LoginPageState extends State<LoginPage> {
             child: Text(
               'Mot de passe oublié',
               style:
-                  TextStyle(
-                    fontSize: 14.r,
-                    color: Colors.blueGrey[700],
-                  ).sourceSansProRegular,
+              TextStyle(
+                fontSize: 14.r,
+                color: Colors.blueGrey[700],
+              ).sourceSansProRegular,
             ),
           ),
         ),
-        Spacer(),
+        Spacer(), // Push login button to bottom
         _buildLoginButton(),
         SpacerPlatform(),
       ],
     );
+
   }
 
   Widget _buildInputField({

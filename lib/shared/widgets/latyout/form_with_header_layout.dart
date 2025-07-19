@@ -29,15 +29,18 @@ class FormWithHeaderLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          _buildHeader(context),
-          Positioned.fill(
-            top: MediaQuery.of(context).size.height * .22,
-            child: _buildFormContainer(context),
-          ),
-        ],
+    return AnnotatedRegion(
+      value: SystemUiOverlayStyle(statusBarColor: AppColors.primary),
+      child: Scaffold(
+        body: Stack(
+          children: [
+            _buildHeader(context),
+            Positioned.fill(
+              top: MediaQuery.of(context).size.height * .22,
+              child: _buildFormContainer(context),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -82,7 +85,16 @@ class FormWithHeaderLayout extends StatelessWidget {
         ),
       ),
       padding: EdgeInsets.all(24.sp),
-      child: content,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
+              child: IntrinsicHeight(child: content),
+            ),
+          );
+        },
+      ),
     );
   }
 }

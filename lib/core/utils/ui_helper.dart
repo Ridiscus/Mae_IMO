@@ -1,3 +1,3 @@
-class UIHelper {
-  
-}
+part of 'index.dart';
+
+class UIHelper {}

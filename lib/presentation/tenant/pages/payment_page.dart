@@ -16,7 +16,7 @@ class PaymentPage extends StatefulWidget {
 }
 
 class _PaymentPageState extends State<PaymentPage> {
-  String selectedDate = 'Date picker';
+  DateTime selectedDate = DateTime.now();
   String selectedPaymentMethod = 'Option 1';
 
   @override
@@ -32,7 +32,7 @@ class _PaymentPageState extends State<PaymentPage> {
 
   Widget _buildHeader() {
     return Container(
-      padding: EdgeInsets.only(left: 16.r, right: 16.r),
+      padding: EdgeInsets.only(left: 16.sp, right: 16.sp, bottom: 16.sp),
       width: double.infinity,
       decoration: BoxDecoration(
         color: AppColors.primary,
@@ -145,12 +145,11 @@ class _PaymentPageState extends State<PaymentPage> {
         ),
         SizedBox(height: 12.r),
         CustomDatePickerFactory.createDatePicker(
-          displayText: selectedDate,
+          displayText: selectedDate.humanWithoutTime(),
           onDateSelected: (DateTime date) {
             setState(() {
               // Format the date as needed
-              selectedDate =
-                  '${date.month.toString().padLeft(2, '0')}/${date.year}';
+              selectedDate = date;
             });
           },
           hintText: 'Sélectionnez une période',

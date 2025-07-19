@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:maelys_imo/core/extensions/index.dart';
 import 'package:maelys_imo/presentation/portal/pages/visit_request_page.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
-import 'package:maelys_imo/core/extensions/index.dart';
 
 class PortalDetailPage extends StatefulWidget {
   static const String routeName = 'portalDetail/:id/:type';
@@ -26,37 +26,40 @@ class _PortalDetailPageState extends State<PortalDetailPage> {
       value: SystemUiOverlayStyle(statusBarColor: Colors.transparent),
       child: Scaffold(
         backgroundColor: Color(0xFFF5F5F5),
-        body: SingleChildScrollView(
-          child: SizedBox(
-            width: context.getSize.width,
-            height: context.getSize.height,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildImageHeader(),
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.all(16.r),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildTitleAndPrice(),
-                        SizedBox(height: 20.r),
-                        _buildPropertyInfo(),
-                        SizedBox(height: 20.r),
-                        _buildAmenities(),
-                        SizedBox(height: 20.r),
-                        _buildDescription(),
-                        SizedBox(height: 32.r),
-                      ],
+        body: SafeArea(
+          top: false,
+          child: SingleChildScrollView(
+            child: SizedBox(
+              width: context.getSize.width,
+              height: context.getSize.height,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildImageHeader(),
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.all(16.r),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildTitleAndPrice(),
+                          SizedBox(height: 20.r),
+                          _buildPropertyInfo(),
+                          SizedBox(height: 20.r),
+                          _buildAmenities(),
+                          SizedBox(height: 20.r),
+                          _buildDescription(),
+                          SizedBox(height: 32.r),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                if (widget.type?.toLowerCase() == 'prospect') ...[
-                  _buildVisitButton(),
-                  SpacerPlatform(),
+                  if (widget.type?.toLowerCase() == 'prospect') ...[
+                    _buildVisitButton(),
+                    SpacerPlatform(),
+                  ],
                 ],
-              ],
+              ),
             ),
           ),
         ),
@@ -248,14 +251,7 @@ class _PortalDetailPageState extends State<PortalDetailPage> {
         onPressed: () {
           context.pushNamed(VisitRequestPage.routeName);
         },
-
         buttonVariant: ButtonVariant.primary,
-        textStyle:
-            TextStyle(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ).sourceSansProBold,
       ),
     );
   }

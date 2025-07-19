@@ -1,6 +1,5 @@
 part of 'index.dart';
 
-
 extension DateFormaterExt on DateTime {
   String time() {
     try {
@@ -22,9 +21,17 @@ extension DateFormaterExt on DateTime {
     }
   }
 
-  String humain() {
+  String human() {
     try {
       return DateFormat('dd LLLL y, HH:mm', 'fr').format(this);
+    } catch (e) {
+      return "-";
+    }
+  }
+
+  String humanWithoutTime() {
+    try {
+      return DateFormat('dd LLLL y', 'fr').format(this);
     } catch (e) {
       return "-";
     }

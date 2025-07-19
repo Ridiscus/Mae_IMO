@@ -7,7 +7,7 @@ import 'package:toastification/toastification.dart';
 
 import '../../../domain/models/index.dart';
 import '../../../domain/requests/index.dart';
-import '../../../utils/failure.dart';
+import '../../../utils/index.dart';
 import '../../../utils/toast/notification_toast.dart';
 import '../../token_manager.dart';
 
@@ -66,7 +66,7 @@ class AuthBloc extends HydratedBloc<AuthEvent, AuthState> {
         );
       }
     } catch (e) {
-      showToast(msg: "Connexion echoué");
+      showToast(msg: "Connexion échouée");
       emit(state.copyWith(loading: false, failure: null));
     }
   }

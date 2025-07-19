@@ -36,25 +36,15 @@ class PropertyCard extends StatelessWidget {
               child: Stack(
                 children: [
                   Positioned.fill(
-                    child: Row(children: [
-                      ClipRRect(
+                    child: ClipRRect(
                       borderRadius: BorderRadius.all(Radius.circular(20.r)),
                       child: Image.asset(
                         property.imageUrl,
                         fit: BoxFit.cover,
                         width: double.infinity,
+                        
                       ),
-                    )
-                    ,
-                    ClipRRect(
-                      borderRadius: BorderRadius.all(Radius.circular(20.r)),
-                      child: Image.asset(
-                        property.imageUrl,
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                      ),
-                    )
-                    ],),
+                    ),
                   ),
                   // Pagination indicators
                   Positioned(

@@ -33,19 +33,19 @@ class CircularBackButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: backgroundColor?.withValues(alpha: backgroundOpacity),
-        shape: BoxShape.circle,
-      ),
-      child: IconButton(
-        icon: Icon(
-          Icons.adaptive.arrow_back_sharp,
-          color: iconColor,
-          size: iconSize ?? 22.r,
+    return IconButton(
+      style: ButtonStyle(
+        padding: WidgetStatePropertyAll(EdgeInsets.zero),
+        backgroundColor: WidgetStatePropertyAll(
+          backgroundColor?.withValues(alpha: backgroundOpacity),
         ),
-        onPressed: onPressed ?? () => Navigator.of(context).pop(),
       ),
+      icon: Icon(
+        Icons.adaptive.arrow_back_sharp,
+        color: iconColor,
+        size: iconSize ?? 22.sp,
+      ),
+      onPressed: onPressed ?? () => Navigator.of(context).pop(),
     );
   }
 }

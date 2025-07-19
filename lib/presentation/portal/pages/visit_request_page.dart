@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:maelys_imo/core/constants/app_colors.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
@@ -15,23 +16,29 @@ class VisitRequestPage extends StatefulWidget {
 }
 
 class _VisitRequestPageState extends State<VisitRequestPage> {
-  String selectedDate = 'Date picker';
+  DateTime selectedDate = DateTime.now();
   String selectedTime = 'Matin';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [_buildHeader(), Expanded(child: _buildVisitForm())],
+      body: SafeArea(
+        top: false,
+        child: Column(
+          children: [
+            _buildHeader(),
+            Expanded(child: _buildVisitForm()),
+            _buildRequestButton(),
+            SpacerPlatform(),
+          ],
+        ),
       ),
-      floatingActionButton: _buildRequestButton(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
   Widget _buildHeader() {
     return Container(
-      padding: EdgeInsets.only(left: 16.r, right: 16.r),
+      padding: EdgeInsets.only(left: 16.sp, right: 16.sp, bottom: 16.sp),
       width: double.infinity,
       decoration: BoxDecoration(
         color: AppColors.primary,
@@ -64,7 +71,7 @@ class _VisitRequestPageState extends State<VisitRequestPage> {
   Widget _buildVisitForm() {
     return Container(
       width: double.infinity,
-      color: Color(0xFFF5F5F5),
+      color: AppColors.scaffold,
       child: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(24.r),
@@ -151,12 +158,12 @@ class _VisitRequestPageState extends State<VisitRequestPage> {
         ),
         SizedBox(height: 8.h),
         CustomDatePickerFactory.createDatePicker(
-          displayText: selectedDate,
+          displayText: selectedDate.humanWithoutTime(),
+          firstDate: DateTime.now(),
           onDateSelected: (DateTime date) {
             setState(() {
               // Format the date as needed
-              selectedDate =
-                  '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
+              selectedDate = date;
             });
           },
           hintText: 'Sélectionnez une date',
@@ -238,8 +245,8 @@ class _VisitRequestPageState extends State<VisitRequestPage> {
                     actions: [
                       TextButton(
                         onPressed: () {
-                          Navigator.of(context).pop();
-                          Navigator.of(context).pop();
+                          context.pop();
+                          context.pop();
                         },
                         child: Text('OK'),
                       ),

@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hive/hive.dart';
 import 'package:maelys_imo/core/constants/app_colors.dart';
 import 'package:maelys_imo/core/constants/assets.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
-import 'package:maelys_imo/presentation/tenant/pages/payment_page.dart';
 import 'package:maelys_imo/presentation/tenant/pages/contact_agency_page.dart';
+import 'package:maelys_imo/presentation/tenant/pages/payment_page.dart';
 import 'package:maelys_imo/presentation/tenant/pages/profile_tenant_page.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
 import 'package:maelys_imo/shared/widgets/modals/index.dart';
@@ -23,22 +22,30 @@ class HomeTenantPage extends StatefulWidget {
 
 class _HomeTenantPageState extends State<HomeTenantPage> {
   /// Affiche le modal avec les détails du paiement
-  void _showPaymentDetails(String month, String amount, String date, bool isPaid) {
+  void _showPaymentDetails(
+    String month,
+    String amount,
+    String date,
+    bool isPaid,
+  ) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => ModalPaymentInfo(
-        month: month,
-        amount: amount,
-        date: date,
-        isPaid: isPaid,
-        reference: 'REF-${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}',
-        paymentMethod: isPaid ? 'Carte bancaire' : null,
-        recipientName: isPaid ? 'Agence Maelys Immo' : null,
-      ),
+      builder:
+          (context) => ModalPaymentInfo(
+            month: month,
+            amount: amount,
+            date: date,
+            isPaid: isPaid,
+            reference:
+                'REF-${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}',
+            paymentMethod: isPaid ? 'Carte bancaire' : null,
+            recipientName: isPaid ? 'Agence Maelys Immo' : null,
+          ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +59,7 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
 
   Widget _buildHeader() {
     return Container(
-      padding: EdgeInsets.only(left: 16.r, right: 16.r),
+      padding: EdgeInsets.symmetric(horizontal: 16.sp).copyWith(bottom: 16.sp),
       width: double.infinity,
       decoration: BoxDecoration(
         color: AppColors.primary,
@@ -87,8 +94,7 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
               ],
             ),
 
-            CustomSpacer(space: 2),
-
+            CustomSpacer(),
             _buildRentInfo(),
             CustomSpacer(),
             _buildPayRentButton(),
@@ -225,20 +231,22 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
                 children: [
                   Text(
                     'Loyer du mois de $month',
-                    style: TextStyle(
-                      fontSize: 16.r,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
-                    ).sourceSansProSemiBold,
+                    style:
+                        TextStyle(
+                          fontSize: 16.r,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                        ).sourceSansProSemiBold,
                   ),
                   CustomSpacer(space: .2),
                   Text(
                     amount,
-                    style: TextStyle(
-                      fontSize: 18.r,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ).sourceSansProBold,
+                    style:
+                        TextStyle(
+                          fontSize: 18.r,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ).sourceSansProBold,
                   ),
                 ],
               ),
@@ -254,10 +262,11 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
                 CustomSpacer(space: .2),
                 Text(
                   date,
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    color: Colors.grey[600],
-                  ).sourceSansProRegular,
+                  style:
+                      TextStyle(
+                        fontSize: 12.sp,
+                        color: Colors.grey[600],
+                      ).sourceSansProRegular,
                 ),
               ],
             ),

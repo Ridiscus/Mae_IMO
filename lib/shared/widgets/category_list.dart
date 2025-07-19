@@ -50,6 +50,7 @@ class CategoryList extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w500,
+                      height: 1,
                       color: isSelected ? Colors.white : Colors.grey,
                     ).sourceSansProSemiBold,
                   ),

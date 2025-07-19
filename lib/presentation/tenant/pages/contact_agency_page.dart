@@ -34,19 +34,17 @@ class _ContactAgencyPageState extends State<ContactAgencyPage> {
   }
 
   Widget _buildContactForm() {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildAgencyInfo(),
-          CustomSpacer(space: 2),
-          _buildSubjectField(),
-          CustomSpacer(),
-          _buildMessageField(),
-          CustomSpacer(space: 5),
-          _buildSendButton(),
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildAgencyInfo(),
+        CustomSpacer(space: 2),
+        _buildSubjectField(),
+        CustomSpacer(),
+        _buildMessageField(),
+        Spacer(),
+        _buildSendButton(),
+      ],
     );
   }
 
