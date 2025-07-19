@@ -25,7 +25,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
   @override
   Widget build(BuildContext context) {
     return FormWithHeaderLayout(
-      headerTitle: 'Réinitialisation du mot de passe',
+      headerTitle: 'Réinitialiser le mot de passe',
       content: _buildResetForm(),
     );
   }
@@ -34,6 +34,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+
         Text(
           'Mot de passe oublié',
           style:

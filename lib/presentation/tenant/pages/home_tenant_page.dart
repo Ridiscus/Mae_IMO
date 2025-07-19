@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -59,7 +61,7 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
 
   Widget _buildHeader() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16.sp).copyWith(bottom: 16.sp),
+      padding: EdgeInsets.symmetric(horizontal: 16.sp).copyWith(bottom: Platform.isIOS ? 1.sp : 16.sp),
       width: double.infinity,
       decoration: BoxDecoration(
         color: AppColors.primary,
@@ -98,6 +100,7 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
             _buildRentInfo(),
             CustomSpacer(),
             _buildPayRentButton(),
+
           ],
         ),
       ),

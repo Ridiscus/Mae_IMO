@@ -44,6 +44,7 @@ class _ContactAgencyPageState extends State<ContactAgencyPage> {
         _buildMessageField(),
         Spacer(),
         _buildSendButton(),
+        SpacerPlatform()
       ],
     );
   }

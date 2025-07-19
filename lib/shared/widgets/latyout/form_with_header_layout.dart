@@ -67,9 +67,12 @@ class FormWithHeaderLayout extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 16.sp),
                     child: Text(
                       headerTitle,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                       style:
+                          
                           TextStyle(
-                            fontSize: 32.sp,
+                            fontSize: 28.sp,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ).sourceSansProBold,

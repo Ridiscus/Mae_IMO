@@ -28,38 +28,40 @@ class _PortalDetailPageState extends State<PortalDetailPage> {
         backgroundColor: Color(0xFFF5F5F5),
         body: SafeArea(
           top: false,
-          child: SingleChildScrollView(
-            child: SizedBox(
-              width: context.getSize.width,
-              height: context.getSize.height,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildImageHeader(),
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.all(16.r),
+          bottom: false,
+          child: SizedBox(
+            width: context.getSize.width,
+            height: context.getSize.height,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildImageHeader(),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.all(16.sp),
+
+                    child: SingleChildScrollView(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           _buildTitleAndPrice(),
-                          SizedBox(height: 20.r),
+                          CustomSpacer(),
                           _buildPropertyInfo(),
-                          SizedBox(height: 20.r),
+                          CustomSpacer(),
                           _buildAmenities(),
-                          SizedBox(height: 20.r),
+                          CustomSpacer(),
                           _buildDescription(),
-                          SizedBox(height: 32.r),
+                          CustomSpacer(space: 3),
+                          if (widget.type?.toLowerCase() == 'prospect') ...[
+                            _buildVisitButton(),
+                            SpacerPlatform(),
+                          ],
                         ],
                       ),
                     ),
                   ),
-                  if (widget.type?.toLowerCase() == 'prospect') ...[
-                    _buildVisitButton(),
-                    SpacerPlatform(),
-                  ],
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
@@ -230,7 +232,7 @@ class _PortalDetailPageState extends State<PortalDetailPage> {
         ),
         SizedBox(height: 8.r),
         Text(
-          'Le lorem ipsum est, en imprimerie, une suite de mots sans signification utilisée à titre provisoire Le lorem ipsum est, en imprimerie, une suite de mots sans signification utilisée à titre provisoire',
+          'Le lorem ipsum est, en imprimerie, une suite de mots sans signification utilisée à titre provisoire Le lorem ipsum est, en imprimerie, une suite de mots sans signification utilisée à titre provisoire Le lorem ipsum est, en imprimerie, une suite de mots sans signification utilisée à titre provisoire Le lorem ipsum est, en imprimerie, une suite de mots sans signification utilisée à titre provisoire Le lorem ipsum est, en imprimerie, une suite de mots sans signification utilisée à titre provisoire Le lorem ipsum est, en imprimerie, une suite de mots sans signification utilisée à titre provisoire Le lorem ipsum est, en imprimerie, une suite de mots sans signification utilisée à titre provisoire Le lorem ipsum est, en imprimerie, une suite de mots sans signification utilisée à titre provisoire',
           style:
               TextStyle(
                 fontSize: 14.r,
@@ -243,16 +245,13 @@ class _PortalDetailPageState extends State<PortalDetailPage> {
   }
 
   Widget _buildVisitButton() {
-    return Padding(
-      padding: EdgeInsets.all(16.sp),
-      child: CustomButton(
-        text: 'Visiter',
-        showArrow: true,
-        onPressed: () {
-          context.pushNamed(VisitRequestPage.routeName);
-        },
-        buttonVariant: ButtonVariant.primary,
-      ),
+    return CustomButton(
+      text: 'Visiter',
+      showArrow: true,
+      onPressed: () {
+        context.pushNamed(VisitRequestPage.routeName);
+      },
+      buttonVariant: ButtonVariant.primary,
     );
   }
 }

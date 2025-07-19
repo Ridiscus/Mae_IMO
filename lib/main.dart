@@ -1,4 +1,3 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,7 +18,6 @@ import 'core/manager/state/auth/auth_bloc.dart';
 import 'core/manager/state/simple_bloc_observer.dart';
 import 'core/manager/token_manager.dart';
 import 'di_container.dart';
-import 'firebase_options.dart';
 import 'routes/app_route.dart' show AppRoute;
 
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -28,7 +26,6 @@ late GoRouter appRouter;
 void main() async {
   final binding = WidgetsFlutterBinding.ensureInitialized();
   binding.deferFirstFrame();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   TokenManager.init();
   appRouter = AppRoute().router;

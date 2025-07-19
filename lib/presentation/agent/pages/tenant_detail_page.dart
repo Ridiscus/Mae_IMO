@@ -38,6 +38,7 @@ class _TenantDetailPageState extends State<TenantDetailPage> {
         _buildPropertyInfoCard(),
         Spacer(),
         _buildCollectRentButton(),
+        SpacerPlatform()
       ],
     );
   }
