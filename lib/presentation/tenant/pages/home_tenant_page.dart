@@ -48,49 +48,43 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        top: false,
-        child: Column(
-          children: [_buildHeader(), Expanded(child: _buildContent())],
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: _buildContactButton(),
+    return PageWithHeaderLayout(
+      headerContent: _buildHeaderContent(),
+      bodyContent: _buildContent(),
+      //floatingActionButton: _buildContactButton(),
     );
   }
 
-  Widget _buildHeader() {
-    return AppHeaderLayout(
-      content: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Row(
-            children: [
-              Text(
-                'Juillet 2025',
-                style: TextStyle(
-                  fontSize: 20.r,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ).sourceSansProBold,
-              ),
-              Icon(Icons.arrow_drop_down, color: Colors.white, size: 24.r),
-              Spacer(),
-              CircularIcon(
-                iconAsset: Assets.user,
-                onPressed: () {
-                  context.pushNamed(ProfileTenantPage.routeName);
-                },
-              ),
-            ],
-          ),
-          CustomSpacer(),
-          _buildRentInfo(),
-          CustomSpacer(),
-          _buildPayRentButton(),
-        ],
-      ),
+  Widget _buildHeaderContent() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Row(
+          children: [
+            Text(
+              'Juillet 2025',
+              style:
+                  TextStyle(
+                    fontSize: 20.r,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ).sourceSansProBold,
+            ),
+            Icon(Icons.arrow_drop_down, color: Colors.white, size: 24.r),
+            Spacer(),
+            CircularIcon(
+              iconAsset: Assets.user,
+              onPressed: () {
+                context.pushNamed(ProfileTenantPage.routeName);
+              },
+            ),
+          ],
+        ),
+        CustomSpacer(),
+        _buildRentInfo(),
+        CustomSpacer(),
+        _buildPayRentButton(),
+      ],
     );
   }
 
@@ -141,51 +135,69 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
   }
 
   Widget _buildContent() {
-    return Container(
-      width: double.infinity,
-      color: AppColors.scaffold,
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(16.r),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Historique des paiements',
-                style:
-                    TextStyle(
-                      fontSize: 20.sp,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ).sourceSansProSemiBold,
-              ),
-              CustomSpacer(),
-              _buildPaymentHistoryItem(
-                month: 'juin',
-                amount: '200 000 FCFA',
-                date: '06 juin 2025',
-                isPaid: true,
-              ),
-              CustomSpacer(),
+    final paymentHistory = [
+      {
+        'month': 'juin',
+        'amount': '200 000 FCFA',
+        'date': '06 juin 2025',
+        'isPaid': true,
+      },
+      {
+        'month': 'mai',
+        'amount': '200 000 FCFA',
+        'date': '06 juin 2025',
+        'isPaid': true,
+      },
+      {
+        'month': 'avril',
+        'amount': '150 000 FCFA',
+        'date': '06 juin 2025',
+        'isPaid': true,
+      },
+      {
+        'month': 'juin',
+        'amount': '200 000 FCFA',
+        'date': '06 juin 2025',
+        'isPaid': true,
+      },
+      {
+        'month': 'mai',
+        'amount': '200 000 FCFA',
+        'date': '06 juin 2025',
+        'isPaid': true,
+      },
+      {
+        'month': 'avril',
+        'amount': '150 000 FCFA',
+        'date': '06 juin 2025',
+        'isPaid': true,
+      },
+    ];
 
-              _buildPaymentHistoryItem(
-                month: 'mai',
-                amount: '200 000 FCFA',
-                date: '06 juin 2025',
-                isPaid: true,
-              ),
-              CustomSpacer(),
-
-              _buildPaymentHistoryItem(
-                month: 'avril',
-                amount: '150 000 FCFA',
-                date: '06 juin 2025',
-                isPaid: true,
-              ),
-            ],
-          ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Historique des paiements',
+          style:
+              TextStyle(
+                fontSize: 20.sp,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ).sourceSansProSemiBold,
         ),
-      ),
+        CustomSpacer(),
+        ...paymentHistory
+            .map((payment) {
+              return _buildPaymentHistoryItem(
+                month: payment['month'] as String,
+                amount: payment['amount'] as String,
+                date: payment['date'] as String,
+                isPaid: payment['isPaid'] as bool,
+              );
+            })
+            .expand((element) => [element, CustomSpacer(space: .5)]),
+      ],
     );
   }
 

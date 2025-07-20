@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:maelys_imo/core/constants/app_colors.dart';
 import 'package:maelys_imo/core/constants/assets.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
@@ -21,55 +20,41 @@ class _PaymentPageState extends State<PaymentPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [_buildHeader(), Expanded(child: _buildPaymentForm())],
-      ),
+    return PageWithHeaderLayout(
+      headerContent: _buildHeaderContent(),
+      bodyContent: _buildPaymentForm(),
       floatingActionButton: _buildPaymentButton(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
-  Widget _buildHeader() {
-    return AppHeaderLayout(
-      padding: EdgeInsets.only(left: 16.sp, right: 16.sp, bottom: 16.sp),
-      content: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CircularBackButton(),
-          CustomSpacer(),
-          Text(
-            'Payer mon loyer',
-            style: TextStyle(
-              fontSize: 32.sp,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ).sourceSansProBold,
-          ),
-        ],
-      ),
+  Widget _buildHeaderContent() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        CircularBackButton(),
+        CustomSpacer(),
+        Text(
+          'Payer mon loyer',
+          style: TextStyle(
+            fontSize: 32.sp,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ).sourceSansProBold,
+        ),
+      ],
     );
   }
 
   Widget _buildPaymentForm() {
-    return Container(
-      width: double.infinity,
-      color: Color(0xFFF5F5F5),
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(24.r),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildSummarySection(),
-              CustomSpacer(space: 2),
-              _buildDatePicker(),
-              CustomSpacer(),
-              _buildPaymentMethodPicker(),
-            ],
-          ),
-        ),
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSummarySection(),
+        CustomSpacer(space: 2),
+        _buildDatePicker(),
+        CustomSpacer(),
+        _buildPaymentMethodPicker(),
+      ],
     );
   }
 

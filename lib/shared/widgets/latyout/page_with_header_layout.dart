@@ -77,7 +77,7 @@ class PageWithHeaderLayout extends StatelessWidget {
   }
 
   Widget _buildBody() {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       // color: bodyBackgroundColor ?? AppColors.scaffold,
       child: LayoutBuilder(

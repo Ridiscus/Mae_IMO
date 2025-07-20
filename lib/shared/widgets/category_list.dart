@@ -19,6 +19,7 @@ class CategoryList extends StatelessWidget {
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: categories.length,
+        physics: BouncingScrollPhysics(),
         itemBuilder: (context, index) {
           final isSelected = index == selectedIndex;
           return GestureDetector(

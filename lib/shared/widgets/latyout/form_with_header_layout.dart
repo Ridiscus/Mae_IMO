@@ -39,7 +39,7 @@ class FormWithHeaderLayout extends StatelessWidget {
             _buildHeader(context),
             Positioned.fill(
               top: MediaQuery.of(context).size.height * .22,
-              child: _buildFormContainer(context),
+              child: _buildFormContainer(),
             ),
           ],
         ),
@@ -96,7 +96,7 @@ class FormWithHeaderLayout extends StatelessWidget {
   }
 
   /// Builds the white rounded container for the form.
-  Widget _buildFormContainer(BuildContext context) {
+  Widget _buildFormContainer() {
     return Container(
       width: double.infinity,
       margin: EdgeInsets.only(top: 20.sp),
@@ -111,6 +111,7 @@ class FormWithHeaderLayout extends StatelessWidget {
       child: LayoutBuilder(
         builder: (context, constraints) {
           return SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
             child: ConstrainedBox(
               constraints: BoxConstraints(minHeight: constraints.maxHeight),
               child: IntrinsicHeight(child: content),

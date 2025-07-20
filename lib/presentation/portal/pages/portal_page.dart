@@ -68,91 +68,76 @@ class _PortalPageState extends State<PortalPage> {
         statusBarColor: AppColors.orange,
         statusBarIconBrightness: Brightness.light,
       ),
-      child: Scaffold(
-        backgroundColor: AppColors.scaffold,
-        body: SafeArea(
-          top: false,
-          child: Column(
-            children: [
-              _buildAppBar(),
-              Expanded(
-                child: Column(
-                  children: [
-                    CustomSpacer(),
-                    CategoryList(
-                      categories: _categories,
-                      selectedIndex: _selectedIndex,
-                      onCategorySelected: (index) {
-                        setState(() {
-                          _selectedIndex = index;
-                        });
-                      },
-                    ),
-                    CustomSpacer(),
-                    Expanded(
-                      child: ListView(
-                        padding: EdgeInsets.symmetric(horizontal: 16.r),
-                        children: [
-                          ...List.generate(
-                            _properties.length,
-                            (index) => Padding(
-                              padding: EdgeInsets.only(
-                                bottom:
-                                    index < _properties.length - 1 ? 16.h : 0,
-                              ),
-                              child: PropertyCard(
-                                property: _properties[index],
-                                onPressed:
-                                    () => _onPropertyTap(_properties[index]),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
+      child: PageWithHeaderLayout(
+        headerBackgroundColor: AppColors.orange,
+        bodyPadding: EdgeInsets.only(top: 16.sp),
+        headerContent: _buildHeaderContent(),
+        bodyContent: _buildPageContent(),
       ),
     );
   }
-
-  Widget _buildAppBar() {
-    return AppHeaderLayout(
-      backgroundColor: AppColors.orange,
-      content: Column(
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              CircularIcon(
-                iconAsset: Assets.user,
-                onPressed: () {
-                  context.pushNamed(LoginPage.routeName);
-                },
-              ),
-              SizedBox(width: 16.w),
-              Expanded(
-                child: Text(
-                  'Maelys-imo',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 32.sp,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ).sourceSansProBold,
-                ),
-              ),
-            ],
+  
+  Widget _buildPageContent() {
+    return Column(
+      children: [
+        CategoryList(
+          categories: _categories,
+          selectedIndex: _selectedIndex,
+          onCategorySelected: (index) {
+            setState(() {
+              _selectedIndex = index;
+            });
+          },
+        ),
+        CustomSpacer(),
+        ...List.generate(
+          _properties.length,
+          (index) => Padding(
+            padding: EdgeInsets.only(
+              left: 16.sp,
+              right: 16.sp,
+              bottom: index < _properties.length - 1 ? 16.h : 0,
+            ),
+            child: PropertyCard(
+              property: _properties[index],
+              onPressed: () => _navigateToPropertyDetails(_properties[index]),
+            ),
           ),
-          SizedBox(height: 16.sp),
-          _buildSearchBar(),
-        ],
-      ),
+        ),
+      ],
+    );
+  }
+  
+  Widget _buildHeaderContent() {
+    return Column(
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            CircularIcon(
+              iconAsset: Assets.user,
+              onPressed: () {
+                context.pushNamed(LoginPage.routeName);
+              },
+            ),
+            SizedBox(width: 16.w),
+            Expanded(
+              child: Text(
+                'Maelys-imo',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 32.sp,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ).sourceSansProBold,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 16.sp),
+        _buildSearchBar(),
+      ],
     );
   }
 
@@ -207,13 +192,10 @@ class _PortalPageState extends State<PortalPage> {
     );
   }
 
-  void _onPropertyTap(PropertyModel property) {
-    // Action à effectuer quand une propriété est cliquée
-    debugPrint('Property tapped: ${property.title}');
+  void _navigateToPropertyDetails(PropertyModel property) {
     context.pushNamed(
       PortalDetailPage.routeName,
       pathParameters: {'id': "1", 'type': 'prospect'},
     );
-    // Naviguer vers la page de détails ou autre action
   }
 }
