@@ -30,6 +30,8 @@ part 'custom_spacer.dart';
 part 'custom_tag.dart';
 part 'latyout/form_with_header_layout.dart';
 part 'latyout/app_header_layout.dart';
+part 'latyout/page_with_header_layout.dart';
+part 'latyout/profile_page_layout.dart';
 part 'back_button.dart';
 part 'property_card.dart';
 part 'spacer_platform.dart';
