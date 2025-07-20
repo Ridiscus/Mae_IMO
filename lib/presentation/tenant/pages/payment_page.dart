@@ -31,33 +31,22 @@ class _PaymentPageState extends State<PaymentPage> {
   }
 
   Widget _buildHeader() {
-    return Container(
+    return AppHeaderLayout(
       padding: EdgeInsets.only(left: 16.sp, right: 16.sp, bottom: 16.sp),
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: AppColors.primary,
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(20.r),
-          bottomRight: Radius.circular(20.r),
-        ),
-      ),
-      child: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CircularBackButton(),
-            CustomSpacer(),
-            Text(
-              'Payer mon loyer',
-              style:
-                  TextStyle(
-                    fontSize: 32.sp,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ).sourceSansProBold,
-            ),
-          ],
-        ),
+      content: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CircularBackButton(),
+          CustomSpacer(),
+          Text(
+            'Payer mon loyer',
+            style: TextStyle(
+              fontSize: 32.sp,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ).sourceSansProBold,
+          ),
+        ],
       ),
     );
   }

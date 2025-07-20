@@ -61,47 +61,35 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
   }
 
   Widget _buildHeader() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16.sp).copyWith(bottom: 16.sp),
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: AppColors.primary,
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(20.r),
-          bottomRight: Radius.circular(20.r),
-        ),
-      ),
-      child: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Row(
-              children: [
-                Text(
-                  'Juillet 2025',
-                  style:
-                      TextStyle(
-                        fontSize: 20.r,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ).sourceSansProBold,
-                ),
-                Icon(Icons.arrow_drop_down, color: Colors.white, size: 24.r),
-                Spacer(),
-                CircularIcon(
-                  iconAsset: Assets.user,
-                  onPressed: () {
-                    context.pushNamed(ProfileTenantPage.routeName);
-                  },
-                ),
-              ],
-            ),
-            CustomSpacer(),
-            _buildRentInfo(),
-            CustomSpacer(),
-            _buildPayRentButton(),
-          ],
-        ),
+    return AppHeaderLayout(
+      content: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Row(
+            children: [
+              Text(
+                'Juillet 2025',
+                style: TextStyle(
+                  fontSize: 20.r,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ).sourceSansProBold,
+              ),
+              Icon(Icons.arrow_drop_down, color: Colors.white, size: 24.r),
+              Spacer(),
+              CircularIcon(
+                iconAsset: Assets.user,
+                onPressed: () {
+                  context.pushNamed(ProfileTenantPage.routeName);
+                },
+              ),
+            ],
+          ),
+          CustomSpacer(),
+          _buildRentInfo(),
+          CustomSpacer(),
+          _buildPayRentButton(),
+        ],
       ),
     );
   }

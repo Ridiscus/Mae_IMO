@@ -69,7 +69,7 @@ class _PortalPageState extends State<PortalPage> {
         statusBarIconBrightness: Brightness.light,
       ),
       child: Scaffold(
-        backgroundColor: Color(0xFFF5F5F5),
+        backgroundColor: AppColors.scaffold,
         body: SafeArea(
           top: false,
           child: Column(
@@ -121,47 +121,37 @@ class _PortalPageState extends State<PortalPage> {
   }
 
   Widget _buildAppBar() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16.sp).copyWith(bottom: 16.sp),
-      decoration: BoxDecoration(
-        color: AppColors.orange,
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(20.r),
-          bottomRight: Radius.circular(20.r),
-        ),
-      ),
-      child: SafeArea(
-        child: Column(
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                CircularIcon(
-                  iconAsset: Assets.user,
-                  onPressed: () {
-                    context.pushNamed(LoginPage.routeName);
-                  },
+    return AppHeaderLayout(
+      backgroundColor: AppColors.orange,
+      content: Column(
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              CircularIcon(
+                iconAsset: Assets.user,
+                onPressed: () {
+                  context.pushNamed(LoginPage.routeName);
+                },
+              ),
+              SizedBox(width: 16.w),
+              Expanded(
+                child: Text(
+                  'Maelys-imo',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 32.sp,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ).sourceSansProBold,
                 ),
-                SizedBox(width: 16.w),
-                Expanded(
-                  child: Text(
-                    'Maelys-imo',
-                    textAlign: TextAlign.center,
-                    style:
-                        TextStyle(
-                          fontSize: 32.sp,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ).sourceSansProBold,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 16.sp),
-            _buildSearchBar(),
-          ],
-        ),
+              ),
+            ],
+          ),
+          SizedBox(height: 16.sp),
+          _buildSearchBar(),
+        ],
       ),
     );
   }
