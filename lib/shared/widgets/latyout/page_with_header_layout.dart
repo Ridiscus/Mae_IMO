@@ -11,16 +11,16 @@ class PageWithHeaderLayout extends StatelessWidget {
 
   /// The content to display in the main body of the page.
   final Widget bodyContent;
-  
+
   /// The color of the header background. Default is AppColors.primary.
   final Color? headerBackgroundColor;
-  
+
   /// The color of the body background. Default is AppColors.scaffold.
   final Color? bodyBackgroundColor;
-  
+
   /// Padding to apply to the header content.
   final EdgeInsetsGeometry? headerPadding;
-  
+
   /// Padding to apply to the body content.
   final EdgeInsetsGeometry? bodyPadding;
 
@@ -47,7 +47,8 @@ class PageWithHeaderLayout extends StatelessWidget {
     this.bodyPadding,
     this.roundedBottomCorners = true,
     this.floatingActionButton,
-    this.floatingActionButtonLocation = FloatingActionButtonLocation.centerFloat,
+    this.floatingActionButtonLocation =
+        FloatingActionButtonLocation.centerFloat,
     this.scrollableBody = true,
   });
 
@@ -65,37 +66,27 @@ class PageWithHeaderLayout extends StatelessWidget {
               roundedBottomCorners: roundedBottomCorners,
               content: headerContent,
             ),
-            Expanded(
-              child: _buildBody(),
-            ),
+            Expanded(child: _buildBody()),
           ],
         ),
       ),
       floatingActionButton: floatingActionButton,
-      floatingActionButtonLocation: floatingActionButton != null ? 
-          floatingActionButtonLocation : null,
+      floatingActionButtonLocation:
+          floatingActionButton != null ? floatingActionButtonLocation : null,
     );
   }
-  
+
   Widget _buildBody() {
-    if (!scrollableBody) {
-      return Container(
-        width: double.infinity,
-        color: bodyBackgroundColor ?? AppColors.scaffold,
-        padding: bodyPadding,
-        child: bodyContent,
-      );
-    }
-    
     return Container(
       width: double.infinity,
-      color: bodyBackgroundColor ?? AppColors.scaffold,
+      // color: bodyBackgroundColor ?? AppColors.scaffold,
       child: LayoutBuilder(
         builder: (context, constraints) {
           return SingleChildScrollView(
             physics: BouncingScrollPhysics(),
             child: ConstrainedBox(
               constraints: BoxConstraints(minHeight: constraints.maxHeight),
+
               child: Padding(
                 padding: bodyPadding ?? EdgeInsets.all(16.sp),
                 child: bodyContent,

@@ -3,6 +3,8 @@ class Assets {
   static const String logoText = "assets/logos/logoText.png";
   static const String splash = "assets/images/logoText.png";
   static const String shareImage = "assets/images/logoText.png";
+  static const String illustrationBackground = "assets/images/gradient_blanc_fond.jpg";
+
   static const String arrowRight = "assets/icons/angle-right.svg";
   static const String key = "assets/icons/key.svg";
   static const String texture = "assets/images/texture.png";

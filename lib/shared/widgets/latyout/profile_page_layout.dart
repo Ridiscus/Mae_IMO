@@ -117,7 +117,9 @@ class ProfilePageLayout extends StatelessWidget {
       width: double.infinity,
       color: profileBackgroundColor ?? AppColors.primary,
       child: Column(
-        children: [_buildProfileInfo(context), _buildEditOptions(context)],
+        children: [
+          _buildProfileInfo(context), 
+          _buildEditOptions(context)],
       ),
     );
   }
@@ -193,9 +195,10 @@ class ProfilePageLayout extends StatelessWidget {
       margin: EdgeInsets.only(top: 16.sp),
       decoration: BoxDecoration(
         color: Colors.white,
+
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(30.r),
-          topRight: Radius.circular(30.r),
+          topLeft: Radius.circular(20.r),
+          topRight: Radius.circular(20.r),
         ),
       ),
       child: Column(

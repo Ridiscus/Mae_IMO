@@ -7,14 +7,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart' show GoogleFonts;
+import 'package:maelys_imo/core/constants/assets.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
-import 'package:maelys_imo/presentation/agent/pages/profile_agent_page.dart';
 import 'package:maelys_imo/presentation/portal/pages/portal_page.dart' show PortalPage;
 import 'package:maelys_imo/shared/models/index.dart';
 
 import 'package:go_router/go_router.dart';
 import '../../core/constants/app_colors.dart' show AppColors;
-import '../../core/constants/assets.dart';
 
 
 part 'category_list.dart';
