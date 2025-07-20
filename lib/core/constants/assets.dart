@@ -13,5 +13,6 @@ class Assets {
   static const String phone = "assets/icons/phone.svg";
   static const String monney = "assets/icons/monney.svg";
   static const String logout = "assets/icons/logout.svg";
+  static const String cloudDownload = "assets/icons/download.svg";
   
 }

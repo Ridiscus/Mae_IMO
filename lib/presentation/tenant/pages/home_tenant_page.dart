@@ -147,6 +147,7 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
       onPressed: () {
         context.pushNamed(PaymentPage.routeName);
       },
+      assetPath: Assets.monney,
       buttonVariant: ButtonVariant.orange,
     );
   }
@@ -154,7 +155,7 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
   Widget _buildContent() {
     return Container(
       width: double.infinity,
-      color: Color(0xFFF5F5F5),
+      color: AppColors.scaffold,
       child: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(16.r),

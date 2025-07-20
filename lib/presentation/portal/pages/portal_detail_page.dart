@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:maelys_imo/core/constants/assets.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
 import 'package:maelys_imo/presentation/portal/pages/visit_request_page.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
@@ -20,6 +21,8 @@ class PortalDetailPage extends StatefulWidget {
 }
 
 class _PortalDetailPageState extends State<PortalDetailPage> {
+  int _currentImageIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion(
@@ -53,7 +56,20 @@ class _PortalDetailPageState extends State<PortalDetailPage> {
                           _buildDescription(),
                           CustomSpacer(space: 3),
                           if (widget.type?.toLowerCase() == 'prospect') ...[
-                            _buildVisitButton(),
+                            _buildVisitButton(
+                              text: 'Visiter',
+                              onPressed: () {
+                                context.pushNamed(VisitRequestPage.routeName);
+                              },
+                            ),
+                            SpacerPlatform(),
+                          ],
+                          if (widget.type?.toLowerCase() == 'tenant') ...[
+                            _buildVisitButton(
+                              text: 'Télécharger mon contrat',
+                              onPressed: () {},
+                              assetPath:  Assets.cloudDownload,
+                            ),
                             SpacerPlatform(),
                           ],
                         ],
@@ -81,10 +97,22 @@ class _PortalDetailPageState extends State<PortalDetailPage> {
               Positioned.fill(
                 child: ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(20.r)),
-                  child: Image.asset(
-                    'assets/images/temps.png',
-                    fit: BoxFit.cover,
-                    width: double.infinity,
+                  child: PageView.builder(
+                    itemCount: 3,
+                    onPageChanged: (index) {
+                      setState(() {
+                        _currentImageIndex = index;
+                      });
+                    },
+                    itemBuilder: (context, index) {
+                      // Pour l'instant, nous utilisons la même image pour toutes les pages
+                      // Dans une implémentation réelle, vous utiliseriez une liste d'images
+                      return Image.asset(
+                        "assets/images/temps.png",
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                      );
+                    },
                   ),
                 ),
               ),
@@ -97,7 +125,8 @@ class _PortalDetailPageState extends State<PortalDetailPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: List.generate(
                     3,
-                    (index) => PaginationDot(isActive: index == 0),
+                    (index) =>
+                        PaginationDot(isActive: index == _currentImageIndex),
                   ),
                 ),
               ),
@@ -244,14 +273,19 @@ class _PortalDetailPageState extends State<PortalDetailPage> {
     );
   }
 
-  Widget _buildVisitButton() {
+  Widget _buildVisitButton({
+    required String text,
+    required VoidCallback onPressed,
+     IconData? iconData,
+     String? assetPath,
+  }) {
     return CustomButton(
-      text: 'Visiter',
+      text: text,
       showArrow: true,
-      onPressed: () {
-        context.pushNamed(VisitRequestPage.routeName);
-      },
+      onPressed: onPressed,
       buttonVariant: ButtonVariant.primary,
+      iconData: iconData,
+  assetPath: assetPath,
     );
   }
 }
