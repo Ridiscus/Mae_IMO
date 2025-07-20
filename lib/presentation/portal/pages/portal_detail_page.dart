@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:maelys_imo/core/constants/app_colors.dart';
 import 'package:maelys_imo/core/constants/assets.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
 import 'package:maelys_imo/presentation/portal/pages/visit_request_page.dart';
@@ -28,57 +29,53 @@ class _PortalDetailPageState extends State<PortalDetailPage> {
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(statusBarColor: Colors.transparent),
       child: Scaffold(
-        backgroundColor: Color(0xFFF5F5F5),
-        body: SafeArea(
-          top: false,
-          bottom: false,
-          child: SizedBox(
-            width: context.getSize.width,
-            height: context.getSize.height,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildImageHeader(),
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.all(16.sp),
-
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildTitleAndPrice(),
-                          CustomSpacer(),
-                          _buildPropertyInfo(),
-                          CustomSpacer(),
-                          _buildAmenities(),
-                          CustomSpacer(),
-                          _buildDescription(),
-                          CustomSpacer(space: 3),
-                          if (widget.type?.toLowerCase() == 'prospect') ...[
-                            _buildVisitButton(
-                              text: 'Visiter',
-                              onPressed: () {
-                                context.pushNamed(VisitRequestPage.routeName);
-                              },
-                            ),
-                            SpacerPlatform(),
-                          ],
-                          if (widget.type?.toLowerCase() == 'tenant') ...[
-                            _buildVisitButton(
-                              text: 'Télécharger mon contrat',
-                              onPressed: () {},
-                              assetPath:  Assets.cloudDownload,
-                            ),
-                            SpacerPlatform(),
-                          ],
+        backgroundColor: AppColors.scaffold,
+        body: SizedBox(
+          width: context.getSize.width,
+          height: context.getSize.height,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildImageHeader(),
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.all(16.sp),
+        
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildTitleAndPrice(),
+                        CustomSpacer(),
+                        _buildPropertyInfo(),
+                        CustomSpacer(),
+                        _buildAmenities(),
+                        CustomSpacer(),
+                        _buildDescription(),
+                        CustomSpacer(space: 3),
+                        if (widget.type?.toLowerCase() == 'prospect') ...[
+                          _buildVisitButton(
+                            text: 'Visiter',
+                            onPressed: () {
+                              context.pushNamed(VisitRequestPage.routeName);
+                            },
+                          ),
+                          SpacerPlatform(),
                         ],
-                      ),
+                        if (widget.type?.toLowerCase() == 'tenant') ...[
+                          _buildVisitButton(
+                            text: 'Télécharger mon contrat',
+                            onPressed: () {},
+                            assetPath: Assets.cloudDownload,
+                          ),
+                          SpacerPlatform(),
+                        ],
+                      ],
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -134,7 +131,7 @@ class _PortalDetailPageState extends State<PortalDetailPage> {
           ),
 
           // Back button
-          Positioned(top: 40.r, left: 16.r, child: CircularBackButton()),
+          Positioned(left: 16.r, child: SafeArea(child: CircularBackButton())),
         ],
       ),
     );
@@ -276,8 +273,8 @@ class _PortalDetailPageState extends State<PortalDetailPage> {
   Widget _buildVisitButton({
     required String text,
     required VoidCallback onPressed,
-     IconData? iconData,
-     String? assetPath,
+    IconData? iconData,
+    String? assetPath,
   }) {
     return CustomButton(
       text: text,
@@ -285,7 +282,7 @@ class _PortalDetailPageState extends State<PortalDetailPage> {
       onPressed: onPressed,
       buttonVariant: ButtonVariant.primary,
       iconData: iconData,
-  assetPath: assetPath,
+      assetPath: assetPath,
     );
   }
 }

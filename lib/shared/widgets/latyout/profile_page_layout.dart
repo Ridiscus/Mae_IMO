@@ -4,13 +4,13 @@ part of '../index.dart';
 class ProfileEditOption {
   /// The icon to display for the edit option
   final IconData icon;
-  
+
   /// The title text of the edit option
   final String title;
-  
+
   /// The callback function when the option is tapped
   final VoidCallback onTap;
-  
+
   /// Optional trailing icon to display
   final IconData? trailingIcon;
 
@@ -27,41 +27,38 @@ class ProfileEditOption {
 class ProfileContactInfo {
   /// The icon to display next to the contact info
   final IconData icon;
-  
+
   /// The text content of the contact info (email, phone, etc.)
   final String text;
 
   /// Creates a new contact info item
-  const ProfileContactInfo({
-    required this.icon,
-    required this.text,
-  });
+  const ProfileContactInfo({required this.icon, required this.text});
 }
 
-/// A reusable widget for displaying a profile page with header, 
+/// A reusable widget for displaying a profile page with header,
 /// profile information, and edit options.
 class ProfilePageLayout extends StatelessWidget {
   /// The user's display name
   final String userName;
-  
+
   /// The user's ID to display
   final String userId;
-  
+
   /// Optional callback for back button. If null, the back button will use context.pop()
   final VoidCallback? onBackPressed;
-  
+
   /// Optional callback for logout button
   final VoidCallback onLogoutPressed;
-  
+
   /// List of contact information to display (email, phone, etc.)
   final List<ProfileContactInfo> contactInfo;
-  
+
   /// List of edit options to display in the bottom section
   final List<ProfileEditOption> editOptions;
-  
+
   /// Background color for the profile section
   final Color? profileBackgroundColor;
-  
+
   /// Creates a profile page layout
   const ProfilePageLayout({
     super.key,
@@ -106,13 +103,9 @@ class ProfilePageLayout extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            CircularBackButton(
-              onPressed: onBackPressed,
-            ),
-            CircularIcon(
-              iconAsset: Assets.logout,
-              onPressed: onLogoutPressed,
-            ),
+            CircularBackButton(onPressed: onBackPressed),
+
+            CircularSignOutButton(),
           ],
         ),
       ),
@@ -124,10 +117,7 @@ class ProfilePageLayout extends StatelessWidget {
       width: double.infinity,
       color: profileBackgroundColor ?? AppColors.primary,
       child: Column(
-        children: [
-          _buildProfileInfo(context),
-          _buildEditOptions(context),
-        ],
+        children: [_buildProfileInfo(context), _buildEditOptions(context)],
       ),
     );
   }
@@ -150,25 +140,29 @@ class ProfilePageLayout extends StatelessWidget {
           CustomSpacer(),
           Text(
             userName,
-            style: TextStyle(
-              fontSize: 24.r,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ).sourceSansProBold,
+            style:
+                TextStyle(
+                  fontSize: 24.r,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ).sourceSansProBold,
           ),
           SizedBox(height: 4.r),
           Text(
             'ID : $userId',
-            style: TextStyle(
-              fontSize: 16.r,
-              color: Colors.grey[300],
-            ).sourceSansProRegular,
+            style:
+                TextStyle(
+                  fontSize: 16.r,
+                  color: Colors.grey[300],
+                ).sourceSansProRegular,
           ),
           SizedBox(height: 24.r),
-          ...contactInfo.map((info) => Padding(
-            padding: EdgeInsets.only(bottom: 16.r),
-            child: _buildContactInfoItem(info),
-          )),
+          ...contactInfo.map(
+            (info) => Padding(
+              padding: EdgeInsets.only(bottom: 16.r),
+              child: _buildContactInfoItem(info),
+            ),
+          ),
         ],
       ),
     );
@@ -182,10 +176,11 @@ class ProfilePageLayout extends StatelessWidget {
         SizedBox(width: 16.r),
         Text(
           info.text,
-          style: TextStyle(
-            fontSize: 16.r,
-            color: Colors.white,
-          ).sourceSansProRegular,
+          style:
+              TextStyle(
+                fontSize: 16.r,
+                color: Colors.white,
+              ).sourceSansProRegular,
         ),
       ],
     );
@@ -226,11 +221,12 @@ class ProfilePageLayout extends StatelessWidget {
             Expanded(
               child: Text(
                 option.title,
-                style: TextStyle(
-                  fontSize: 18.r,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black87,
-                ).sourceSansProSemiBold,
+                style:
+                    TextStyle(
+                      fontSize: 18.r,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ).sourceSansProSemiBold,
               ),
             ),
             if (option.trailingIcon != null)

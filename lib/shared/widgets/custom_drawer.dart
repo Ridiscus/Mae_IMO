@@ -72,15 +72,6 @@ class CustomDrawer extends StatelessWidget {
                 size: 72,
                 backgroundColor: AppColors.primary,
               ),
-
-              CircularIcon(
-                iconAsset: Assets.logout,
-                backgroundColor: AppColors.redColor,
-                iconColor: Colors.white,
-                onPressed: () {
-                  context.goNamed(PortalPage.routeName);
-                },
-              ),
             ],
           ),
           SizedBox(height: 16.sp),

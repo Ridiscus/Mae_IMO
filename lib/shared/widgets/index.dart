@@ -33,6 +33,7 @@ part 'latyout/app_header_layout.dart';
 part 'latyout/page_with_header_layout.dart';
 part 'latyout/profile_page_layout.dart';
 part 'back_button.dart';
+part 'circular_signout_button.dart';
 part 'property_card.dart';
 part 'spacer_platform.dart';
 part 'scaffold_with_bottom_nav.dart';
