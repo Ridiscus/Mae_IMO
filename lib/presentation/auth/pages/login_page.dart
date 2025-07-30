@@ -6,6 +6,7 @@ import 'package:maelys_imo/presentation/agent/pages/home_agent_page.dart';
 import 'package:maelys_imo/presentation/tenant/pages/home_tenant_page.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
 
+import '../../tenant/pages/dashboard_tenant_page.dart';
 import '../pages/forget_passord_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -167,7 +168,7 @@ class _LoginPageState extends State<LoginPage> {
         if (_usernameController.text.trim().toLowerCase() == 'agent') {
           context.goNamed(HomeAgentPage.routeName);
         } else {
-          context.goNamed(HomeTenantPage.routeName);
+          context.goNamed(DashboardTenantPage.routeName);
         }
       },
       buttonVariant: ButtonVariant.primary,

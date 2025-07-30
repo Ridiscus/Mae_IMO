@@ -1,11 +1,23 @@
 import 'package:go_router/go_router.dart' show GoRoute;
 import '../presentation/tenant/pages/contact_agency_page.dart';
+import '../presentation/tenant/pages/dashboard_tenant_page.dart';
+import '../presentation/tenant/pages/document_tenant_page.dart';
 import '../presentation/tenant/pages/home_tenant_page.dart';
 import '../presentation/tenant/pages/payment_page.dart';
 import '../presentation/tenant/pages/profile_tenant_page.dart';
 
 class TenantRoutes {
   static List<GoRoute> routes = [
+    GoRoute(
+      name: DashboardTenantPage.routeName,
+      path: DashboardTenantPage.routePath,
+      builder: (context, state) => const DashboardTenantPage(),
+    ),
+    GoRoute(
+      name: DocumentsTenantPage.routeName,
+      path: DocumentsTenantPage.routePath,
+      builder: (context, state) => const DocumentsTenantPage(),
+    ),
     GoRoute(
       name: HomeTenantPage.routeName,
       path: HomeTenantPage.routePath,

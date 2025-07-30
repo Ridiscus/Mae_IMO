@@ -17,6 +17,7 @@ class PaymentPage extends StatefulWidget {
 class _PaymentPageState extends State<PaymentPage> {
   DateTime selectedDate = DateTime.now();
   String selectedPaymentMethod = 'Option 1';
+  TextEditingController _numberController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -35,11 +36,12 @@ class _PaymentPageState extends State<PaymentPage> {
         CustomSpacer(),
         Text(
           'Payer mon loyer',
-          style: TextStyle(
-            fontSize: 32.sp,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ).sourceSansProBold,
+          style:
+              TextStyle(
+                fontSize: 32.sp,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ).sourceSansProBold,
         ),
       ],
     );
@@ -109,7 +111,7 @@ class _PaymentPageState extends State<PaymentPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Choix de la période',
+          'Entrez le nombre de mois',
           style:
               TextStyle(
                 fontSize: 18.r,
@@ -118,15 +120,19 @@ class _PaymentPageState extends State<PaymentPage> {
               ).sourceSansProSemiBold,
         ),
         SizedBox(height: 12.r),
-        CustomDatePickerFactory.createDatePicker(
-          displayText: selectedDate.humanWithoutTime(),
-          onDateSelected: (DateTime date) {
-            setState(() {
-              // Format the date as needed
-              selectedDate = date;
-            });
+        CustomInputTextFactory.createTextInput(
+          keyboardType: TextInputType.number,
+          controller: _numberController,
+          validator: (value) {
+            if (value!.isEmpty ||
+                int.tryParse(value) == null ||
+                int.parse(value) > 12 ||
+                int.parse(value) <= 0) {
+              return 'Veuillez entrer un numéro de mois valide';
+            }
+            return null;
           },
-          hintText: 'Sélectionnez une période',
+          hintText: 'Entrez un chiffre entre 1 et 12',
         ),
       ],
     );

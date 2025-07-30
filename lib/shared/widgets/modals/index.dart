@@ -8,3 +8,4 @@ import 'package:pinput/pinput.dart';
 
 part 'modal_collecting_the_rent.dart';
 part 'modal_payment_info.dart';
+part 'modal_qr_code.dart';

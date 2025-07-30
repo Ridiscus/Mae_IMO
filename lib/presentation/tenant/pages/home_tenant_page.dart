@@ -51,6 +51,7 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
     return PageWithHeaderLayout(
       headerContent: _buildHeaderContent(),
       bodyContent: _buildContent(),
+
       //floatingActionButton: _buildContactButton(),
     );
   }
@@ -60,28 +61,57 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              'Juillet 2025',
-              style:
-                  TextStyle(
-                    fontSize: 20.r,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ).sourceSansProBold,
+            CircularBackButton(),
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    'Juillet 2025',
+                    style:
+                        TextStyle(
+                          fontSize: 20.r,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ).sourceSansProBold,
+                  ),
+                  Icon(Icons.arrow_drop_down, color: Colors.white, size: 24.r),
+                ],
+              ),
             ),
-            Icon(Icons.arrow_drop_down, color: Colors.white, size: 24.r),
-            Spacer(),
-            CircularIcon(
-              iconAsset: Assets.user,
-              onPressed: () {
-                context.pushNamed(ProfileTenantPage.routeName);
-              },
-            ),
+            // CircularIcon(
+            //   iconAsset: Assets.user,
+            //   onPressed: () {
+            //     context.pushNamed(ProfileTenantPage.routeName);
+            //   },
+            // ),
           ],
         ),
         CustomSpacer(),
-        _buildRentInfo(),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            _buildRentInfo(),
+            GestureDetector(
+              onTap: () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  backgroundColor: Colors.white,
+                  showDragHandle: true,
+                  useSafeArea: true,
+                  builder: (context) => ModalQrCode(),
+                );
+              },
+              child: CustomQrCodeView(data: DateTime.now().human()),
+            ),
+          ],
+        ),
         CustomSpacer(),
         _buildPayRentButton(),
       ],

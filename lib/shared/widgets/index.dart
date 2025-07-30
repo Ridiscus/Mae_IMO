@@ -13,6 +13,7 @@ import 'package:maelys_imo/presentation/portal/pages/portal_page.dart' show Port
 import 'package:maelys_imo/shared/models/index.dart';
 
 import 'package:go_router/go_router.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import '../../core/constants/app_colors.dart' show AppColors;
 
 
@@ -40,3 +41,4 @@ part 'pagination_dot.dart';
 
 // Widgets exportés directement (non-part)
 part 'illustration_header.dart';
+part 'custom_qr_code_view.dart';

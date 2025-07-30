@@ -59,6 +59,7 @@ class CustomInputText extends StatelessWidget {
   /// Le focus node pour le champ
   final FocusNode? focusNode;
 
+
   const CustomInputText({
     Key? key,
     this.controller,
@@ -80,7 +81,7 @@ class CustomInputText extends StatelessWidget {
     this.centerText = false,
     this.textInputAction,
     this.focusNode,
-  }) : super(key: key);
+   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -188,7 +189,8 @@ class CustomInputTextFactory {
     bool readOnly = false,
     TextInputAction? textInputAction,
     FocusNode? focusNode,
-  }) {
+    TextInputType? keyboardType,
+   }) {
     return CustomInputText(
       controller: controller,
       hintText: hintText,
@@ -204,7 +206,8 @@ class CustomInputTextFactory {
       readOnly: readOnly,
       textInputAction: textInputAction,
       focusNode: focusNode,
-    );
+      keyboardType: keyboardType,
+     );
   }
 
   static CustomInputText createTextAreaInput({

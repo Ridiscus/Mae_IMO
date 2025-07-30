@@ -5,21 +5,24 @@ import 'package:go_router/go_router.dart';
 import 'package:maelys_imo/core/constants/app_colors.dart';
 import 'package:maelys_imo/core/constants/assets.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
-import 'package:maelys_imo/presentation/agent/pages/profile_agent_page.dart';
 import 'package:maelys_imo/presentation/agent/pages/tenant_list_page.dart';
+import 'package:maelys_imo/presentation/tenant/pages/home_tenant_page.dart';
+import 'package:maelys_imo/presentation/tenant/pages/profile_tenant_page.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
 
-class HomeAgentPage extends StatefulWidget {
-  static const routeName = 'homeAgent';
-  static const routePath = '/home-agent';
+import 'document_tenant_page.dart';
 
-  const HomeAgentPage({super.key});
+class DashboardTenantPage extends StatefulWidget {
+  static const routeName = 'dashboardTenant';
+  static const routePath = '/dashboard-tenant';
+
+  const DashboardTenantPage({super.key});
 
   @override
-  State<HomeAgentPage> createState() => _HomeAgentPageState();
+  State<DashboardTenantPage> createState() => _DashboardTenantPageState();
 }
 
-class _HomeAgentPageState extends State<HomeAgentPage> {
+class _DashboardTenantPageState extends State<DashboardTenantPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -34,15 +37,25 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
         drawer: CustomDrawer(
           name: 'Nom de l\'utilisateur',
           email: 'utilsateur@gmail.com',
+          profileType: "tenant",
+          onDocumentsTap: () {
+            // _scaffoldKey.currentState?.closeDrawer();
+            context.pushNamed(DocumentsTenantPage.routeName);
+
+          },
           onHomeTap: () {
             _scaffoldKey.currentState?.closeDrawer();
+          },
+          onPaymentsTap: () {
+            // _scaffoldKey.currentState?.closeDrawer();
+            context.pushNamed(HomeTenantPage.routeName);
+
             // Already on home page
           },
+
           onProfileTap: () {
-            context.pushNamed(ProfileAgentPage.routeName);
-          },
-          onCurrentSituationTap: () {
-            _scaffoldKey.currentState?.closeDrawer();
+            // _scaffoldKey.currentState?.closeDrawer();
+            context.pushNamed(ProfileTenantPage.routeName);
           },
           onCloseTap: () {
             _scaffoldKey.currentState?.closeDrawer();
@@ -52,18 +65,9 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
         body: Stack(
           children: [
             Positioned(child: _buildHeader()),
-
             Positioned.fill(
-              top: MediaQuery.of(context).size.height * .22,
-
+              top: MediaQuery.of(context).size.height * .16,
               child: _buildContent(),
-            ),
-
-            Positioned(
-              left: 16.sp,
-              right: 16.sp,
-              top: MediaQuery.of(context).size.height * .14,
-              child: _buildTotalRentCard(),
             ),
           ],
         ),
@@ -105,7 +109,7 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
                     },
                   ),
                   Text(
-                    'Statistiques',
+                    'Accueil',
                     style:
                         TextStyle(
                           fontSize: 32.sp,
@@ -117,7 +121,7 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
                     iconAsset: Assets.user,
 
                     onPressed: () {
-                      context.pushNamed(ProfileAgentPage.routeName);
+                      context.pushNamed(ProfileTenantPage.routeName);
                     },
                   ),
                 ],
@@ -133,7 +137,6 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
     return Container(
       width: double.infinity,
       height: double.infinity,
-      padding: EdgeInsets.only(top: (150 / 1.8).h),
       decoration: BoxDecoration(
         color: AppColors.scaffold,
         borderRadius: BorderRadius.only(
@@ -147,10 +150,7 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildTenantsUpToDateCard(),
-              CustomSpacer(),
-              _buildTenantsInArrearsCard(),
-              CustomSpacer(),
+
               _buildPendingPaymentsCard(),
             ],
           ),

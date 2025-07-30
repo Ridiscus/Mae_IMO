@@ -1,28 +1,34 @@
 part of 'index.dart';
 
 class CustomDrawer extends StatelessWidget {
+  final String? profileType;
   final String name;
   final String email;
   final String? profileImage;
   final Function()? onHomeTap;
+  final Function()? onPaymentsTap;
   final Function()? onWalletTap;
   final Function()? onTransactionsTap;
   final Function()? onProfileTap;
-  final Function()? onSettingsTap;
+  final Function()? onCurrentSituationTap;
+  final Function()? onDocumentsTap;
   final Function()? onLogoutTap;
   final Function()? onCloseTap;
   final int selectedIndex;
 
   const CustomDrawer({
     super.key,
+    this.profileType,
     required this.name,
     required this.email,
     this.profileImage,
     this.onHomeTap,
+    this.onPaymentsTap,
     this.onWalletTap,
     this.onTransactionsTap,
     this.onProfileTap,
-    this.onSettingsTap,
+    this.onCurrentSituationTap,
+    this.onDocumentsTap,
     this.onLogoutTap,
     this.onCloseTap,
     this.selectedIndex = 0,
@@ -110,8 +116,7 @@ class CustomDrawer extends StatelessWidget {
         icon: Icons.home_outlined,
         title: 'Accueil',
         onTap: onHomeTap ?? onCloseTap,
-        isSelected: selectedIndex == 0,
-      ),
+       ),
       /* _MenuItem(
         icon: Icons.account_balance_wallet_outlined,
         title: 'Wallet',
@@ -124,18 +129,29 @@ class CustomDrawer extends StatelessWidget {
         onTap: onTransactionsTap,
         isSelected: selectedIndex == 2,
       ), */
+      // _MenuItem(
+      //   icon: Icons.person_outline,
+      //   title: 'Profil',
+      //   onTap: onProfileTap,
+      //  ),
       _MenuItem(
-        icon: Icons.person_outline,
-        title: 'Profil',
-        onTap: onProfileTap,
-        isSelected: selectedIndex == 1,
-      ),
-      _MenuItem(
-        icon: Icons.settings_outlined,
-        title: 'Paramètres',
-        onTap: onSettingsTap,
-        isSelected: selectedIndex == 2,
-      ),
+        icon: Icons.checklist_outlined,
+        title: 'État des lieux',
+        onTap: onCurrentSituationTap,
+       ),
+      if (profileType == 'tenant') ...[
+
+        _MenuItem(
+          icon: Icons.payment,
+          title: 'Paiements',
+          onTap: onPaymentsTap,
+         )
+        ,_MenuItem(
+          icon: Icons.picture_as_pdf_outlined,
+          title: 'Documents',
+          onTap: onDocumentsTap,
+         ),
+      ],
     ];
 
     return ListView.separated(
