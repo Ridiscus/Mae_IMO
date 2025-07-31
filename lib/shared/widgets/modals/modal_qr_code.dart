@@ -1,5 +1,4 @@
 part of 'index.dart';
-
 class ModalQrCode extends StatelessWidget {
   const ModalQrCode({super.key});
 
@@ -29,7 +28,7 @@ class ModalQrCode extends StatelessWidget {
               borderRadius: BorderRadius.circular(15.r),
             ),
             child: CustomQrCodeView(
-              data: DateTime.now().human(),
+              data: DateTime.now().toString(), // Replace with proper formatting method if available
               padding: EdgeInsets.zero,
               backgroundColor: Colors.transparent,
             ),

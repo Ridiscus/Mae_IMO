@@ -8,6 +8,7 @@ import 'package:maelys_imo/core/extensions/index.dart';
 import 'package:maelys_imo/presentation/agent/pages/tenant_list_page.dart';
 import 'package:maelys_imo/presentation/tenant/pages/home_tenant_page.dart';
 import 'package:maelys_imo/presentation/tenant/pages/profile_tenant_page.dart';
+import 'package:maelys_imo/presentation/tenant/pages/property_inspection_page.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
 
 import 'document_tenant_page.dart';
@@ -39,28 +40,24 @@ class _DashboardTenantPageState extends State<DashboardTenantPage> {
           email: 'utilsateur@gmail.com',
           profileType: "tenant",
           onDocumentsTap: () {
-            // _scaffoldKey.currentState?.closeDrawer();
             context.pushNamed(DocumentsTenantPage.routeName);
-
           },
           onHomeTap: () {
             _scaffoldKey.currentState?.closeDrawer();
           },
           onPaymentsTap: () {
-            // _scaffoldKey.currentState?.closeDrawer();
             context.pushNamed(HomeTenantPage.routeName);
-
-            // Already on home page
           },
 
           onProfileTap: () {
-            // _scaffoldKey.currentState?.closeDrawer();
             context.pushNamed(ProfileTenantPage.routeName);
           },
           onCloseTap: () {
             _scaffoldKey.currentState?.closeDrawer();
           },
-          selectedIndex: 0, // Home is selected
+          onCurrentSituationTap: () {
+            context.pushNamed(PropertyInspectionPage.routeName);
+          },
         ),
         body: Stack(
           children: [
@@ -149,10 +146,7 @@ class _DashboardTenantPageState extends State<DashboardTenantPage> {
           padding: EdgeInsets.all(16.sp),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-
-              _buildPendingPaymentsCard(),
-            ],
+            children: [_buildPendingPaymentsCard()],
           ),
         ),
       ),
@@ -251,19 +245,13 @@ class _DashboardTenantPageState extends State<DashboardTenantPage> {
 
   Widget _buildPendingPaymentsCard() {
     return _buildStatCard(
-      title: 'Nombre de paiement en attente',
-      value: '20',
+      title: 'Nombre de en rétard',
+      value: '2',
       iconData: Icons.watch_later_outlined,
-      iconBackgroundColor: AppColors.primary,
-      arrowColor: AppColors.orange,
-      valueColor: AppColors.orange,
-      onTap: () {
-        // Navigate to pending payments list
-        context.pushNamed(
-          TenantListPage.routeName,
-          pathParameters: {'type': 'pending'},
-        );
-      },
+      iconBackgroundColor: AppColors.redColor,
+      arrowColor: AppColors.redColor,
+      valueColor: AppColors.redColor,
+      onTap: () {},
     );
   }
 

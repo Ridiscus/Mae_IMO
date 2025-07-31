@@ -1,5 +1,4 @@
 part of 'index.dart';
-
 class ModalPaymentInfo extends StatelessWidget {
   /// Le mois du paiement
   final String month;
@@ -36,19 +35,15 @@ class ModalPaymentInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom,
-      ),
-      decoration: const BoxDecoration(color: Colors.transparent),
-      child: Container(
-        padding: EdgeInsets.all(24.sp),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30.r),
-            topRight: Radius.circular(30.r),
-          ),
+      padding: EdgeInsets.symmetric(horizontal: 24.sp),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30.r),
+          topRight: Radius.circular(30.r),
         ),
+      ),
+      child: SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -101,7 +96,7 @@ class ModalPaymentInfo extends StatelessWidget {
             width: 80.w,
             height: 80.w,
             decoration: BoxDecoration(
-              color: isPaid ? AppColors.success.withOpacity(0.1) : AppColors.redColor.withOpacity(0.1),
+              color: isPaid ? AppColors.success.withValues(alpha: 0.1) : AppColors.redColor.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -139,9 +134,9 @@ class ModalPaymentInfo extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(16.sp),
       decoration: BoxDecoration(
-        color: Colors.grey.withOpacity(0.05),
+        color: Colors.grey.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: Colors.grey.withOpacity(0.2)),
+        border: Border.all(color: Colors.grey.withValues(alpha: 0.2)),
       ),
       child: Column(
         children: [
@@ -151,7 +146,7 @@ class ModalPaymentInfo extends StatelessWidget {
             icon: Icons.calendar_today,
           ),
           if (reference != null) ...[
-            Divider(height: 24.sp, color: Colors.grey.withOpacity(0.2)),
+            Divider(height: 24.sp, color: Colors.grey.withValues(alpha: 0.2)),
             _buildDetailRow(
               label: 'Référence',
               value: reference!,
@@ -159,7 +154,7 @@ class ModalPaymentInfo extends StatelessWidget {
             ),
           ],
           if (paymentMethod != null) ...[
-            Divider(height: 24.sp, color: Colors.grey.withOpacity(0.2)),
+            Divider(height: 24.sp, color: Colors.grey.withValues(alpha: 0.2)),
             _buildDetailRow(
               label: 'Méthode de paiement',
               value: paymentMethod!,
@@ -167,7 +162,7 @@ class ModalPaymentInfo extends StatelessWidget {
             ),
           ],
           if (recipientName != null) ...[
-            Divider(height: 24.sp, color: Colors.grey.withOpacity(0.2)),
+            Divider(height: 24.sp, color: Colors.grey.withValues(alpha: 0.2)),
             _buildDetailRow(
               label: 'Bénéficiaire',
               value: recipientName!,
@@ -190,7 +185,7 @@ class ModalPaymentInfo extends StatelessWidget {
           width: 40.sp,
           height: 40.sp,
           decoration: BoxDecoration(
-            color: AppColors.primary.withOpacity(0.1),
+            color: AppColors.primary.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8.r),
           ),
           child: Icon(

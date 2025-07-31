@@ -5,6 +5,7 @@ import '../presentation/tenant/pages/document_tenant_page.dart';
 import '../presentation/tenant/pages/home_tenant_page.dart';
 import '../presentation/tenant/pages/payment_page.dart';
 import '../presentation/tenant/pages/profile_tenant_page.dart';
+import '../presentation/tenant/pages/property_inspection_page.dart';
 
 class TenantRoutes {
   static List<GoRoute> routes = [
@@ -37,6 +38,13 @@ class TenantRoutes {
       name: ContactAgencyPage.routeName,
       path: ContactAgencyPage.routePath,
       builder: (context, state) => const ContactAgencyPage(),
+    ),
+    GoRoute(
+      name: PropertyInspectionPage.routeName,
+      path: PropertyInspectionPage.routePath,
+      builder: (context, state) => const PropertyInspectionPage(
+
+      ),
     ),
   ];
 }

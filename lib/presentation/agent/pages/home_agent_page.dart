@@ -6,6 +6,7 @@ import 'package:maelys_imo/core/constants/app_colors.dart';
 import 'package:maelys_imo/core/constants/assets.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
 import 'package:maelys_imo/presentation/agent/pages/profile_agent_page.dart';
+import 'package:maelys_imo/presentation/agent/pages/property_inspection_list_page.dart';
 import 'package:maelys_imo/presentation/agent/pages/tenant_list_page.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
 
@@ -152,6 +153,8 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
               _buildTenantsInArrearsCard(),
               CustomSpacer(),
               _buildPendingPaymentsCard(),
+              CustomSpacer(),
+              _buildPropertyInspectionCard(),
             ],
           ),
         ),
@@ -263,6 +266,22 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
           TenantListPage.routeName,
           pathParameters: {'type': 'pending'},
         );
+      },
+    );
+  }
+
+  // État des lieux card
+  Widget _buildPropertyInspectionCard() {
+    return _buildStatCard(
+      title: 'États des lieux à effectuer',
+      value: '3',
+      iconData: Icons.home_work_outlined,
+      iconBackgroundColor: AppColors.primary,
+      arrowColor: AppColors.primary,
+      valueColor: AppColors.primary,
+      onTap: () {
+        // Navigate to property inspection list
+        context.pushNamed(PropertyInspectionListPage.routeName);
       },
     );
   }

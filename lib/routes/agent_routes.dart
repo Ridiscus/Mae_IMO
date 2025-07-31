@@ -4,6 +4,9 @@ import '../presentation/agent/pages/home_agent_page.dart';
 import '../presentation/agent/pages/profile_agent_page.dart';
 import '../presentation/agent/pages/tenant_detail_page.dart';
 import '../presentation/agent/pages/tenant_list_page.dart';
+import '../presentation/agent/pages/property_inspection_list_page.dart';
+import '../presentation/agent/pages/property_inspection_detail_page.dart';
+import '../presentation/agent/pages/property_inspection_form_page.dart';
 
 class AgentRoutes {
   static List<GoRoute> routes = [
@@ -46,6 +49,28 @@ class AgentRoutes {
       name: ProfileAgentPage.routeName,
       path: ProfileAgentPage.routePath,
       builder: (context, state) => const ProfileAgentPage(),
+    ),
+    // Property Inspection Routes
+    GoRoute(
+      name: PropertyInspectionListPage.routeName,
+      path: PropertyInspectionListPage.routePath,
+      builder: (context, state) => const PropertyInspectionListPage(),
+    ),
+    GoRoute(
+      name: PropertyInspectionDetailPage.routeName,
+      path: PropertyInspectionDetailPage.routePath,
+      builder: (context, state) {
+        final propertyId = state.pathParameters['id'] ?? '';
+        return PropertyInspectionDetailPage(propertyId: propertyId);
+      },
+    ),
+    GoRoute(
+      name: PropertyInspectionFormPage.routeName,
+      path: PropertyInspectionFormPage.routePath,
+      builder: (context, state) {
+        final propertyId = state.pathParameters['id'] ?? '';
+        return PropertyInspectionFormPage(propertyId: propertyId);
+      },
     ),
   ];
 }
