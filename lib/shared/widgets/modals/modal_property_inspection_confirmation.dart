@@ -53,16 +53,8 @@ class _ModalPropertyInspectionConfirmationState
   }
 
   void _scanQrCode() {
-    // This would normally navigate to a QR code scanner page
-    // For now, we'll just simulate a successful scan
-    Navigator.pop(context); // Close the modal first
-
-    // In a real implementation, we would navigate to a QR scanner page
-    // and handle the result there
-    Future.delayed(const Duration(milliseconds: 500), () {
-      // Simulate a successful scan
-      widget.onValidated();
-    });
+    // On utilise maintenant un vrai scanner QR code
+    // La gestion du résultat est faite dans le callback du QrCodeViewer
   }
 
   @override
@@ -292,18 +284,26 @@ class _ModalPropertyInspectionConfirmationState
           Container(
             width: 250.w,
             height: 250.w,
-            decoration: BoxDecoration(
-              color: Colors.grey.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(16.r),
-              border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-
-              ],
+            child: QrCodeViewer(
+              onQrCodeScanned: (String scannedCode) {
+                // Vérifie si le code scanné correspond à celui attendu
+                // Dans une vraie implémentation, comparez avec un code attendu
+                if (scannedCode.isNotEmpty) {
+                  // Ferme la modal et appelle la fonction de validation
+                  Navigator.pop(context);
+                  widget.onValidated();
+                } else {
+                  setState(() {
+                    _errorMessage = 'Code QR invalide. Veuillez réessayer.';
+                  });
+                }
+              },
             ),
           ),
+          if (_errorMessage != null) ...[
+            CustomSpacer(space: 0.5),
+            _buildErrorMessage(),
+          ],
         ],
       ),
     );

@@ -2,6 +2,8 @@
 // Utilisez 'import 'package:maelys_imo/shared/widgets/index.dart';' 
 // pour importer tous les widgets en une seule ligne
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -14,8 +16,11 @@ import 'package:maelys_imo/shared/models/index.dart';
 
 import 'package:go_router/go_router.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:qr_code_scanner/qr_code_scanner.dart';
 import '../../core/constants/app_colors.dart' show AppColors;
 
+// Export QrCodeViewer comme un widget autonome (ne fait pas partie de l'index)
+part 'qr_code_viewer.dart';
 
 part 'category_list.dart';
 part 'circular_icon.dart';
