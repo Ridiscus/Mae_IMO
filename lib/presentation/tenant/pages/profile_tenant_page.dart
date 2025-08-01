@@ -3,8 +3,9 @@ import 'package:go_router/go_router.dart';
 import 'package:maelys_imo/core/constants/app_colors.dart';
 import 'package:maelys_imo/presentation/portal/pages/portal_detail_page.dart';
 import 'package:maelys_imo/presentation/portal/pages/portal_page.dart';
-import 'package:maelys_imo/presentation/tenant/pages/contact_agency_page.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
+
+import 'contact_agency_page.dart';
 
 class ProfileTenantPage extends StatefulWidget {
   static const routeName = 'profileTenant';
@@ -21,14 +22,8 @@ class _ProfileTenantPageState extends State<ProfileTenantPage> {
   Widget build(BuildContext context) {
     // Define contact info
     final List<ProfileContactInfo> contactInfo = [
-      ProfileContactInfo(
-        icon: Icons.email_outlined,
-        text: 'user@gmail.com',
-      ),
-      ProfileContactInfo(
-        icon: Icons.phone_outlined,
-        text: '+225 0578687749',
-      ),
+      ProfileContactInfo(icon: Icons.email_outlined, text: 'user@gmail.com'),
+      ProfileContactInfo(icon: Icons.phone_outlined, text: '+225 0578687749'),
     ];
 
     // Define edit options with tenant-specific options
@@ -71,6 +66,14 @@ class _ProfileTenantPageState extends State<ProfileTenantPage> {
           context.pushNamed(ContactAgencyPage.routeName);
         },
       ),
+
+      ProfileEditOption(
+        icon: Icons.logout_outlined,
+        title: 'Déconnexion',
+        onTap: () {
+          context.goNamed(PortalPage.routeName);
+        },
+      ),
     ];
 
     return ProfilePageLayout(
@@ -84,6 +87,4 @@ class _ProfileTenantPageState extends State<ProfileTenantPage> {
       },
     );
   }
-
-
 }

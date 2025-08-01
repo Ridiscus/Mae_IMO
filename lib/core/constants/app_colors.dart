@@ -17,6 +17,7 @@ class AppColors {
   static Color get success => Color.fromRGBO(4, 139, 19, 1);
 
   static Color get black => Color.fromRGBO(33, 33, 33, 1);
+  static Color get fillColor => Color(0xFFEDEDED);
 
 
   // 100% = FF

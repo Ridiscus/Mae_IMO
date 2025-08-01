@@ -86,11 +86,11 @@ class CustomDrawer extends StatelessWidget {
             child: Text(
               name,
               style:
-                  TextStyle(
-                    fontSize: 24.sp,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ).sourceSansProSemiBold,
+              TextStyle(
+                fontSize: 24.sp,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ).sourceSansProSemiBold,
             ),
           ),
           SizedBox(height: 8.sp),
@@ -99,10 +99,10 @@ class CustomDrawer extends StatelessWidget {
             child: Text(
               email,
               style:
-                  TextStyle(
-                    fontSize: 14.sp,
-                    color: Colors.grey[600],
-                  ).sourceSansProRegular,
+              TextStyle(
+                fontSize: 14.sp,
+                color: Colors.grey[600],
+              ).sourceSansProRegular,
             ),
           ),
         ],
@@ -116,7 +116,7 @@ class CustomDrawer extends StatelessWidget {
         icon: Icons.home_outlined,
         title: 'Accueil',
         onTap: onHomeTap ?? onCloseTap,
-       ),
+      ),
       /* _MenuItem(
         icon: Icons.account_balance_wallet_outlined,
         title: 'Wallet',
@@ -134,29 +134,32 @@ class CustomDrawer extends StatelessWidget {
       //   title: 'Profil',
       //   onTap: onProfileTap,
       //  ),
-      _MenuItem(
-        icon: Icons.checklist_outlined,
-        title: 'État des lieux',
-        onTap: onCurrentSituationTap,
-       ),
+      if (profileType != 'tenant') ...[
+        _MenuItem(
+          icon: Icons.checklist_outlined,
+          title: 'État des lieux',
+          onTap: onCurrentSituationTap,
+        ),
+      ],
+
       if (profileType == 'tenant') ...[
-        _MenuItem(
-          icon: Icons.payment,
-          title: 'Paiements',
-          onTap: onPaymentsTap,
-         ),
-        _MenuItem(
-          icon: Icons.picture_as_pdf_outlined,
-          title: 'Documents',
-          onTap: onDocumentsTap,
-         ),
+        // _MenuItem(
+        //   icon: Icons.payment,
+        //   title: 'Paiements',
+        //   onTap: onPaymentsTap,
+        //  ),
+        // _MenuItem(
+        //   icon: Icons.picture_as_pdf_outlined,
+        //   title: 'Documents',
+        //   onTap: onDocumentsTap,
+        //  ),
         _MenuItem(
           icon: Icons.phone,
           title: 'Contacter l\'agence',
           onTap: () {
-              context.pushNamed(ContactAgencyPage.routeName);
+            context.pushNamed(ContactAgencyPage.routeName);
           },
-         ),
+        ),
       ],
     ];
 
@@ -191,11 +194,11 @@ class _MenuItem extends StatelessWidget {
       title: Text(
         title,
         style:
-            TextStyle(
-              fontSize: 16.sp,
-              fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-              color: isSelected ? Colors.black : Colors.black87,
-            ).sourceSansProRegular,
+        TextStyle(
+          fontSize: 16.sp,
+          fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+          color: isSelected ? Colors.black : Colors.black87,
+        ).sourceSansProRegular,
       ),
       onTap: onTap,
       contentPadding: EdgeInsets.symmetric(horizontal: 24.sp),

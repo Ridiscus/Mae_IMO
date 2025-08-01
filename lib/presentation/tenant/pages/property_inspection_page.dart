@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:maelys_imo/core/constants/app_colors.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
@@ -27,12 +28,17 @@ class _PropertyInspectionPageState extends State<PropertyInspectionPage> {
     {'name': 'Salle de bain', 'status': false},
   ];
 
-
   @override
   Widget build(BuildContext context) {
-    return PageWithHeaderLayout(
-      headerContent: _buildHeaderContent(),
-      bodyContent: _buildInspectionForm(),
+    return AnnotatedRegion(
+      value: SystemUiOverlayStyle(
+        statusBarColor: AppColors.primary,
+        statusBarIconBrightness: Brightness.light,
+      ),
+      child: PageWithHeaderLayout(
+        headerContent: _buildHeaderContent(),
+        bodyContent: _buildInspectionForm(),
+      ),
     );
   }
 
@@ -200,9 +206,7 @@ class _PropertyInspectionPageState extends State<PropertyInspectionPage> {
       padding: EdgeInsets.symmetric(vertical: 10.sp),
       decoration: BoxDecoration(
         color:
-            isSelected
-                ? color.withOpacity(0.1)
-                : Colors.grey.withOpacity(0.1),
+            isSelected ? color.withOpacity(0.1) : Colors.grey.withOpacity(0.1),
         border: Border.all(
           color: isSelected ? color : Colors.grey.withOpacity(0.3),
           width: 1.sp,

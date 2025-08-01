@@ -101,11 +101,11 @@ class ProfilePageLayout extends StatelessWidget {
       alignment: Alignment.centerLeft,
       child: SafeArea(
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             CircularBackButton(onPressed: onBackPressed),
 
-            CircularSignOutButton(),
+            // CircularSignOutButton(),
           ],
         ),
       ),

@@ -2,12 +2,14 @@ part of 'index.dart';
 
 class PropertyCard extends StatefulWidget {
   final PropertyModel property;
+  final bool showMoreInfo;
   final VoidCallback onPressed;
 
   const PropertyCard({
     Key? key,
     required this.property,
     required this.onPressed,
+    this.showMoreInfo = true,
   }) : super(key: key);
 
   @override
@@ -16,7 +18,7 @@ class PropertyCard extends StatefulWidget {
 
 class _PropertyCardState extends State<PropertyCard> {
   int _currentImageIndex = 0;
-  
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -73,7 +75,8 @@ class _PropertyCardState extends State<PropertyCard> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: List.generate(
                         widget.property.imageCount,
-                        (index) => _buildPaginationDot(index == _currentImageIndex),
+                        (index) =>
+                            _buildPaginationDot(index == _currentImageIndex),
                       ),
                     ),
                   ),
@@ -81,21 +84,24 @@ class _PropertyCardState extends State<PropertyCard> {
               ),
             ),
             // Property details
-            const CustomSpacer(),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.property.title,
-                  style: TextStyle(
-                    fontSize: 15.sp,
-                    fontWeight: FontWeight.bold,
-                  ).sourceSansProSemiBold,
-                ),
-                SizedBox(height: 12.r),
-                _buildAmenities(),
-              ],
-            ),
+            if (this.widget.showMoreInfo) ...[
+              const CustomSpacer(),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.property.title,
+                    style:
+                        TextStyle(
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.bold,
+                        ).sourceSansProSemiBold,
+                  ),
+                  SizedBox(height: 12.r),
+                  _buildAmenities(),
+                ],
+              ),
+            ],
           ],
         ),
       ),
@@ -110,29 +116,32 @@ class _PropertyCardState extends State<PropertyCard> {
     return Wrap(
       spacing: 8.r,
       runSpacing: 8.r,
-      children: widget.property.amenities.map((amenity) {
-        return Container(
-          padding: EdgeInsets.symmetric(horizontal: 8.r, vertical: 4.r),
-          decoration: BoxDecoration(
-            color: Colors.grey.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(8.r),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.shower_outlined, size: 14.r, color: Colors.grey), // À remplacer par l'icône dynamique
-              SizedBox(width: 4.r),
-              Text(
-                amenity.text,
-                style: TextStyle(
-                  fontSize: 12.r,
-                  color: Colors.grey,
-                ).sourceSansProRegular,
+      children:
+          widget.property.amenities.map((amenity) {
+            return Container(
+              padding: EdgeInsets.symmetric(horizontal: 8.r, vertical: 4.r),
+              decoration: BoxDecoration(
+                color: Colors.grey.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8.r),
               ),
-            ],
-          ),
-        );
-      }).toList(),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.shower_outlined, size: 14.r, color: Colors.grey),
+                  // À remplacer par l'icône dynamique
+                  SizedBox(width: 4.r),
+                  Text(
+                    amenity.text,
+                    style:
+                        TextStyle(
+                          fontSize: 12.r,
+                          color: Colors.grey,
+                        ).sourceSansProRegular,
+                  ),
+                ],
+              ),
+            );
+          }).toList(),
     );
   }
 }

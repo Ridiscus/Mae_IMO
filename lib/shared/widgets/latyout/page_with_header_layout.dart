@@ -66,35 +66,17 @@ class PageWithHeaderLayout extends StatelessWidget {
               roundedBottomCorners: roundedBottomCorners,
               content: headerContent,
             ),
-            Expanded(child: _buildBody()),
+
+            ScrollableBodyWidget(
+              bodyContent: bodyContent,
+              bodyPadding: bodyPadding,
+            ),
           ],
         ),
       ),
       floatingActionButton: floatingActionButton,
       floatingActionButtonLocation:
           floatingActionButton != null ? floatingActionButtonLocation : null,
-    );
-  }
-
-  Widget _buildBody() {
-    return SizedBox(
-      width: double.infinity,
-      // color: bodyBackgroundColor ?? AppColors.scaffold,
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          return SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(minHeight: constraints.maxHeight),
-
-              child: Padding(
-                padding: bodyPadding ?? EdgeInsets.all(16.sp),
-                child: bodyContent,
-              ),
-            ),
-          );
-        },
-      ),
     );
   }
 }

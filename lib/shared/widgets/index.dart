@@ -3,6 +3,7 @@
 // pour importer tous les widgets en une seule ligne
 
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -51,5 +52,8 @@ part 'custom_qr_code_view.dart';
 part 'info_card_widget.dart';
 part 'info_row_widget.dart';
 part 'stats_card_widget.dart';
+part 'scrollable_body_widget.dart';
+part 'icon_button_menu.dart';
+part 'custom_floating_action.dart';
 
 
