@@ -43,7 +43,7 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
             context.pushNamed(ProfileAgentPage.routeName);
           },
           onCurrentSituationTap: () {
-            _scaffoldKey.currentState?.closeDrawer();
+            context.pushNamed(PropertyInspectionListPage.routeName);
           },
           onCloseTap: () {
             _scaffoldKey.currentState?.closeDrawer();
@@ -217,7 +217,7 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
   }
 
   Widget _buildTenantsUpToDateCard() {
-    return _buildStatCard(
+    return StatsCardWidget(
       title: 'Nombre de locataire à jours',
       value: '20',
       iconData: Icons.calendar_today,
@@ -235,7 +235,7 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
   }
 
   Widget _buildTenantsInArrearsCard() {
-    return _buildStatCard(
+    return StatsCardWidget(
       title: 'Nombre de locataire en retard',
       value: '20',
       iconData: Icons.warning_amber_rounded,
@@ -253,7 +253,7 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
   }
 
   Widget _buildPendingPaymentsCard() {
-    return _buildStatCard(
+    return StatsCardWidget(
       title: 'Nombre de paiement en attente',
       value: '20',
       iconData: Icons.watch_later_outlined,
@@ -272,7 +272,7 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
 
   // État des lieux card
   Widget _buildPropertyInspectionCard() {
-    return _buildStatCard(
+    return StatsCardWidget(
       title: 'États des lieux à effectuer',
       value: '3',
       iconData: Icons.home_work_outlined,
@@ -283,84 +283,6 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
         // Navigate to property inspection list
         context.pushNamed(PropertyInspectionListPage.routeName);
       },
-    );
-  }
-
-  Widget _buildStatCard({
-    required String title,
-    required String value,
-    required IconData iconData,
-    required Color iconBackgroundColor,
-    required Color arrowColor,
-    required Color valueColor,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: double.infinity,
-        constraints: BoxConstraints(maxHeight: 110.h),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20.r),
-          border: Border.all(color: arrowColor.withValues(alpha: 0.3)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
-              blurRadius: 10,
-              offset: Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 60.w,
-              decoration: BoxDecoration(
-                color: arrowColor.withValues(alpha: 0.3),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20.r),
-                  bottomLeft: Radius.circular(20.r),
-                ),
-              ),
-              child: Center(
-                child: Icon(iconData, color: arrowColor, size: 30.sp),
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15.sp),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style:
-                          TextStyle(
-                            fontSize: 16.sp,
-                            color: AppColors.black,
-                          ).sourceSansProSemiBold,
-                    ),
-
-                    Text(
-                      value,
-                      style:
-                          TextStyle(
-                            fontSize: 38.sp,
-                            fontWeight: FontWeight.bold,
-                            color: valueColor,
-                          ).sourceSansProBold,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

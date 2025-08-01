@@ -18,6 +18,7 @@ import 'package:go_router/go_router.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import '../../core/constants/app_colors.dart' show AppColors;
+import '../../presentation/tenant/pages/contact_agency_page.dart';
 
 // Export QrCodeViewer comme un widget autonome (ne fait pas partie de l'index)
 part 'qr_code_viewer.dart';
@@ -47,3 +48,8 @@ part 'pagination_dot.dart';
 // Widgets exportés directement (non-part)
 part 'illustration_header.dart';
 part 'custom_qr_code_view.dart';
+part 'info_card_widget.dart';
+part 'info_row_widget.dart';
+part 'stats_card_widget.dart';
+
+

@@ -52,25 +52,16 @@ class _ModalPropertyInspectionConfirmationState
     });
   }
 
-  void _scanQrCode() {
-    // On utilise maintenant un vrai scanner QR code
-    // La gestion du résultat est faite dans le callback du QrCodeViewer
-  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom,
-        left: 24.sp,
-        right: 24.sp,
-        top: 24.sp,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: 24.sp),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(30.r),
-          topRight: Radius.circular(30.r),
+          topLeft: Radius.circular(20.r),
+          topRight: Radius.circular(20.r),
         ),
       ),
       child: SafeArea(
@@ -158,7 +149,7 @@ class _ModalPropertyInspectionConfirmationState
                     ),
               ),
             ),
-            SizedBox(width: 12.sp),
+            SizedBox(width: 24.sp),
             Expanded(
               child: _buildMethodButton(
                 icon: Icons.qr_code_scanner,
@@ -281,16 +272,15 @@ class _ModalPropertyInspectionConfirmationState
     return Center(
       child: Column(
         children: [
-          Container(
+          SizedBox(
             width: 250.w,
             height: 250.w,
             child: QrCodeViewer(
+
               onQrCodeScanned: (String scannedCode) {
                 // Vérifie si le code scanné correspond à celui attendu
                 // Dans une vraie implémentation, comparez avec un code attendu
                 if (scannedCode.isNotEmpty) {
-                  // Ferme la modal et appelle la fonction de validation
-                  Navigator.pop(context);
                   widget.onValidated();
                 } else {
                   setState(() {
@@ -310,10 +300,13 @@ class _ModalPropertyInspectionConfirmationState
   }
 
   Widget _buildErrorMessage() {
-    return Text(
-      _errorMessage!,
-      textAlign: TextAlign.center,
-      style: TextStyle(fontSize: 16.sp, color: Colors.red).sourceSansProRegular,
+    return Center(
+      child: Text(
+        _errorMessage!,
+        textAlign: TextAlign.center,
+        style:
+            TextStyle(fontSize: 16.sp, color: Colors.red).sourceSansProRegular,
+      ),
     );
   }
 
@@ -326,12 +319,7 @@ class _ModalPropertyInspectionConfirmationState
         buttonVariant: ButtonVariant.primary,
       );
     } else {
-      return CustomButton(
-        text: 'Scanner maintenant',
-        onPressed: _scanQrCode,
-        buttonVariant: ButtonVariant.primary,
-        iconData: Icons.qr_code_scanner,
-      );
+      return SizedBox.shrink();
     }
   }
 }

@@ -146,190 +146,77 @@ class _DashboardTenantPageState extends State<DashboardTenantPage> {
           padding: EdgeInsets.all(16.sp),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [_buildPendingPaymentsCard()],
+            children: [
+              _buildBilingPaymentsCard(),
+              CustomSpacer(),
+
+              _buildPropertyInfoCard(),
+              CustomSpacer(),
+              _buildPAgencyInfoCard(),
+              CustomSpacer(),
+
+            ],
           ),
         ),
       ),
     );
   }
 
-  Widget _buildTotalRentCard() {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.all(24.sp),
-      decoration: BoxDecoration(
-        color: AppColors.primary,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(
-          color: AppColors.scaffold.withValues(alpha: .12),
-          width: 1.sp,
-          style: BorderStyle.solid,
-        ),
-      ),
+  Widget _buildPropertyInfoCard() {
+    return InfoCardWidget(
+      title: 'Mon Bien loué',
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Text(
-            'Montant total des loyers réçu',
-            style:
-                TextStyle(
-                  fontSize: 18.sp,
-                  color: Colors.white,
-                ).sourceSansProRegular,
+          InfoRowWidget(icon: Icons.home_outlined, text: 'Type : villa'),
+          CustomSpacer(),
+          InfoRowWidget(
+            icon: Icons.location_on_outlined,
+            text: 'Localisation : Marcory',
           ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: TextBaseline.alphabetic,
-            children: [
-              Text(
-                '500 000',
-                style:
-                    TextStyle(
-                      fontSize: 40.sp,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ).sourceSansProBold,
-              ),
-              SizedBox(width: 8.sp),
-              Text(
-                'FCFA',
-                style:
-                    TextStyle(
-                      fontSize: 20.sp,
-                      color: Colors.white,
-                    ).sourceSansProRegular,
-              ),
-            ],
+          CustomSpacer(),
+          InfoRowWidget(
+            icon: Icons.money_outlined,
+            text: 'loyer : 200 000 FCFA',
+          ),
+          CustomSpacer(),
+          InfoRowWidget(icon:  Icons.meeting_room_outlined, text: 'Chambres: 4'),
+          CustomSpacer(),
+          InfoRowWidget(icon:  Icons.bathroom_outlined, text:  'Salles de bain: 3'),
+
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPAgencyInfoCard() {
+    return InfoCardWidget(
+      title: 'Informations sur l\'agence',
+      child: Column(
+        children: [
+          InfoRowWidget(
+            icon: Icons.phone,
+            text: 'Contact : +225 06 75 76 56 57',
+          ),
+          SizedBox(height: 16.sp),
+          InfoRowWidget(
+            icon: Icons.location_on_outlined,
+            text: 'Localisation : Cote d\'ivoire, Abidjan, zone 4',
           ),
         ],
       ),
     );
   }
 
-  Widget _buildTenantsUpToDateCard() {
-    return _buildStatCard(
-      title: 'Nombre de locataire à jours',
-      value: '20',
-      iconData: Icons.calendar_today,
-      iconBackgroundColor: AppColors.primary,
-      arrowColor: AppColors.success,
-      valueColor: AppColors.success,
-      onTap: () {
-        // Navigate to tenants up to date list
-        context.pushNamed(
-          TenantListPage.routeName,
-          pathParameters: {'type': 'up-to-date'},
-        );
-      },
-    );
-  }
 
-  Widget _buildTenantsInArrearsCard() {
-    return _buildStatCard(
-      title: 'Nombre de locataire en retard',
-      value: '20',
-      iconData: Icons.warning_amber_rounded,
-      iconBackgroundColor: AppColors.primary,
-      arrowColor: AppColors.redColor,
-      valueColor: AppColors.redColor,
-      onTap: () {
-        // Navigate to tenants in arrears list
-        context.pushNamed(
-          TenantListPage.routeName,
-          pathParameters: {'type': 'late'},
-        );
-      },
-    );
-  }
-
-  Widget _buildPendingPaymentsCard() {
-    return _buildStatCard(
-      title: 'Nombre de en rétard',
-      value: '2',
-      iconData: Icons.watch_later_outlined,
+  Widget _buildBilingPaymentsCard() {
+    return StatsCardWidget(
+      title: 'Loyer mensuel',
+      value: '200 000 FCFA',
+      iconData: Icons.credit_card_outlined,
       iconBackgroundColor: AppColors.redColor,
       arrowColor: AppColors.redColor,
       valueColor: AppColors.redColor,
       onTap: () {},
-    );
-  }
-
-  Widget _buildStatCard({
-    required String title,
-    required String value,
-    required IconData iconData,
-    required Color iconBackgroundColor,
-    required Color arrowColor,
-    required Color valueColor,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: double.infinity,
-        constraints: BoxConstraints(maxHeight: 110.h),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20.r),
-          border: Border.all(color: arrowColor.withValues(alpha: 0.3)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
-              blurRadius: 10,
-              offset: Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 60.w,
-              decoration: BoxDecoration(
-                color: arrowColor.withValues(alpha: 0.3),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20.r),
-                  bottomLeft: Radius.circular(20.r),
-                ),
-              ),
-              child: Center(
-                child: Icon(iconData, color: arrowColor, size: 30.sp),
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15.sp),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style:
-                          TextStyle(
-                            fontSize: 16.sp,
-                            color: AppColors.black,
-                          ).sourceSansProSemiBold,
-                    ),
-
-                    Text(
-                      value,
-                      style:
-                          TextStyle(
-                            fontSize: 38.sp,
-                            fontWeight: FontWeight.bold,
-                            color: valueColor,
-                          ).sourceSansProBold,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

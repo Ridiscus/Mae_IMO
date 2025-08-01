@@ -140,16 +140,22 @@ class CustomDrawer extends StatelessWidget {
         onTap: onCurrentSituationTap,
        ),
       if (profileType == 'tenant') ...[
-
         _MenuItem(
           icon: Icons.payment,
           title: 'Paiements',
           onTap: onPaymentsTap,
-         )
-        ,_MenuItem(
+         ),
+        _MenuItem(
           icon: Icons.picture_as_pdf_outlined,
           title: 'Documents',
           onTap: onDocumentsTap,
+         ),
+        _MenuItem(
+          icon: Icons.phone,
+          title: 'Contacter l\'agence',
+          onTap: () {
+              context.pushNamed(ContactAgencyPage.routeName);
+          },
          ),
       ],
     ];

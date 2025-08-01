@@ -27,7 +27,7 @@ class _PropertyInspectionListPageState
       'tenantName': 'John Doe',
       'address': 'Marcory, Abidjan',
       'date': '15/08/2025',
-      'status': 'Pending',
+      'status': 'En attente',
     },
     {
       'id': '2',
@@ -35,7 +35,7 @@ class _PropertyInspectionListPageState
       'tenantName': 'Jane Smith',
       'address': 'Cocody, Abidjan',
       'date': '18/08/2025',
-      'status': 'Pending',
+      'status': 'En attente',
     },
     {
       'id': '3',
@@ -43,7 +43,7 @@ class _PropertyInspectionListPageState
       'tenantName': 'Robert Johnson',
       'address': 'Yopougon, Abidjan',
       'date': '20/08/2025',
-      'status': 'Pending',
+      'status': 'En attente',
     },
   ];
 

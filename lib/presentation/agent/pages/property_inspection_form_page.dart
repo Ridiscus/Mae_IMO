@@ -294,7 +294,10 @@ class _PropertyInspectionFormPageState
   void _validateAndSave() {
     if (!_isFormValid()) {
       // Show error message
-      showToast(msg: 'Veuillez sélectionner un état pour toutes les pièces', type: ToastificationType.error);
+      showToast(
+        msg: 'Veuillez sélectionner un état pour toutes les pièces',
+        type: ToastificationType.error,
+      );
       return;
     }
 
@@ -308,8 +311,8 @@ class _PropertyInspectionFormPageState
           (context) => ModalPropertyInspectionConfirmation(
             onValidated: () {
               // Handle validation
-              Navigator.pop(context); // Close modal
-              Navigator.pop(context); // Return to detail page
+              // Navigator.pop(context);
+
             },
             onCancel: () {
               Navigator.pop(context);

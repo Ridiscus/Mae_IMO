@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:maelys_imo/core/constants/app_colors.dart';
 import 'package:maelys_imo/core/constants/assets.dart';
@@ -98,31 +99,17 @@ class _DocumentsTenantPageState extends State<DocumentsTenantPage> {
                 ).sourceSansProSemiBold,
               ),
             ),
-            Icon(Icons.file_download),
+            SvgPicture.asset(
+              Assets.cloudDownload,
+              colorFilter: ColorFilter.mode(
+                AppColors.black,
+                BlendMode.srcIn,
+              ),
+            )
           ],
         ),
       ),
     );
   }
 
-  Widget _buildContactButton() {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 16.sp),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          CustomButton(
-            text: "Contacter l'agence",
-            showArrow: true,
-            onPressed: () {
-              context.pushNamed(ContactAgencyPage.routeName);
-            },
-            assetPath: Assets.phone,
-            buttonVariant: ButtonVariant.primary,
-          ),
-        ],
-      ),
-    );
-  }
 }
