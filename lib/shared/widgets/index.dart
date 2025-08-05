@@ -54,6 +54,6 @@ part 'info_row_widget.dart';
 part 'stats_card_widget.dart';
 part 'scrollable_body_widget.dart';
 part 'icon_button_menu.dart';
-part 'custom_floating_action.dart';
+part 'custom_navigation_bar.dart';
 
 

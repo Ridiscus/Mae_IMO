@@ -64,7 +64,8 @@ class _DashboardTenantPageState extends State<DashboardTenantPage> {
           child: widget.navigationShell,
         ),
 
-        bottomNavigationBar: CustomFloatingAction(
+
+        bottomNavigationBar: CustomNavigationBar(
           selectedIndex: widget.navigationShell.currentIndex,
           onNavigate: (int index) {
             widget.navigationShell.goBranch(

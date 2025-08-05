@@ -64,28 +64,21 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            CircularBackButton(),
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    'Juillet 2025',
-                    style:
-                        TextStyle(
-                          fontSize: 20.r,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ).sourceSansProBold,
-                  ),
-                  Icon(Icons.arrow_drop_down, color: Colors.white, size: 24.r),
-                ],
-              ),
+            // CircularBackButton(), // Retiré car dans le shell de navigation
+            Text(
+              'Juillet 2025',
+              style:
+                  TextStyle(
+                    fontSize: 20.r,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ).sourceSansProBold,
             ),
+            Icon(Icons.arrow_drop_down, color: Colors.white, size: 24.r),
+            // Ajout d'un espace pour équilibrer la mise en page
             // CircularIcon(
             //   iconAsset: Assets.user,
             //   onPressed: () {

@@ -46,8 +46,9 @@ class _PropertyInspectionPageState extends State<PropertyInspectionPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CircularBackButton(),
+        // CircularBackButton(), // Retiré car dans le shell de navigation
         CustomSpacer(),
+        
         Text(
           'État des lieux',
           style:

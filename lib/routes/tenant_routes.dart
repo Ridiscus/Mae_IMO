@@ -11,8 +11,8 @@ class TenantRoutes {
     GoRoute(
       name: DashboardTenantPage.routeName,
       path: DashboardTenantPage.routePath,
-      // Cette route est maintenant utilisée pour rediriger vers la première branche du shell
-      redirect: (context, state) => '/documents',
+      // Cette route est maintenant utilisée pour rediriger vers la première branche du shell (Dashboard/Accueil)
+      redirect: (context, state) => '/dashboard',
     ),
     GoRoute(
       name: ProfileTenantPage.routeName,

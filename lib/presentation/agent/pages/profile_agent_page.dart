@@ -52,6 +52,14 @@ class _ProfileAgentPageState extends State<ProfileAgentPage> {
           // Handle password edit
         },
       ),
+
+      ProfileEditOption(
+        icon: Icons.logout_outlined,
+        title: 'Déconnexion',
+        onTap: () {
+          context.goNamed(PortalPage.routeName);
+        },
+      ),
     ];
 
     return ProfilePageLayout(

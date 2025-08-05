@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../presentation/tenant/pages/dashboard_content_page.dart';
 import '../presentation/tenant/pages/dashboard_tenant_page.dart';
 import '../presentation/tenant/pages/document_tenant_page.dart';
 import '../presentation/tenant/pages/home_tenant_page.dart';
@@ -17,11 +18,24 @@ class TenantShellRoutes {
         );
       },
       branches: [
+        // Branche Accueil (Dashboard)
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: DashboardContentPage.routePath,
+              name: DashboardContentPage.routeName,
+              pageBuilder: (context, state) => const NoTransitionPage(
+                child: DashboardContentPage(),
+              ),
+            ),
+          ],
+        ),
+        
         // Branche Documents
         StatefulShellBranch(
           routes: [
             GoRoute(
-              path: '/documents',
+              path: DocumentsTenantPage.routePath,
               name: DocumentsTenantPage.routeName,
               pageBuilder: (context, state) => const NoTransitionPage(
                 child: DocumentsTenantPage(),
@@ -34,7 +48,7 @@ class TenantShellRoutes {
         StatefulShellBranch(
           routes: [
             GoRoute(
-              path: '/payments',
+              path: HomeTenantPage.routePath,
               name: HomeTenantPage.routeName,
               pageBuilder: (context, state) => const NoTransitionPage(
                 child: HomeTenantPage(),
@@ -47,7 +61,7 @@ class TenantShellRoutes {
         StatefulShellBranch(
           routes: [
             GoRoute(
-              path: '/property-inspection',
+              path: PropertyInspectionPage.routePath,
               name: PropertyInspectionPage.routeName,
               pageBuilder: (context, state) => const NoTransitionPage(
                 child: PropertyInspectionPage(),

@@ -1,10 +1,10 @@
 part of 'index.dart';
 
-class CustomFloatingAction extends StatelessWidget {
+class CustomNavigationBar extends StatelessWidget {
   final int selectedIndex;
   final Function(int) onNavigate;
 
-  const CustomFloatingAction({
+  const CustomNavigationBar({
     super.key, 
     required this.selectedIndex, 
     required this.onNavigate,
@@ -30,7 +30,7 @@ class CustomFloatingAction extends StatelessWidget {
           SizedBox(
             height: 2,
             child: Row(
-              children: List.generate(3, (index) {
+              children: List.generate(4, (index) {
                 return Expanded(
                   child: Container(
                     margin: EdgeInsets.symmetric(horizontal: 12.sp),
@@ -66,7 +66,12 @@ class CustomFloatingAction extends StatelessWidget {
               fontWeight: FontWeight.w400,
               color: Colors.grey[500],
             ),
+
             items: [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home_outlined),
+                label: 'Accueil',
+              ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.picture_as_pdf_outlined),
                 label: 'Documents',
@@ -76,7 +81,7 @@ class CustomFloatingAction extends StatelessWidget {
                   clipBehavior: Clip.none,
                   children: [
                     Icon(Icons.credit_card_outlined),
-                    Positioned(
+                    /*Positioned(
                       top: -6,
                       right: -6,
                       child: Container(
@@ -99,7 +104,7 @@ class CustomFloatingAction extends StatelessWidget {
                           textAlign: TextAlign.center,
                         ),
                       ),
-                    ),
+                    ),*/
                   ],
                 ),
                 label: 'Paiements',

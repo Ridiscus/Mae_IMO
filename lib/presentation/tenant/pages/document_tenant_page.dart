@@ -30,7 +30,7 @@ class _DocumentsTenantPageState extends State<DocumentsTenantPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CircularBackButton(),
+        // CircularBackButton(), // Retiré comme demandé
         CustomSpacer(),
         Text(
           'Mes documents',

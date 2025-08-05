@@ -59,13 +59,13 @@ class _ProfileTenantPageState extends State<ProfileTenantPage> {
           // Handle password edit
         },
       ),
-      ProfileEditOption(
-        icon: Icons.phone,
-        title: 'Contacter l\'agence',
-        onTap: () {
-          context.pushNamed(ContactAgencyPage.routeName);
-        },
-      ),
+      // ProfileEditOption(
+      //   icon: Icons.phone,
+      //   title: 'Contacter l\'agence',
+      //   onTap: () {
+      //     context.pushNamed(ContactAgencyPage.routeName);
+      //   },
+      // ),
 
       ProfileEditOption(
         icon: Icons.logout_outlined,
