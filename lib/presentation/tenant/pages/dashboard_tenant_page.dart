@@ -18,9 +18,12 @@ class DashboardTenantPage extends StatefulWidget {
   static const routeName = 'dashboardTenant';
   static const routePath = '/dashboard-tenant';
 
-  // final StatefulNavigationShell shell;
+  final StatefulNavigationShell navigationShell;
 
-  const DashboardTenantPage({super.key});
+  const DashboardTenantPage({
+    super.key, 
+    required this.navigationShell
+  });
 
   @override
   State<DashboardTenantPage> createState() => _DashboardTenantPageState();
@@ -28,7 +31,6 @@ class DashboardTenantPage extends StatefulWidget {
 
 class _DashboardTenantPageState extends State<DashboardTenantPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -59,164 +61,20 @@ class _DashboardTenantPageState extends State<DashboardTenantPage> {
         ),
         body: SafeArea(
           top: false,
-          child: Column(
-            children: [
-              AppHeaderLayout(content: _buildHeader()),
-              ScrollableBodyWidget(bodyContent: _buildContent()),
-            ],
-
-          ),
+          child: widget.navigationShell,
         ),
 
         bottomNavigationBar: CustomFloatingAction(
-          selectedIndex: _selectedIndex,
+          selectedIndex: widget.navigationShell.currentIndex,
           onNavigate: (int index) {
-            setState(() {
-              _selectedIndex = index;
-            });
-            switch (index) {
-              case 0:
-                context.pushNamed(DocumentsTenantPage.routeName);
-                break;
-              case 1:
-                context.pushNamed(HomeTenantPage.routeName);
-                break;
-              case 2:
-                context.pushNamed(PropertyInspectionPage.routeName);
-                break;
-            }
+            widget.navigationShell.goBranch(
+              index,
+              // Ne pas animer à nouveau si on est déjà à cet index
+              initialLocation: index == widget.navigationShell.currentIndex,
+            );
           },
         ),
       ),
     );
-  }
-
-  Widget _buildHeader() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16.sp),
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: AppColors.primary,
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(20.r),
-          bottomRight: Radius.circular(20.r),
-        ),
-      ),
-      child: SafeArea(
-        child: SizedBox(
-          width: double.infinity,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              CircularIcon(
-                iconAsset: Assets.menu,
-                iconSize: 16.sp,
-                onPressed: () {
-                  _scaffoldKey.currentState?.openDrawer();
-                },
-              ),
-              Text(
-                'Accueil',
-                style:
-                    TextStyle(
-                      fontSize: 32.sp,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ).sourceSansProBold,
-              ),
-              CircularIcon(
-                iconAsset: Assets.user,
-                onPressed: () {
-                  context.pushNamed(ProfileTenantPage.routeName);
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildContent() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildBillingPaymentsCard(),
-        CustomSpacer(),
-        _buildDatePaymentsCard(),
-        CustomSpacer(),
-        _buildPropertyInfoCard(),
-        CustomSpacer(),
-        _buildPAgencyInfoCard(),
-      ],
-    );
-  }
-
-  Widget _buildPropertyInfoCard() {
-    return PropertyCard(
-      property: PropertyModel(
-        title: 'Maison à abobo',
-        imageUrl: 'assets/images/temps.png',
-        amenities: List.generate(
-          8,
-          (index) =>
-              AmenityModel(text: '2 douches', iconData: 'shower_outlined'),
-        ),
-      ),
-      showMoreInfo: false,
-      onPressed: () {
-        context.pushNamed(
-          PortalDetailPage.routeName,
-          pathParameters: {'id': '1', 'type': 'tenant'},
-        );
-      },
-    );
-  }
-
-  Widget _buildPAgencyInfoCard() {
-    return InfoCardWidget(
-      title: 'Informations sur l\'agence',
-      child: Column(
-        children: [
-          InfoRowWidget(
-            icon: Icons.phone,
-            text: 'Contact : +225 06 75 76 56 57',
-          ),
-          SizedBox(height: 16.sp),
-          InfoRowWidget(
-            icon: Icons.location_on_outlined,
-            text: 'Localisation : Cote d\'ivoire, Abidjan, zone 4',
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBillingPaymentsCard() {
-    return StatsCardWidget(
-      title: 'Loyer mensuel',
-      value: '200 000 FCFA',
-      iconData: Icons.credit_card_outlined,
-      iconBackgroundColor: AppColors.redColor,
-      arrowColor: AppColors.redColor,
-      valueColor: AppColors.redColor,
-      onTap: () {},
-    );
-  }
-
-  Widget _buildDatePaymentsCard() {
-    return StatsCardWidget(
-      title: 'Date limite de paiement',
-      value: DateTime.now().add(Duration(days: 5)).humanWithoutTime(),
-      iconData: Icons.calendar_month_outlined,
-      iconBackgroundColor: AppColors.primary,
-      arrowColor: AppColors.primary,
-      valueColor: AppColors.primary,
-      onTap: () {},
-    );
-  }
-
-  _selected(int i) {
-    return true;
   }
 }
