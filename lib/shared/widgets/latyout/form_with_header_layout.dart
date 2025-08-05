@@ -37,6 +37,7 @@ class FormWithHeaderLayout extends StatelessWidget {
         body: Stack(
           children: [
             _buildHeader(context),
+
             Positioned.fill(
               top: MediaQuery.of(context).size.height * .22,
               child: _buildFormContainer(),

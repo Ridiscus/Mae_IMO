@@ -311,25 +311,4 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
       ),
     );
   }
-
-  Widget _buildContactButton() {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 16.sp),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          CustomButton(
-            text: "Contacter l'agence",
-            showArrow: true,
-            onPressed: () {
-              context.pushNamed(ContactAgencyPage.routeName);
-            },
-            assetPath: Assets.phone,
-            buttonVariant: ButtonVariant.primary,
-          ),
-        ],
-      ),
-    );
-  }
 }

@@ -22,7 +22,6 @@ class ScrollableBodyWidget extends StatelessWidget {
               physics: BouncingScrollPhysics(),
               child: ConstrainedBox(
                 constraints: BoxConstraints(minHeight: constraints.maxHeight),
-
                 child: Padding(
                   padding: bodyPadding ?? EdgeInsets.all(16.sp),
                   child: bodyContent,

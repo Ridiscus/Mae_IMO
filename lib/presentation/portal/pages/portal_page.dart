@@ -76,7 +76,7 @@ class _PortalPageState extends State<PortalPage> {
       ),
     );
   }
-  
+
   Widget _buildPageContent() {
     return Column(
       children: [
@@ -107,7 +107,7 @@ class _PortalPageState extends State<PortalPage> {
       ],
     );
   }
-  
+
   Widget _buildHeaderContent() {
     return Column(
       children: [
@@ -126,11 +126,12 @@ class _PortalPageState extends State<PortalPage> {
               child: Text(
                 'Maelys-imo',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 32.sp,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ).sourceSansProBold,
+                style:
+                    TextStyle(
+                      fontSize: 32.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ).sourceSansProBold,
               ),
             ),
           ],
@@ -198,4 +199,5 @@ class _PortalPageState extends State<PortalPage> {
       pathParameters: {'id': "1", 'type': 'prospect'},
     );
   }
+
 }

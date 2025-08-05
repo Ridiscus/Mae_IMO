@@ -59,7 +59,6 @@ class CustomInputText extends StatelessWidget {
   /// Le focus node pour le champ
   final FocusNode? focusNode;
 
-
   const CustomInputText({
     Key? key,
     this.controller,
@@ -81,7 +80,7 @@ class CustomInputText extends StatelessWidget {
     this.centerText = false,
     this.textInputAction,
     this.focusNode,
-   }) : super(key: key);
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -100,8 +99,15 @@ class CustomInputText extends StatelessWidget {
         fillColor: Colors.white,
         hintText: hintText,
         labelText: labelText,
-        hintStyle: TextStyle(fontSize: 16.sp, color: Colors.black38, letterSpacing: -.2),
-        labelStyle: GoogleFonts.sourceSans3(fontSize: 16.sp, color: Colors.black),
+        hintStyle: TextStyle(
+          fontSize: 16.sp,
+          color: Colors.black38,
+          letterSpacing: -.2,
+        ),
+        labelStyle: GoogleFonts.sourceSans3(
+          fontSize: 16.sp,
+          color: Colors.black,
+        ),
         contentPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15.r), // Forme très arrondie
@@ -190,7 +196,7 @@ class CustomInputTextFactory {
     TextInputAction? textInputAction,
     FocusNode? focusNode,
     TextInputType? keyboardType,
-   }) {
+  }) {
     return CustomInputText(
       controller: controller,
       hintText: hintText,
@@ -207,7 +213,52 @@ class CustomInputTextFactory {
       textInputAction: textInputAction,
       focusNode: focusNode,
       keyboardType: keyboardType,
-     );
+    );
+  }
+
+  static Widget createTextNumberInput({
+    TextEditingController? controller,
+    String? hintText,
+    String? labelText,
+    IconData? prefixIcon,
+    IconData? suffixIcon,
+    VoidCallback? onSuffixIconTap,
+    ValueChanged<String>? onChanged,
+    ValueChanged<String>? onSubmitted,
+    FormFieldValidator<String>? validator,
+    bool isRequired = false,
+    String? initialValue,
+    bool readOnly = false,
+    TextInputAction? textInputAction,
+    FocusNode? focusNode,
+    TextInputType? keyboardType,
+  }) {
+    return IOSKeyboardAction(
+      focusNode: focusNode ?? FocusNode(),
+      backgroundColor: Colors.white,
+      textColor: Colors.black,
+      focusActionType: FocusActionType.done,
+      onTap: () {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
+      child: CustomInputText(
+        controller: controller,
+        hintText: hintText,
+        labelText: labelText,
+        prefixIcon: prefixIcon,
+        suffixIcon: suffixIcon,
+        onSuffixIconTap: onSuffixIconTap,
+        onChanged: onChanged,
+        onSubmitted: onSubmitted,
+        validator: validator,
+        isRequired: isRequired,
+        initialValue: initialValue,
+        readOnly: readOnly,
+        textInputAction: textInputAction,
+        focusNode: focusNode,
+        keyboardType: keyboardType ?? TextInputType.number,
+      ),
+    );
   }
 
   static CustomInputText createTextAreaInput({

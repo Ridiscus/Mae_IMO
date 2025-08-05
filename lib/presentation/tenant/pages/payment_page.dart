@@ -24,7 +24,6 @@ class _PaymentPageState extends State<PaymentPage> {
     return PageWithHeaderLayout(
       headerContent: _buildHeaderContent(),
       bodyContent: _buildPaymentForm(),
-      floatingActionButton: _buildPaymentButton(),
     );
   }
 
@@ -56,6 +55,9 @@ class _PaymentPageState extends State<PaymentPage> {
         _buildDatePicker(),
         CustomSpacer(),
         _buildPaymentMethodPicker(),
+        CustomSpacer(space: 10),
+
+        _buildPaymentButton(),
       ],
     );
   }
@@ -120,9 +122,9 @@ class _PaymentPageState extends State<PaymentPage> {
               ).sourceSansProSemiBold,
         ),
         SizedBox(height: 12.r),
-        CustomInputTextFactory.createTextInput(
-          keyboardType: TextInputType.number,
+        CustomInputTextFactory.createTextNumberInput(
           controller: _numberController,
+          focusNode: FocusNode(),
           validator: (value) {
             if (value!.isEmpty ||
                 int.tryParse(value) == null ||

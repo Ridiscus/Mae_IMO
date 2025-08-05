@@ -75,21 +75,10 @@ class ProfilePageLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(
-        statusBarColor: profileBackgroundColor ?? AppColors.primary,
+        statusBarColor: AppColors.primary,
         statusBarIconBrightness: Brightness.light,
       ),
-      child: Scaffold(
-        body: Column(
-          children: [
-            _buildHeader(context),
-            Expanded(
-              child: SingleChildScrollView(
-                child: _buildProfileContent(context),
-              ),
-            ),
-          ],
-        ),
-      ),
+      child: Scaffold(body: _buildProfileContent(context)),
     );
   }
 
@@ -99,16 +88,7 @@ class ProfilePageLayout extends StatelessWidget {
       width: double.infinity,
       color: profileBackgroundColor ?? AppColors.primary,
       alignment: Alignment.centerLeft,
-      child: SafeArea(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            CircularBackButton(onPressed: onBackPressed),
-
-            // CircularSignOutButton(),
-          ],
-        ),
-      ),
+      child: CircularBackButton(onPressed: onBackPressed),
     );
   }
 
@@ -116,10 +96,15 @@ class ProfilePageLayout extends StatelessWidget {
     return Container(
       width: double.infinity,
       color: profileBackgroundColor ?? AppColors.primary,
-      child: Column(
-        children: [
-          _buildProfileInfo(context), 
-          _buildEditOptions(context)],
+      child: SafeArea(
+        bottom: false,
+        child: Column(
+          children: [
+            _buildHeader(context),
+            _buildProfileInfo(context),
+            Expanded(child: _buildEditOptions(context)),
+          ],
+        ),
       ),
     );
   }
@@ -195,19 +180,21 @@ class ProfilePageLayout extends StatelessWidget {
       margin: EdgeInsets.only(top: 16.sp),
       decoration: BoxDecoration(
         color: Colors.white,
-
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(20.r),
           topRight: Radius.circular(20.r),
         ),
       ),
-      child: Column(
-        children: [
-          for (int i = 0; i < editOptions.length; i++) ...[
-            if (i > 0) _buildDivider(),
-            _buildEditOptionItem(editOptions[i]),
+      child: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        child: Column(
+          children: [
+            for (int i = 0; i < editOptions.length; i++) ...[
+              if (i > 0) _buildDivider(),
+              _buildEditOptionItem(editOptions[i]),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
