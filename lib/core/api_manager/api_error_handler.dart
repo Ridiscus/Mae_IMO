@@ -1,14 +1,24 @@
+import 'dart:developer' as developer;
+
 import 'package:dio/dio.dart';
+
+final String TAG = 'ApiErrorHandler';
+final int LEVEL = 1;
 
 class ApiErrorHandler<T> {
   static dynamic handleError<T>(error) {
     String? errorDescription;
-    print("[ApiErrorHandler] error $error runtimeType: ${error.runtimeType}");
+    developer.log(
+      "[ApiErrorHandler] error $error runtimeType: ${error.runtimeType}",
+      name: TAG,
+    );
     if (error is Exception) {
       try {
         if (error is DioException) {
-          print(
+          developer.log(
             "[ApiErrorHandler] error.response ${error.type} :${error.response.toString()}",
+            name: TAG,
+            level: LEVEL,
           );
 
           switch (error.type) {

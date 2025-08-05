@@ -28,6 +28,7 @@ class DashboardTenantPage extends StatefulWidget {
 
 class _DashboardTenantPageState extends State<DashboardTenantPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -63,20 +64,24 @@ class _DashboardTenantPageState extends State<DashboardTenantPage> {
               AppHeaderLayout(content: _buildHeader()),
               ScrollableBodyWidget(bodyContent: _buildContent()),
             ],
+
           ),
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: CustomFloatingAction(
-          isSelected: _selected,
-          onNavigate: (String route) {
-            switch (route) {
-              case 'documents':
+
+        bottomNavigationBar: CustomFloatingAction(
+          selectedIndex: _selectedIndex,
+          onNavigate: (int index) {
+            setState(() {
+              _selectedIndex = index;
+            });
+            switch (index) {
+              case 0:
                 context.pushNamed(DocumentsTenantPage.routeName);
                 break;
-              case 'payments':
+              case 1:
                 context.pushNamed(HomeTenantPage.routeName);
                 break;
-              case 'inspection':
+              case 2:
                 context.pushNamed(PropertyInspectionPage.routeName);
                 break;
             }

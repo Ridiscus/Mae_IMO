@@ -15,10 +15,10 @@ import 'package:toastification/toastification.dart';
 import 'core/config/themes/app_theme.dart';
 import 'core/constants/constants.dart';
 import 'core/manager/state/auth/auth_bloc.dart';
-import 'core/manager/state/simple_bloc_observer.dart';
 import 'core/manager/token_manager.dart';
 import 'di_container.dart';
 import 'routes/app_route.dart' show AppRoute;
+import 'package:talker_bloc_logger/talker_bloc_logger.dart';
 
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 late GoRouter appRouter;
@@ -37,8 +37,19 @@ void main() async {
             ? HydratedStorageDirectory.web
             : HydratedStorageDirectory((await getTemporaryDirectory()).path),
   );
-  Bloc.observer = SimpleBlocObserver();
+  Bloc.observer = TalkerBlocObserver(
+    settings: TalkerBlocLoggerSettings(
+      enabled: kDebugMode,
+      printEventFullData: true,
+      printStateFullData: false,
+      printChanges: true,
+      printClosings: true,
+      printCreations: true,
+      printEvents: true,
+      printTransitions: true,
 
+    ),
+  );
   binding.allowFirstFrame();
   runApp(const MainApp());
 }

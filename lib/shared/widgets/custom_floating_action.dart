@@ -1,59 +1,117 @@
 part of 'index.dart';
 
 class CustomFloatingAction extends StatelessWidget {
-  final Function(int) isSelected;
-  final Function(String) onNavigate;
+  final int selectedIndex;
+  final Function(int) onNavigate;
 
   const CustomFloatingAction({
     super.key, 
-    required this.isSelected, 
+    required this.selectedIndex, 
     required this.onNavigate,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Stack(
-          children: [
-            Positioned.fill(
-              left: 0,
-              right: 0,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20.r),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 4, sigmaY: 1.5),
-                  child: Container(color: AppColors.orange),
-                ),
-              ),
-            ),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButtonMenu(
-                  iconData: Icons.picture_as_pdf_outlined,
-                  title: "Documents",
-                  onPressed: () => onNavigate('documents'),
-                  selected: isSelected(0),
-                ),
-                IconButtonMenu(
-                  iconData: Icons.credit_card_outlined,
-                  title: "Paiements",
-                  selected: isSelected(1),
-                  onPressed: () => onNavigate('payments'),
-                ),
-                IconButtonMenu(
-                  iconData: Icons.checklist_outlined,
-                  selected: isSelected(2),
-                  title: "État des lieux",
-                  onPressed: () => onNavigate('inspection'),
-                ),
-              ],
-            ),
-          ],
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border(
+          top: BorderSide(
+            color: Colors.grey.withOpacity(0.2),
+            width: 1,
+          ),
         ),
-      ],
+      ),
+
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Barre indicatrice en haut (style violet fin)
+          SizedBox(
+            height: 2,
+            child: Row(
+              children: List.generate(3, (index) {
+                return Expanded(
+                  child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: 12.sp),
+                    decoration: BoxDecoration(
+                      color: selectedIndex == index
+                          ? AppColors.primary // Violet comme dans la capture
+                          : Colors.transparent,
+                      borderRadius: BorderRadius.circular(1),
+                    ),
+                  ),
+                );
+              }),
+            ),
+          ),
+          // BottomNavigationBar
+          BottomNavigationBar(
+            currentIndex: selectedIndex,
+            onTap: onNavigate,
+
+            type: BottomNavigationBarType.fixed,
+            backgroundColor: Colors.white,
+            selectedItemColor: Colors.black87,
+            unselectedItemColor: Colors.grey[500],
+            selectedFontSize: 12.sp,
+            unselectedFontSize: 12.sp,
+            iconSize: 24.sp,
+            elevation: 0,
+            selectedLabelStyle: TextStyle(
+              fontWeight: FontWeight.w500,
+              color: Colors.black87,
+            ),
+            unselectedLabelStyle: TextStyle(
+              fontWeight: FontWeight.w400,
+              color: Colors.grey[500],
+            ),
+            items: [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.picture_as_pdf_outlined),
+                label: 'Documents',
+              ),
+              BottomNavigationBarItem(
+                icon: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Icon(Icons.credit_card_outlined),
+                    Positioned(
+                      top: -6,
+                      right: -6,
+                      child: Container(
+                        padding: EdgeInsets.all(3.sp),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                        constraints: BoxConstraints(
+                          minWidth: 16.sp,
+                          minHeight: 16.sp,
+                        ),
+                        child: Text(
+                          '5',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 9.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                label: 'Paiements',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.checklist_outlined),
+                label: 'État des lieux',
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

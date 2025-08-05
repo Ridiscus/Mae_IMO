@@ -5,8 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:maelys_imo/core/constants/app_colors.dart';
 import 'package:maelys_imo/core/constants/assets.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
-import 'package:maelys_imo/presentation/tenant/pages/contact_agency_page.dart';
-import 'package:maelys_imo/presentation/tenant/pages/payment_page.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
 
 class DocumentsTenantPage extends StatefulWidget {

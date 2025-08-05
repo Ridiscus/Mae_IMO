@@ -1,4 +1,5 @@
 import 'dart:core';
+import 'dart:developer' as developer;
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
@@ -22,7 +23,7 @@ class TransporterCubit<T extends TransporterInterface<T>>
   /// Initialise ou remplace la valeur du transporteur avec une première valeur.
   void init({required T value}) {
     if (kDebugMode) {
-      print("init Type ${T.toString()}");
+      developer.log("init Type ${T.toString()}", name: "TransporterCubit");
     }
     emit(TransporterUpdate<T>(value: value));
   }
