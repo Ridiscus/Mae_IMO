@@ -1,3 +1,4 @@
+import 'dart:developer' as console;
 import 'dart:developer' as developer;
 
 import 'package:dio/dio.dart';
@@ -8,15 +9,12 @@ final int LEVEL = 1;
 class ApiErrorHandler<T> {
   static dynamic handleError<T>(error) {
     String? errorDescription;
-    developer.log(
-      "[ApiErrorHandler] error $error runtimeType: ${error.runtimeType}",
-      name: TAG,
-    );
+    developer.log("error $error runtimeType: ${error.runtimeType}", name: TAG);
     if (error is Exception) {
       try {
         if (error is DioException) {
           developer.log(
-            "[ApiErrorHandler] error.response ${error.type} :${error.response.toString()}",
+            "error type: ${error.type} data :${error.response?.data.toString()}",
             name: TAG,
             level: LEVEL,
           );
@@ -35,20 +33,22 @@ class ApiErrorHandler<T> {
               errorDescription = "Délai de connexion avec le serveur API";
               break;
             case DioExceptionType.badCertificate:
-              // TODO: Handle this case.
               break;
 
             case DioExceptionType.badResponse:
-              if ((error.response?.data is Map) &&
-                  (error.response?.data as Map).containsKey("message") &&
-                  ((error.response?.data as Map)["message"].toString())
-                      .isNotEmpty) {
-                final message = error.response?.data['message'];
+              var data = error.response?.data;
 
-                if (message.runtimeType == List) {
-                  errorDescription = (message as List).firstOrNull;
-                } else {
-                  errorDescription = error.response?.data['message'];
+              if ((data is Map) &&
+                  (data.containsKey("message") || data.containsKey("errors"))) {
+                console.log(data['message'], name: TAG);
+
+                final message = data['message'];
+                Map? errors = data['errors'];
+                errorDescription = (message ?? '').toString();
+
+                if (errors != null) {
+                  var error = errors.values.firstOrNull[0] ?? '';
+                  errorDescription = "$errorDescription $error";
                 }
               }
               break;
@@ -79,6 +79,6 @@ class ApiErrorHandler<T> {
     } else {
       errorDescription = "Une erreur inattendue s'est produite";
     }
-    return errorDescription ?? "Une erreur est survenue !";
+    return (errorDescription ?? "Une erreur est survenue !").trim();
   }
 }

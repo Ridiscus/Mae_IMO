@@ -99,8 +99,11 @@ class ApiClient {
       );
       return _processResponse<T>(response, fromJson);
     } on DioException catch (e) {
-      return ApiErrorHandler.handleError<T>(e);
+      return ApiResponse.error(message: ApiErrorHandler.handleError<T>(e));
     } catch (e) {
+      if (kDebugMode) {
+        rethrow;
+      }
       return ApiResponse.error(
         message: e.toString(),
         errorType: 'UNEXPECTED_ERROR',
@@ -127,8 +130,11 @@ class ApiClient {
 
       return _processResponse<T>(response, fromJson);
     } on DioException catch (e) {
-      return ApiErrorHandler.handleError<T>(e);
+      return ApiResponse.error(message: ApiErrorHandler.handleError<T>(e));
     } catch (e) {
+      if (kDebugMode) {
+        rethrow;
+      }
       return ApiResponse.error(
         message: e.toString(),
         errorType: 'UNEXPECTED_ERROR',
@@ -155,8 +161,11 @@ class ApiClient {
 
       return _processResponse<T>(response, fromJson);
     } on DioException catch (e) {
-      return ApiErrorHandler.handleError<T>(e);
+      return ApiResponse.error(message: ApiErrorHandler.handleError<T>(e));
     } catch (e) {
+      if (kDebugMode) {
+        rethrow;
+      }
       return ApiResponse.error(
         message: e.toString(),
         errorType: 'UNEXPECTED_ERROR',
@@ -183,8 +192,11 @@ class ApiClient {
 
       return _processResponse<T>(response, fromJson);
     } on DioException catch (e) {
-      return ApiErrorHandler.handleError<T>(e);
+      return ApiResponse.error(message: ApiErrorHandler.handleError<T>(e));
     } catch (e) {
+      if (kDebugMode) {
+        rethrow;
+      }
       return ApiResponse.error(
         message: e.toString(),
         errorType: 'UNEXPECTED_ERROR',
@@ -215,12 +227,13 @@ class ApiClient {
               : response.data as dynamic;
 
       final message = response.data?['message'];
-      console.log(message, name: "message");
-      return ApiResponse.success(
-        data: data,
-        message: response.data['message'],
-      );
+      console.log(message ?? "", name: "message");
+
+      return ApiResponse.success(data: data, message: message);
     } catch (e) {
+      if (kDebugMode) {
+        rethrow;
+      }
       return ApiResponse.error(
         message: 'Erreur de conversion des données: ${e.toString()}',
         statusCode: response.statusCode,

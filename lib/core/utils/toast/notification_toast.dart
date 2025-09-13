@@ -99,7 +99,7 @@ void showToast({
               Expanded(
                 child: Text(
                   msg,
-                  maxLines: 2,
+                  maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: Colors.black,

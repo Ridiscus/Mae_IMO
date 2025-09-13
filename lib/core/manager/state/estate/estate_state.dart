@@ -54,14 +54,14 @@ class EstateState extends Equatable {
           json['estatesType'] == null
               ? []
               : List<EstateTypeModel>.from(
-                json['estatesType'].map((x) => EstateTypeModel.fromMap(x)),
+                json['estatesType'].map((x) => EstateTypeModel.fromJson(x)),
               ),
 
       estates:
           json['estates'] == null
               ? []
               : List<EstateModel>.from(
-                json['estates'].map((x) => EstateModel.fromMap(x)),
+                json['estates'].map((x) => EstateModel.fromJson(x)),
               ),
 
     );

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer' as console;
 
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:maelys_imo/core/api_manager/api_paginate_response.dart';
 import 'package:maelys_imo/core/services/estate_service.dart';
@@ -116,8 +117,9 @@ class EstateBloc extends HydratedBloc<EstateEvent, EstateState> {
         );
       }
     } catch (e) {
-      console.log(e.toString(), name: "catch _onFetchEstateEvent");
+      console.log(e.toString(), name: "catch _onFetchDetailEstateEvent");
       emit(state.copyWith(isLoading: false));
+      rethrow;
     }
   }
 
@@ -143,7 +145,9 @@ class EstateBloc extends HydratedBloc<EstateEvent, EstateState> {
         emit(state.copyWith(isLoading: false, messageResult: null));
       }
     } catch (e) {
-      console.log(e.toString(), name: "catch _onFetchEstateEvent");
+      if (kDebugMode) {
+        rethrow;
+      }
       emit(state.copyWith(isLoading: false));
     }
   }

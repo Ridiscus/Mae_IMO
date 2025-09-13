@@ -141,7 +141,7 @@ class _PortalDetailPageState extends State<PortalDetailPage> {
                     },
                     itemBuilder: (context, index) {
                       return UIHelper.cachedNetworkImage(
-                        CoreHelper.fullLink(_property!.images![index]),
+                        CoreHelper.fullLink(_property?.images![index]),
                         height: double.infinity,
                         fit: BoxFit.cover,
                       );
