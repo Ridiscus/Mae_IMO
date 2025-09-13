@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:go_router/go_router.dart';
 import 'package:maelys_imo/core/constants/app_colors.dart';
 import 'package:maelys_imo/core/constants/assets.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
@@ -83,31 +82,30 @@ class _DocumentsTenantPageState extends State<DocumentsTenantPage> {
                 color: Colors.grey[200],
                 borderRadius: BorderRadius.circular(8.r),
               ),
-              child: Icon(Icons.picture_as_pdf_outlined, color: Colors.grey[600]),
+              child: Icon(
+                Icons.picture_as_pdf_outlined,
+                color: Colors.grey[600],
+              ),
             ),
             SizedBox(width: 16.r),
             Expanded(
               child: Text(
                 label,
                 style:
-                TextStyle(
-                  fontSize: 16.r,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black87,
-                ).sourceSansProSemiBold,
+                    TextStyle(
+                      fontSize: 16.r,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ).sourceSansProSemiBold,
               ),
             ),
             SvgPicture.asset(
               Assets.cloudDownload,
-              colorFilter: ColorFilter.mode(
-                AppColors.black,
-                BlendMode.srcIn,
-              ),
-            )
+              colorFilter: ColorFilter.mode(AppColors.black, BlendMode.srcIn),
+            ),
           ],
         ),
       ),
     );
   }
-
 }

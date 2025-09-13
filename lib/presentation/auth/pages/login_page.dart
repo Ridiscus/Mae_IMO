@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:maelys_imo/core/domain/requests/index.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
-import 'package:maelys_imo/presentation/agent/pages/home_agent_page.dart';
-import 'package:maelys_imo/presentation/tenant/pages/home_tenant_page.dart';
+import 'package:maelys_imo/core/manager/state/auth/auth_bloc.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
+import 'package:toastification/toastification.dart';
 
+import '../../../core/utils/toast/notification_toast.dart';
+import '../../agent/pages/home_agent_page.dart';
 import '../../tenant/pages/dashboard_tenant_page.dart';
 import '../pages/forget_passord_page.dart';
 
@@ -20,8 +24,12 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController(
+    text: "MA935006",
+  );
+  final TextEditingController _passwordController = TextEditingController(
+    text: "12345678",
+  );
   bool _obscureText = true;
 
   @override
@@ -161,18 +169,65 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _buildLoginButton() {
-    return CustomButton(
-      text: 'Se connecter',
-      showArrow: true,
-      onPressed: () {
-        if (_usernameController.text.trim().toLowerCase() == 'agent') {
+    return BlocConsumer<AuthBloc, AuthState>(
+      listenWhen:
+          (previous, current) =>
+              current.userModel != null &&
+              current.isLoading == false &&
+              current.failure == null,
+      listener: (context, state) {
+        if (state.userModel!.isCollectionAgent) {
           context.goNamed(HomeAgentPage.routeName);
-        } else {
-          // context.goNamed(HomeAgentPage.routeName);
+          return;
+        }
+
+        if (state.userModel!.isTenant) {
           context.goNamed(DashboardTenantPage.routeName);
+          return;
+        }
+
+        if (state.userModel!.isUnknownType) {
+          showToast(
+            msg: "Ce type de compte n'est pas pris en charge !",
+            type: ToastificationType.warning,
+          );
         }
       },
-      buttonVariant: ButtonVariant.primary,
+      builder: (context, state) {
+        return CustomButton(
+          text: 'Se connecter',
+          isLoading: state.isLoading ?? false,
+          isDisabled: state.isLoading ?? false,
+          showArrow: true,
+          onPressed: () {
+            if (_usernameController.text.isEmpty) {
+              showToast(msg: "Veuillez entrer un identifiant");
+              return;
+            }
+            if (_passwordController.text.isEmpty) {
+              showToast(msg: "Votre mot de passe est incorrect");
+              return;
+            }
+
+            context.read<AuthBloc>().add(
+              UserSignInEvent(
+                dto: LoginRequest(
+                  codeId: _usernameController.text,
+                  password: _passwordController.text,
+                ),
+              ),
+            );
+
+            // if (_usernameController.text.trim().toLowerCase() == 'agent') {
+            //   context.goNamed(HomeAgentPage.routeName);
+            // } else {
+            //   // context.goNamed(HomeAgentPage.routeName);
+            //   context.goNamed(DashboardTenantPage.routeName);
+            // }
+          },
+          buttonVariant: ButtonVariant.primary,
+        );
+      },
     );
   }
 }

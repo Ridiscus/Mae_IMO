@@ -110,6 +110,8 @@ class ProfilePageLayout extends StatelessWidget {
   }
 
   Widget _buildProfileInfo(BuildContext context) {
+    final profileImage =
+        context.select((AuthBloc bloc) => bloc.state).userModel?.profileImage;
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: 16.r),
@@ -123,6 +125,7 @@ class ProfilePageLayout extends StatelessWidget {
             size: 120,
             iconColor: AppColors.black,
             iconSize: 60,
+            profileImage: CoreHelper.fullLink(profileImage),
           ),
           CustomSpacer(),
           Text(
@@ -143,10 +146,10 @@ class ProfilePageLayout extends StatelessWidget {
                   color: Colors.grey[300],
                 ).sourceSansProRegular,
           ),
-          SizedBox(height: 24.r),
+          SizedBox(height: 20.r),
           ...contactInfo.map(
             (info) => Padding(
-              padding: EdgeInsets.only(bottom: 16.r),
+              padding: EdgeInsets.only(bottom: 10.r),
               child: _buildContactInfoItem(info),
             ),
           ),

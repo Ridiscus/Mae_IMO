@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:maelys_imo/core/services/auth_service.dart';
 import 'package:toastification/toastification.dart';
@@ -51,23 +52,26 @@ class AuthBloc extends HydratedBloc<AuthEvent, AuthState> {
     UserSignInEvent event,
     Emitter<AuthState> emit,
   ) async {
-    emit(state.copyWith(loading: true, failure: null));
+    emit(state.copyWith(isLoading: true, failure: null));
     try {
       final result = await _service.signIn(dto: event.dto);
       if (result.success) {
-        emit(state.copyWith(loading: false));
+        emit(state.copyWith(isLoading: false, userModel: result.data));
       } else {
-        showToast(msg: result.message ?? "");
+        showToast(msg: result.message ?? "Connexion échouée");
         emit(
           state.copyWith(
-            loading: false,
+            isLoading: false,
             failure: Failure(message: result.message!),
           ),
         );
       }
     } catch (e) {
       showToast(msg: "Connexion échouée");
-      emit(state.copyWith(loading: false, failure: null));
+      emit(state.copyWith(isLoading: false, failure: null));
+      if (kDebugMode) {
+        rethrow;
+      }
     }
   }
 }

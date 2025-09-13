@@ -1,18 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:maelys_imo/core/constants/app_colors.dart';
-import 'package:maelys_imo/core/constants/assets.dart';
-import 'package:maelys_imo/core/extensions/index.dart';
-import 'package:maelys_imo/presentation/tenant/pages/home_tenant_page.dart';
 import 'package:maelys_imo/presentation/tenant/pages/profile_tenant_page.dart';
-import 'package:maelys_imo/presentation/tenant/pages/property_inspection_page.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
-
-import '../../../shared/models/index.dart';
-import '../../portal/pages/portal_detail_page.dart';
-import 'document_tenant_page.dart';
 
 class DashboardTenantPage extends StatefulWidget {
   static const routeName = 'dashboardTenant';
@@ -20,10 +11,7 @@ class DashboardTenantPage extends StatefulWidget {
 
   final StatefulNavigationShell navigationShell;
 
-  const DashboardTenantPage({
-    super.key, 
-    required this.navigationShell
-  });
+  const DashboardTenantPage({super.key, required this.navigationShell});
 
   @override
   State<DashboardTenantPage> createState() => _DashboardTenantPageState();
@@ -59,11 +47,7 @@ class _DashboardTenantPageState extends State<DashboardTenantPage> {
           },
           // onCurrentSituationTap: () {},
         ),
-        body: SafeArea(
-          top: false,
-          child: widget.navigationShell,
-        ),
-
+        body: SafeArea(top: false, child: widget.navigationShell),
 
         bottomNavigationBar: CustomNavigationBar(
           selectedIndex: widget.navigationShell.currentIndex,

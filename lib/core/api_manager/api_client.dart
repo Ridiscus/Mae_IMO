@@ -223,7 +223,7 @@ class ApiClient {
           fromJson != null &&
                   response.data != null &&
                   response.data['data'] != null
-              ? fromJson(response.data['data'])
+              ? fromJson(response.data['data'] ?? (response.data as dynamic))
               : response.data as dynamic;
 
       final message = response.data?['message'];

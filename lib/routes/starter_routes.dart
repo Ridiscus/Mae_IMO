@@ -1,9 +1,7 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart' show GoRoute, GoRouterState;
+import 'package:go_router/go_router.dart' show GoRoute;
 import 'package:maelys_imo/presentation/portal/pages/portal_detail_page.dart';
 import 'package:maelys_imo/presentation/portal/pages/visit_request_page.dart';
 
-import '../core/manager/state/estate/estate_bloc.dart';
 import '../presentation/portal/pages/portal_page.dart';
 import '../presentation/starter/pages/splash_page.dart';
 

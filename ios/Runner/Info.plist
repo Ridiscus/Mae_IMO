@@ -47,6 +47,10 @@
 	</array>
 	<key>NSCameraUsageDescription</key>
     <string>Nous avons besoin d'accéder à votre caméra pour capturer des photos.</string>
-
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+      <string>sms</string>
+      <string>tel</string>
+    </array>
 </dict>
 </plist>

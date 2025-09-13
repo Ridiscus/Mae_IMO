@@ -21,7 +21,9 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import '../../core/constants/app_colors.dart' show AppColors;
+import '../../core/constants/assets.dart';
 import '../../core/domain/models/index.dart';
+import '../../core/manager/state/auth/auth_bloc.dart';
 import '../../core/manager/state/estate/estate_bloc.dart';
 import '../../core/utils/index.dart';
 import '../../presentation/tenant/pages/contact_agency_page.dart';
@@ -63,5 +65,7 @@ part 'custom_navigation_bar.dart';
 part 'empty_state_widget.dart';
 part 'amenity_chip.dart';
 part 'custom_time_picker.dart';
+part 'search_bar_widget.dart';
+part 'user_profile_widget.dart';
 
 

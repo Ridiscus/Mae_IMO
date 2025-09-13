@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:maelys_imo/core/constants/app_colors.dart';
 import 'package:maelys_imo/core/constants/assets.dart';
@@ -32,6 +31,8 @@ class _PortalPageState extends State<PortalPage> {
   List<EstateModel> _properties = [];
   EstateTypeModel? _selected;
   bool _isLoading = false;
+  Timer? _debounce;
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +88,12 @@ class _PortalPageState extends State<PortalPage> {
             }
             setState(() {});
             context.read<EstateBloc>().add(
-              FetchEstateEvent(dto: FilterEstateRequest(type: _selected?.type)),
+              FetchEstateEvent(
+                dto: FilterEstateRequest(
+                  type: _selected?.type,
+                  commune: _searchController.text,
+                ),
+              ),
             );
           },
         ),
@@ -162,53 +168,23 @@ class _PortalPageState extends State<PortalPage> {
   }
 
   Widget _buildSearchBar() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 4,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(left: 8.sp),
-            child: Icon(Icons.search, size: 24.sp, color: Colors.grey),
-          ),
-          SizedBox(width: 8.sp),
-          Expanded(
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'Rechercher, Appartement, Villa',
-                fillColor: Colors.white,
-                hintStyle:
-                    TextStyle(
-                      fontSize: 14.r,
-                      color: Colors.grey,
-                    ).sourceSansProRegular,
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.symmetric(vertical: 12.r),
-              ),
+    return SearchBarWidget(
+      hintText: 'Rechercher, Appartement, Villa',
+      onFilterPressed: () {
+        // TODO: Implémenter la logique de filtrage
+      },
+      onSearchPressed: () {},
+      controller: _searchController,
+      onChanged: (value) {
+        if (_debounce?.isActive ?? false) _debounce!.cancel();
+        _debounce = Timer(const Duration(milliseconds: 500), () {
+          context.read<EstateBloc>().add(
+            FetchEstateEvent(
+              dto: FilterEstateRequest(type: _selected?.type, commune: value),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(right: 8.sp),
-            child: CircleAvatar(
-              backgroundColor: AppColors.orange,
-              child: SvgPicture.asset(
-                Assets.filter,
-                width: 15.sp,
-                height: 15.sp,
-              ),
-            ),
-          ),
-        ],
-      ),
+          );
+        });
+      },
     );
   }
 

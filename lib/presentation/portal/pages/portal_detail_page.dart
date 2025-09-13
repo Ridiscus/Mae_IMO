@@ -7,6 +7,7 @@ import 'package:maelys_imo/core/constants/app_colors.dart';
 import 'package:maelys_imo/core/constants/assets.dart';
 import 'package:maelys_imo/core/domain/models/index.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
+import 'package:maelys_imo/core/manager/state/auth/auth_bloc.dart';
 import 'package:maelys_imo/presentation/portal/pages/visit_request_page.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -100,7 +101,10 @@ class _PortalDetailPageState extends State<PortalDetailPage> {
                               if (widget.type?.toLowerCase() == 'tenant') ...[
                                 _buildVisitButton(
                                   text: 'Télécharger mon contrat',
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    final contrat = context.read<AuthBloc>().state.userModel?.asTenant()?.contrat;
+                                    CoreHelper.launchLink(CoreHelper.fullLink(contrat));
+                                  },
                                   assetPath: Assets.cloudDownload,
                                 ),
                                 SpacerPlatform(),
