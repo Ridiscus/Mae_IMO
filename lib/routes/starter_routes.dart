@@ -25,9 +25,6 @@ class StarterRoutes {
       builder: (context, state) {
         final id = state.pathParameters['id'];
         final type = state.pathParameters['type'];
-        context.read<EstateBloc>().add(
-          FetchDetailEstateEvent(id: int.parse(id!)),
-        );
         return PortalDetailPage(id: id, type: type);
       },
     ),

@@ -29,74 +29,94 @@ class PortalDetailPage extends StatefulWidget {
 
 class _PortalDetailPageState extends State<PortalDetailPage> {
   int _currentImageIndex = 0;
-  bool _isLoading = false;
+  bool _isLoading = true;
   EstateModel? _property;
 
   @override
+  void initState() {
+    context.read<EstateBloc>().add(
+      FetchDetailEstateEvent(id: int.parse(widget.id!)),
+    );
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final estate = context.select((EstateBloc state) => state.state);
-    _isLoading = estate.isLoading ?? false;
-    _property = estate.estate;
+    // final estate = context.select((EstateBloc state) => state.state);
+    return BlocConsumer<EstateBloc, EstateState>(
+      listener: (context, state) {
+        if (state.estate == null && state.isLoading == false) {
+          context.pop();
+        }
+        setState(() {
+          _isLoading = state.isLoading ?? true;
+        });
+      },
+      buildWhen: (previous, current) => current.estate != null,
+      builder: (context, state) {
+        _property = state.estate;
+        return AnnotatedRegion(
+          value: SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+          child: Scaffold(
+            backgroundColor: AppColors.scaffold,
+            body: Skeletonizer(
+              enabled: _isLoading,
+              child: SizedBox(
+                width: context.getSize.width,
+                height: context.getSize.height,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildImageHeader(),
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.all(16.sp),
 
-    if (_property == null && !_isLoading) {
-      context.pop();
-    }
-    return AnnotatedRegion(
-      value: SystemUiOverlayStyle(statusBarColor: Colors.transparent),
-      child: Scaffold(
-        backgroundColor: AppColors.scaffold,
-        body: Skeletonizer(
-          enabled: _isLoading,
-          child: SizedBox(
-            width: context.getSize.width,
-            height: context.getSize.height,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildImageHeader(),
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.all(16.sp),
-
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildTitleAndPrice(),
-                          CustomSpacer(),
-                          _buildPropertyInfo(),
-                          CustomSpacer(),
-                          AmenityChip(amenities: _property?.amenities ?? []),
-                          CustomSpacer(),
-                          _buildDescription(),
-                          CustomSpacer(space: 3),
-                          if (widget.type?.toLowerCase() == 'prospect') ...[
-                            _buildVisitButton(
-                              text: 'Visiter',
-                              onPressed: () {
-                                context.pushNamed(VisitRequestPage.routeName);
-                              },
-                            ),
-                            SpacerPlatform(),
-                          ],
-                          if (widget.type?.toLowerCase() == 'tenant') ...[
-                            _buildVisitButton(
-                              text: 'Télécharger mon contrat',
-                              onPressed: () {},
-                              assetPath: Assets.cloudDownload,
-                            ),
-                            SpacerPlatform(),
-                          ],
-                        ],
+                        child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildTitleAndPrice(),
+                              CustomSpacer(),
+                              _buildPropertyInfo(),
+                              CustomSpacer(),
+                              AmenityChip(
+                                amenities: _property?.amenities ?? [],
+                              ),
+                              CustomSpacer(),
+                              _buildDescription(),
+                              CustomSpacer(space: 3),
+                              if (widget.type?.toLowerCase() == 'prospect') ...[
+                                _buildVisitButton(
+                                  text: 'Visiter',
+                                  onPressed: () {
+                                    context.pushNamed(
+                                      VisitRequestPage.routeName,
+                                    );
+                                  },
+                                ),
+                                SpacerPlatform(),
+                              ],
+                              if (widget.type?.toLowerCase() == 'tenant') ...[
+                                _buildVisitButton(
+                                  text: 'Télécharger mon contrat',
+                                  onPressed: () {},
+                                  assetPath: Assets.cloudDownload,
+                                ),
+                                SpacerPlatform(),
+                              ],
+                            ],
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -138,7 +158,7 @@ class _PortalDetailPageState extends State<PortalDetailPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: List.generate(
                     _property?.imageCount ?? 1,
-                        (index) =>
+                    (index) =>
                         PaginationDot(isActive: index == _currentImageIndex),
                   ),
                 ),
@@ -162,20 +182,20 @@ class _PortalDetailPageState extends State<PortalDetailPage> {
           child: Text(
             "${_property?.title}",
             style:
-            TextStyle(
-              fontSize: 22.r,
-              fontWeight: FontWeight.bold,
-            ).sourceSansProBold,
+                TextStyle(
+                  fontSize: 22.r,
+                  fontWeight: FontWeight.bold,
+                ).sourceSansProBold,
           ),
         ),
         Text(
           '${"${_property?.prix}".formatCurrency()} / Mois',
           style:
-          TextStyle(
-            fontSize: 16.r,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ).sourceSansProBold,
+              TextStyle(
+                fontSize: 16.r,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ).sourceSansProBold,
         ),
       ],
     );
@@ -200,10 +220,10 @@ class _PortalDetailPageState extends State<PortalDetailPage> {
         Text(
           text,
           style:
-          TextStyle(
-            fontSize: 14.r,
-            color: Colors.grey[700],
-          ).sourceSansProRegular,
+              TextStyle(
+                fontSize: 14.r,
+                color: Colors.grey[700],
+              ).sourceSansProRegular,
         ),
       ],
     );
@@ -216,20 +236,20 @@ class _PortalDetailPageState extends State<PortalDetailPage> {
         Text(
           'Description',
           style:
-          TextStyle(
-            fontSize: 18.r,
-            fontWeight: FontWeight.bold,
-          ).sourceSansProBold,
+              TextStyle(
+                fontSize: 18.r,
+                fontWeight: FontWeight.bold,
+              ).sourceSansProBold,
         ),
         SizedBox(height: 8.r),
         Text(
           _property?.description ?? '',
           style:
-          TextStyle(
-            fontSize: 14.r,
-            color: Colors.grey[800],
-            height: 1.5,
-          ).sourceSansProRegular,
+              TextStyle(
+                fontSize: 14.r,
+                color: Colors.grey[800],
+                height: 1.5,
+              ).sourceSansProRegular,
         ),
       ],
     );

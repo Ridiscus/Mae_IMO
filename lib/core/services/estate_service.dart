@@ -13,6 +13,10 @@ abstract interface class EstateService {
   Future<ApiResponse<ApiPaginateResponse<EstateModel>>> estatesAvailable({
     FilterEstateRequest? dto,
   });
+
+  Future<ApiResponse<dynamic>> sendVisiteEstates({
+    required VisiteEstateRequest dto,
+  });
 }
 
 class EstateServiceImpl implements EstateService {
@@ -51,6 +55,17 @@ class EstateServiceImpl implements EstateService {
     final response = await apiClient.get(
       Endpoints.estatesDetail(id),
       fromJson: (res) => EstateModel.fromMap(res),
+    );
+    return response;
+  }
+
+  @override
+  Future<ApiResponse> sendVisiteEstates({
+    required VisiteEstateRequest dto,
+  }) async {
+    final response = await apiClient.post(
+      Endpoints.sendVisiteEstates,
+      data: dto.toJson(),
     );
     return response;
   }

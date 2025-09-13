@@ -4,7 +4,7 @@ extension CurrencyFormater on String {
   String formatCurrency({
     String locale = "fr",
     int decimalDigits = 0,
-    String symbol = "F",
+    String symbol = "F CFA",
   }) {
     if (isEmpty || toLowerCase() == "null") return "";
 

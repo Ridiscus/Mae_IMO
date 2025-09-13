@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:developer' as console;
 
 import 'package:dio/dio.dart';
@@ -215,7 +214,12 @@ class ApiClient {
               ? fromJson(response.data['data'])
               : response.data as dynamic;
 
-      return ApiResponse.success(data: data);
+      final message = response.data?['message'];
+      console.log(message, name: "message");
+      return ApiResponse.success(
+        data: data,
+        message: response.data['message'],
+      );
     } catch (e) {
       return ApiResponse.error(
         message: 'Erreur de conversion des données: ${e.toString()}',

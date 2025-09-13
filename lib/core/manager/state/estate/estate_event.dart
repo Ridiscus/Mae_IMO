@@ -26,3 +26,12 @@ class FetchDetailEstateEvent extends EstateEvent {
   @override
   List<Object?> get props => [id];
 }
+
+class SendVisiteRequestEstateEvent extends EstateEvent {
+  final VisiteEstateRequest dto;
+
+  const SendVisiteRequestEstateEvent({required this.dto});
+
+  @override
+  List<Object?> get props => [dto];
+}

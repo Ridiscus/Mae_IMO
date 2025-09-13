@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:maelys_imo/core/constants/app_colors.dart';
+import 'package:maelys_imo/core/domain/models/index.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
+import 'package:maelys_imo/core/manager/state/estate/estate_bloc.dart';
+import 'package:maelys_imo/presentation/portal/pages/portal_page.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
+
+import '../../../core/domain/requests/index.dart';
+import '../../../core/utils/toast/notification_toast.dart';
 
 class VisitRequestPage extends StatefulWidget {
   static const routeName = 'visitRequest';
@@ -17,10 +24,21 @@ class VisitRequestPage extends StatefulWidget {
 
 class _VisitRequestPageState extends State<VisitRequestPage> {
   DateTime selectedDate = DateTime.now();
-  String selectedTime = 'Matin';
+  TimeOfDay? selectedTime = TimeOfDay.now();
+  String selectedTimeDisplay = CustomTimePickerFactory.formatTimeOfDay(
+    TimeOfDay.now(),
+  );
+  EstateModel? _property;
+
+  final TextEditingController _nameController = TextEditingController(),
+      _emailController = TextEditingController(),
+      _messageController = TextEditingController(),
+      _phoneController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    final state = context.select((EstateBloc value) => value.state);
+    _property = state.estate;
     return Scaffold(
       body: SafeArea(
         top: false,
@@ -28,6 +46,7 @@ class _VisitRequestPageState extends State<VisitRequestPage> {
           children: [
             _buildHeader(),
             Expanded(child: _buildVisitForm()),
+
             _buildRequestButton(),
             SpacerPlatform(),
           ],
@@ -108,20 +127,23 @@ class _VisitRequestPageState extends State<VisitRequestPage> {
         CustomSpacer(),
         _buildSummaryItem(
           icon: Icons.home_outlined,
-          label: 'Type : Appartement',
+          label: 'Type : ${_property?.type ?? ""}',
         ),
         CustomSpacer(),
         _buildSummaryItem(
           icon: Icons.location_on_outlined,
-          label: 'Localisation : Cocody',
+          label: 'Localisation : ${_property?.commune ?? ''}',
         ),
         CustomSpacer(),
         _buildSummaryItem(
           icon: Icons.payments_outlined,
-          label: 'Prix : 150 000 FCFA',
+          label: 'Prix : ${'${_property?.prix}'.formatCurrency()}',
         ),
         CustomSpacer(),
-        _buildSummaryItem(icon: Icons.hotel_outlined, label: 'Chambres : 2'),
+        _buildSummaryItem(
+          icon: Icons.hotel_outlined,
+          label: 'Chambres : ${_property?.nombreDeChambres ?? '0'}',
+        ),
       ],
     );
   }
@@ -186,18 +208,19 @@ class _VisitRequestPageState extends State<VisitRequestPage> {
               ).sourceSansProSemiBold,
         ),
         SizedBox(height: 8.h),
-        CustomDropdownFactory.createDropdown<String>(
-          value: selectedTime,
-          items: <String>['Matin', 'Après-midi', 'Soirée'],
-          onChanged: (String? newValue) {
-            if (newValue != null) {
-              setState(() {
-                selectedTime = newValue;
-              });
-            }
+        CustomTimePickerFactory.createTimePicker(
+          displayText: selectedTimeDisplay,
+
+          onTimeSelected: (TimeOfDay time) {
+            setState(() {
+              selectedTime = time;
+              selectedTimeDisplay = CustomTimePickerFactory.formatTimeOfDay(
+                time,
+              );
+            });
           },
-          itemLabelBuilder: (String value) => value,
-          hintText: 'Sélectionnez une plage horaire',
+          initialTime: selectedTime,
+          hintText: 'Sélectionnez une heure',
         ),
       ],
     );
@@ -207,6 +230,51 @@ class _VisitRequestPageState extends State<VisitRequestPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Text(
+          'Nom complet',
+          style:
+              TextStyle(
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w600,
+                color: Colors.black,
+              ).sourceSansProSemiBold,
+        ),
+        SizedBox(height: 8.h),
+        CustomInputTextFactory.createTextInput(
+          hintText: 'Votre nom complet',
+          controller: _nameController,
+        ),
+        CustomSpacer(),
+        Text(
+          'Email',
+          style:
+              TextStyle(
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w600,
+                color: Colors.black,
+              ).sourceSansProSemiBold,
+        ),
+        SizedBox(height: 8.h),
+        CustomInputTextFactory.createEmailInput(
+          hintText: 'Votre email',
+          controller: _emailController,
+        ),
+        CustomSpacer(),
+        Text(
+          'Téléphone',
+          style:
+              TextStyle(
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w600,
+                color: Colors.black,
+              ).sourceSansProSemiBold,
+        ),
+        SizedBox(height: 8.h),
+        CustomInputTextFactory.createPhoneInput(
+          hintText: 'Votre téléphone',
+          controller: _phoneController,
+        ),
+        CustomSpacer(),
         Text(
           'Informations supplémentaires',
           style:
@@ -219,6 +287,7 @@ class _VisitRequestPageState extends State<VisitRequestPage> {
         SizedBox(height: 8.h),
         CustomInputTextFactory.createTextAreaInput(
           hintText: 'Commentaires ou questions spécifiques...',
+          controller: _messageController,
         ),
       ],
     );
@@ -230,33 +299,70 @@ class _VisitRequestPageState extends State<VisitRequestPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          CustomButton(
-            text: 'Demander une visite',
-            onPressed: () {
-              // Handle visit request
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text('Demande envoyée'),
-                    content: Text(
-                      'Votre demande de visite a été envoyée avec succès. Un agent vous contactera prochainement pour confirmation.',
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          context.pop();
-                          context.pop();
-                        },
-                        child: Text('OK'),
+          BlocConsumer<EstateBloc, EstateState>(
+            listener: (context, state) {
+              if (state.isLoading == false && state.messageResult != null) {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('Demande de envoyé'),
+                      content: Text(state.messageResult!),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            context.goNamed(PortalPage.routeName);
+                          },
+                          child: Text('OK'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }
+            },
+            builder: (context, state) {
+              return CustomButton(
+                text: 'Demander une visite',
+                isLoading: state.isLoading ?? false,
+                onPressed: () {
+                  if (_emailController.text.trim().isEmpty) {
+                    showToast(msg: "Votre email est invalide");
+                    return;
+                  }
+
+                  if (_phoneController.text.trim().isEmpty) {
+                    showToast(msg: "Votre téléphone est obligatoire");
+                    return;
+                  }
+
+                  if (_nameController.text.trim().isEmpty) {
+                    showToast(msg: "Votre nom est obligatoire");
+                    return;
+                  }
+                  if (_messageController.text.trim().isEmpty) {
+                    showToast(msg: "Un message est obligatoire");
+                    return;
+                  }
+
+                  context.read<EstateBloc>().add(
+                    SendVisiteRequestEstateEvent(
+                      dto: VisiteEstateRequest(
+                        bienId: _property!.id!,
+                        message: _messageController.text,
+                        dateVisite: selectedDate,
+                        heureVisite: selectedTimeDisplay,
+                        email: _emailController.text,
+                        nom: _nameController.text,
+                        telephone: _phoneController.text,
                       ),
-                    ],
+                    ),
                   );
                 },
+                showArrow: true,
+                iconData: Icons.calendar_month,
               );
             },
-            showArrow: true,
-            iconData: Icons.calendar_month,
           ),
         ],
       ),

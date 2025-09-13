@@ -7,6 +7,7 @@ class EstateState extends Equatable {
   final List<EstateModel>? estates;
   final EstateModel? estate;
   final ApiPaginateResponse<EstateModel>? paginate;
+  final String? messageResult;
 
   const EstateState({
     this.estatesType,
@@ -15,6 +16,7 @@ class EstateState extends Equatable {
     this.failure,
     this.estate,
     this.estates,
+    this.messageResult,
   });
 
   @override
@@ -25,6 +27,7 @@ class EstateState extends Equatable {
     estates,
     paginate,
     estate,
+    messageResult,
   ];
 
   EstateState copyWith({
@@ -34,13 +37,15 @@ class EstateState extends Equatable {
     List<EstateTypeModel>? estatesType,
     Failure? failure,
     EstateModel? estate,
+    String? messageResult,
   }) => EstateState(
     isLoading: isLoading ?? this.isLoading,
     estates: estates ?? this.estates,
     paginate: paginate ?? this.paginate,
     estatesType: estatesType ?? this.estatesType,
+    estate: estate ?? this.estate,
     failure: failure,
-    estate: estate,
+    messageResult: messageResult,
   );
 
   factory EstateState.fromJson(Map<String, dynamic> json) {
@@ -58,6 +63,7 @@ class EstateState extends Equatable {
               : List<EstateModel>.from(
                 json['estates'].map((x) => EstateModel.fromMap(x)),
               ),
+
     );
   }
 

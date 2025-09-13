@@ -24,6 +24,7 @@ class EstateBloc extends HydratedBloc<EstateEvent, EstateState> {
     on<FetchEstateTypesEvent>(_onFetchEstateTypesEvent);
     on<FetchEstateEvent>(_onFetchEstateEvent);
     on<FetchDetailEstateEvent>(_onFetchDetailEstateEvent);
+    on<SendVisiteRequestEstateEvent>(_onSendVisiteRequestEstateEvent);
   }
 
   @override
@@ -113,6 +114,33 @@ class EstateBloc extends HydratedBloc<EstateEvent, EstateState> {
             failure: Failure(message: result.message!),
           ),
         );
+      }
+    } catch (e) {
+      console.log(e.toString(), name: "catch _onFetchEstateEvent");
+      emit(state.copyWith(isLoading: false));
+    }
+  }
+
+  FutureOr<void> _onSendVisiteRequestEstateEvent(
+    SendVisiteRequestEstateEvent event,
+    Emitter<EstateState> emit,
+  ) async {
+    emit(state.copyWith(isLoading: true));
+    try {
+      final result = await _service.sendVisiteEstates(dto: event.dto);
+      if (result.success) {
+        emit(
+          state.copyWith(
+            isLoading: false,
+            messageResult: "Demande de visite enregistrée avec succès",
+          ),
+        );
+      } else {
+        showToast(
+          msg: result.message ?? "Demande de visite non enregistrée",
+          type: ToastificationType.error,
+        );
+        emit(state.copyWith(isLoading: false, messageResult: null));
       }
     } catch (e) {
       console.log(e.toString(), name: "catch _onFetchEstateEvent");
