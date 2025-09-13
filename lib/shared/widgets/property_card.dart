@@ -1,16 +1,16 @@
 part of 'index.dart';
 
 class PropertyCard extends StatefulWidget {
-  final PropertyModel property;
+  final EstateModel property;
   final bool showMoreInfo;
   final VoidCallback onPressed;
 
   const PropertyCard({
-    Key? key,
+    super.key,
     required this.property,
     required this.onPressed,
     this.showMoreInfo = true,
-  }) : super(key: key);
+  });
 
   @override
   State<PropertyCard> createState() => _PropertyCardState();
@@ -39,7 +39,6 @@ class _PropertyCardState extends State<PropertyCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Property image carousel with rounded corners at top
             AspectRatio(
               aspectRatio: 16 / 9,
               child: Stack(
@@ -55,12 +54,10 @@ class _PropertyCardState extends State<PropertyCard> {
                           });
                         },
                         itemBuilder: (context, index) {
-                          // Pour l'instant, nous utilisons la même image pour toutes les pages
-                          // Dans une implémentation réelle, vous utiliseriez une liste d'images
-                          return Image.asset(
-                            widget.property.imageUrl,
+                          return UIHelper.cachedNetworkImage(
+                            CoreHelper.fullLink(widget.property.images![index],),
+                            height: double.infinity,
                             fit: BoxFit.cover,
-                            width: double.infinity,
                           );
                         },
                       ),
@@ -98,7 +95,7 @@ class _PropertyCardState extends State<PropertyCard> {
                         ).sourceSansProSemiBold,
                   ),
                   SizedBox(height: 12.r),
-                  _buildAmenities(),
+                  AmenityChip(amenities: widget.property.amenities)
                 ],
               ),
             ],
@@ -112,36 +109,4 @@ class _PropertyCardState extends State<PropertyCard> {
     return PaginationDot(isActive: isActive);
   }
 
-  Widget _buildAmenities() {
-    return Wrap(
-      spacing: 8.r,
-      runSpacing: 8.r,
-      children:
-          widget.property.amenities.map((amenity) {
-            return Container(
-              padding: EdgeInsets.symmetric(horizontal: 8.r, vertical: 4.r),
-              decoration: BoxDecoration(
-                color: Colors.grey.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(8.r),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.shower_outlined, size: 14.r, color: Colors.grey),
-                  // À remplacer par l'icône dynamique
-                  SizedBox(width: 4.r),
-                  Text(
-                    amenity.text,
-                    style:
-                        TextStyle(
-                          fontSize: 12.r,
-                          color: Colors.grey,
-                        ).sourceSansProRegular,
-                  ),
-                ],
-              ),
-            );
-          }).toList(),
-    );
-  }
 }

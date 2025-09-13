@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:maelys_imo/core/constants/app_colors.dart';
 import 'package:maelys_imo/core/constants/assets.dart';
+import 'package:maelys_imo/core/domain/models/index.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
 import 'package:maelys_imo/presentation/portal/pages/visit_request_page.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+
+import '../../../core/manager/state/estate/estate_bloc.dart';
+import '../../../core/utils/index.dart';
 
 class PortalDetailPage extends StatefulWidget {
-  static const String routeName = 'portalDetail/:id/:type';
+  static const String routeName = 'portal-detail/:id/:type';
   static const String routePath = '/portal-detail/:id/:type';
 
   final String? id;
@@ -23,59 +29,71 @@ class PortalDetailPage extends StatefulWidget {
 
 class _PortalDetailPageState extends State<PortalDetailPage> {
   int _currentImageIndex = 0;
+  bool _isLoading = false;
+  EstateModel? _property;
 
   @override
   Widget build(BuildContext context) {
+    final estate = context.select((EstateBloc state) => state.state);
+    _isLoading = estate.isLoading ?? false;
+    _property = estate.estate;
+
+    if (_property == null && !_isLoading) {
+      context.pop();
+    }
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(statusBarColor: Colors.transparent),
       child: Scaffold(
         backgroundColor: AppColors.scaffold,
-        body: SizedBox(
-          width: context.getSize.width,
-          height: context.getSize.height,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildImageHeader(),
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.all(16.sp),
-        
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildTitleAndPrice(),
-                        CustomSpacer(),
-                        _buildPropertyInfo(),
-                        CustomSpacer(),
-                        _buildAmenities(),
-                        CustomSpacer(),
-                        _buildDescription(),
-                        CustomSpacer(space: 3),
-                        if (widget.type?.toLowerCase() == 'prospect') ...[
-                          _buildVisitButton(
-                            text: 'Visiter',
-                            onPressed: () {
-                              context.pushNamed(VisitRequestPage.routeName);
-                            },
-                          ),
-                          SpacerPlatform(),
+        body: Skeletonizer(
+          enabled: _isLoading,
+          child: SizedBox(
+            width: context.getSize.width,
+            height: context.getSize.height,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildImageHeader(),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.all(16.sp),
+
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildTitleAndPrice(),
+                          CustomSpacer(),
+                          _buildPropertyInfo(),
+                          CustomSpacer(),
+                          AmenityChip(amenities: _property?.amenities ?? []),
+                          CustomSpacer(),
+                          _buildDescription(),
+                          CustomSpacer(space: 3),
+                          if (widget.type?.toLowerCase() == 'prospect') ...[
+                            _buildVisitButton(
+                              text: 'Visiter',
+                              onPressed: () {
+                                context.pushNamed(VisitRequestPage.routeName);
+                              },
+                            ),
+                            SpacerPlatform(),
+                          ],
+                          if (widget.type?.toLowerCase() == 'tenant') ...[
+                            _buildVisitButton(
+                              text: 'Télécharger mon contrat',
+                              onPressed: () {},
+                              assetPath: Assets.cloudDownload,
+                            ),
+                            SpacerPlatform(),
+                          ],
                         ],
-                        if (widget.type?.toLowerCase() == 'tenant') ...[
-                          _buildVisitButton(
-                            text: 'Télécharger mon contrat',
-                            onPressed: () {},
-                            assetPath: Assets.cloudDownload,
-                          ),
-                          SpacerPlatform(),
-                        ],
-                      ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -95,19 +113,17 @@ class _PortalDetailPageState extends State<PortalDetailPage> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(20.r)),
                   child: PageView.builder(
-                    itemCount: 3,
+                    itemCount: _property?.imageCount,
                     onPageChanged: (index) {
                       setState(() {
                         _currentImageIndex = index;
                       });
                     },
                     itemBuilder: (context, index) {
-                      // Pour l'instant, nous utilisons la même image pour toutes les pages
-                      // Dans une implémentation réelle, vous utiliseriez une liste d'images
-                      return Image.asset(
-                        "assets/images/temps.png",
+                      return UIHelper.cachedNetworkImage(
+                        CoreHelper.fullLink(_property!.images![index]),
+                        height: double.infinity,
                         fit: BoxFit.cover,
-                        width: double.infinity,
                       );
                     },
                   ),
@@ -121,8 +137,8 @@ class _PortalDetailPageState extends State<PortalDetailPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: List.generate(
-                    3,
-                    (index) =>
+                    _property?.imageCount ?? 1,
+                        (index) =>
                         PaginationDot(isActive: index == _currentImageIndex),
                   ),
                 ),
@@ -144,52 +160,33 @@ class _PortalDetailPageState extends State<PortalDetailPage> {
       children: [
         Expanded(
           child: Text(
-            'Maison à abobo',
+            "${_property?.title}",
             style:
-                TextStyle(
-                  fontSize: 22.r,
-                  fontWeight: FontWeight.bold,
-                ).sourceSansProBold,
+            TextStyle(
+              fontSize: 22.r,
+              fontWeight: FontWeight.bold,
+            ).sourceSansProBold,
           ),
         ),
         Text(
-          '200 000 FCFA / Mois',
+          '${"${_property?.prix}".formatCurrency()} / Mois',
           style:
-              TextStyle(
-                fontSize: 16.r,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ).sourceSansProBold,
+          TextStyle(
+            fontSize: 16.r,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ).sourceSansProBold,
         ),
       ],
     );
   }
 
   Widget _buildPropertyInfo() {
-    return Row(
+    return Wrap(
+      direction: Axis.horizontal,
       children: [
-        _buildInfoItem('Type : Villa', Icons.home_outlined),
-        SizedBox(width: 8.r),
-        Container(
-          width: 4.r,
-          height: 4.r,
-          decoration: BoxDecoration(
-            color: Colors.grey.withOpacity(0.5),
-            shape: BoxShape.circle,
-          ),
-        ),
-        SizedBox(width: 8.r),
+        _buildInfoItem('Type : ${_property?.type}', Icons.home_outlined),
         _buildInfoItem('Garage : Oui', Icons.garage_outlined),
-        SizedBox(width: 8.r),
-        Container(
-          width: 4.r,
-          height: 4.r,
-          decoration: BoxDecoration(
-            color: Colors.grey.withOpacity(0.5),
-            shape: BoxShape.circle,
-          ),
-        ),
-        SizedBox(width: 8.r),
         _buildInfoItem('Superficie : 100m²', Icons.square_foot_outlined),
       ],
     );
@@ -203,44 +200,12 @@ class _PortalDetailPageState extends State<PortalDetailPage> {
         Text(
           text,
           style:
-              TextStyle(
-                fontSize: 14.r,
-                color: Colors.grey[700],
-              ).sourceSansProRegular,
+          TextStyle(
+            fontSize: 14.r,
+            color: Colors.grey[700],
+          ).sourceSansProRegular,
         ),
       ],
-    );
-  }
-
-  Widget _buildAmenities() {
-    return Wrap(
-      spacing: 8.r,
-      runSpacing: 8.r,
-      children: List.generate(
-        3,
-        (index) => Container(
-          padding: EdgeInsets.symmetric(horizontal: 8.r, vertical: 4.r),
-          decoration: BoxDecoration(
-            color: Colors.grey.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(8.r),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.shower_outlined, size: 14.r, color: Colors.grey),
-              SizedBox(width: 4.r),
-              Text(
-                '2 douches',
-                style:
-                    TextStyle(
-                      fontSize: 12.r,
-                      color: Colors.grey[700],
-                    ).sourceSansProRegular,
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 
@@ -251,20 +216,20 @@ class _PortalDetailPageState extends State<PortalDetailPage> {
         Text(
           'Description',
           style:
-              TextStyle(
-                fontSize: 18.r,
-                fontWeight: FontWeight.bold,
-              ).sourceSansProBold,
+          TextStyle(
+            fontSize: 18.r,
+            fontWeight: FontWeight.bold,
+          ).sourceSansProBold,
         ),
         SizedBox(height: 8.r),
         Text(
-          'Le lorem ipsum est, en imprimerie, une suite de mots sans signification utilisée à titre provisoire Le lorem ipsum est, en imprimerie, une suite de mots sans signification utilisée à titre provisoire Le lorem ipsum est, en imprimerie, une suite de mots sans signification utilisée à titre provisoire Le lorem ipsum est, en imprimerie, une suite de mots sans signification utilisée à titre provisoire Le lorem ipsum est, en imprimerie, une suite de mots sans signification utilisée à titre provisoire Le lorem ipsum est, en imprimerie, une suite de mots sans signification utilisée à titre provisoire Le lorem ipsum est, en imprimerie, une suite de mots sans signification utilisée à titre provisoire Le lorem ipsum est, en imprimerie, une suite de mots sans signification utilisée à titre provisoire',
+          _property?.description ?? '',
           style:
-              TextStyle(
-                fontSize: 14.r,
-                color: Colors.grey[800],
-                height: 1.5,
-              ).sourceSansProRegular,
+          TextStyle(
+            fontSize: 14.r,
+            color: Colors.grey[800],
+            height: 1.5,
+          ).sourceSansProRegular,
         ),
       ],
     );

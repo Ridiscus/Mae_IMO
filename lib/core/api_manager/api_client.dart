@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:developer' as console;
+
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' show NavigatorState;
@@ -86,7 +89,7 @@ class ApiClient {
     Map<String, dynamic>? queryParameters,
     Options? options,
     CancelToken? cancelToken,
-    T Function(dynamic)? fromJson,
+    T Function(dynamic res)? fromJson,
   }) async {
     try {
       final response = await _dio.get<dynamic>(
@@ -95,7 +98,6 @@ class ApiClient {
         options: options,
         cancelToken: cancelToken,
       );
-
       return _processResponse<T>(response, fromJson);
     } on DioException catch (e) {
       return ApiErrorHandler.handleError<T>(e);
@@ -213,10 +215,7 @@ class ApiClient {
               ? fromJson(response.data['data'])
               : response.data as dynamic;
 
-      return ApiResponse.success(
-        data: data,
-        statusCode: response.data['statusCode'] ?? response.statusCode,
-      );
+      return ApiResponse.success(data: data);
     } catch (e) {
       return ApiResponse.error(
         message: 'Erreur de conversion des données: ${e.toString()}',

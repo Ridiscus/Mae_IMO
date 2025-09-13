@@ -3,24 +3,24 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:maelys_imo/core/constants/app_colors.dart';
 import 'package:maelys_imo/core/constants/assets.dart';
+import 'package:maelys_imo/core/domain/models/index.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
 
-import '../../../shared/models/index.dart';
 import '../../portal/pages/portal_detail_page.dart';
 import 'profile_tenant_page.dart';
 
 class DashboardContentPage extends StatelessWidget {
   static const routeName = 'dashboardContent';
   static const routePath = '/dashboard';
-  
+
   const DashboardContentPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     // Access the nearest Scaffold to open the drawer
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-    
+
     return Column(
       children: [
         AppHeaderLayout(content: _buildHeader(context)),
@@ -56,11 +56,12 @@ class DashboardContentPage extends StatelessWidget {
               ),
               Text(
                 'Accueil',
-                style: TextStyle(
-                  fontSize: 32.sp,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ).sourceSansProBold,
+                style:
+                    TextStyle(
+                      fontSize: 32.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ).sourceSansProBold,
               ),
               CircularIcon(
                 iconAsset: Assets.user,
@@ -92,14 +93,7 @@ class DashboardContentPage extends StatelessWidget {
 
   Widget _buildPropertyInfoCard(BuildContext context) {
     return PropertyCard(
-      property: PropertyModel(
-        title: 'Maison à abobo',
-        imageUrl: 'assets/images/temps.png',
-        amenities: List.generate(
-          8,
-          (index) => AmenityModel(text: '2 douches', iconData: 'shower_outlined'),
-        ),
-      ),
+      property: EstateModel(),
       showMoreInfo: false,
       onPressed: () {
         context.pushNamed(

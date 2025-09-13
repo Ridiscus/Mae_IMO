@@ -1,7 +1,9 @@
-import 'package:go_router/go_router.dart' show GoRoute;
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart' show GoRoute, GoRouterState;
 import 'package:maelys_imo/presentation/portal/pages/portal_detail_page.dart';
 import 'package:maelys_imo/presentation/portal/pages/visit_request_page.dart';
 
+import '../core/manager/state/estate/estate_bloc.dart';
 import '../presentation/portal/pages/portal_page.dart';
 import '../presentation/starter/pages/splash_page.dart';
 
@@ -23,6 +25,9 @@ class StarterRoutes {
       builder: (context, state) {
         final id = state.pathParameters['id'];
         final type = state.pathParameters['type'];
+        context.read<EstateBloc>().add(
+          FetchDetailEstateEvent(id: int.parse(id!)),
+        );
         return PortalDetailPage(id: id, type: type);
       },
     ),

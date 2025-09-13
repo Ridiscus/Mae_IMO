@@ -2,11 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:maelys_imo/core/extensions/index.dart';
+import 'package:maelys_imo/core/manager/state/estate/estate_bloc.dart';
 import 'package:maelys_imo/presentation/portal/pages/portal_page.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
-import 'package:maelys_imo/core/extensions/index.dart';
 
 import '../../../core/constants/assets.dart';
 
@@ -22,6 +23,9 @@ class SplashPage extends StatefulWidget {
 
 class _SplashPageState extends State<SplashPage> {
   void _init() async {
+    context.read<EstateBloc>().add(FetchEstateTypesEvent());
+    context.read<EstateBloc>().add(FetchEstateEvent());
+
     await Future.delayed(const Duration(seconds: 3)).whenComplete(() {
       _next();
     });
@@ -34,7 +38,7 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   Future<void> _next() async {
-    // context.read<ToolsBloc>().add(FetchAdEvent());
+
     // final userModel = context.read<AuthBloc>().state.userModel;
     // final hasUserToken = await TokenManager().hasUserToken();
     //
@@ -49,9 +53,7 @@ class _SplashPageState extends State<SplashPage> {
     // }
 
     // Navigate to onboarding page
-    context.goNamed(
-      PortalPage.routeName
-    );
+    context.goNamed(PortalPage.routeName);
   }
 
   @override

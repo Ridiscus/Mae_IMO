@@ -1,5 +1,8 @@
+import 'dart:developer' as console;
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../shared/models/index.dart';
 import '../domain/models/index.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -11,3 +14,6 @@ part 'string_ext.dart';
 part 'date_ext.dart';
 part 'padding_ext.dart';
 part 'navigator_ext.dart';
+part 'estate_type_ext.dart';
+part 'estate_ext.dart';
+

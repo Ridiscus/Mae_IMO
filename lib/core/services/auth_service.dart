@@ -5,13 +5,13 @@ import '../domain/models/index.dart';
 import '../domain/requests/index.dart';
 import '../manager/token_manager.dart';
 
-final String TAG = "[auth_service.dart]";
-
 abstract interface class AuthService {
   Future<ApiResponse<AccountModel>> signIn({required LoginRequest dto});
 }
 
 class AuthServiceImpl implements AuthService {
+  final String TAG = "auth_service";
+
   final ApiClient apiClient;
   final Endpoints endpoints;
 

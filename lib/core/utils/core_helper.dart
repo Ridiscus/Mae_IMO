@@ -1,3 +1,9 @@
 part of 'index.dart';
 
-class CoreHelper {}
+class CoreHelper {
+  static String fullLink(String name) {
+    return name.startsWith('http') || name.startsWith('https')
+        ? name
+        : "https://maelysimo.com/storage/$name";
+  }
+}

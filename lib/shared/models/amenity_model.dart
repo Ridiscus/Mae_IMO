@@ -2,10 +2,10 @@ part of 'index.dart';
 
 class AmenityModel {
   final String text;
-  final String iconData;
+  final String? iconData;
 
   AmenityModel({
     required this.text,
-    required this.iconData,
+     this.iconData,
   });
 }

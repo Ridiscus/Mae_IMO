@@ -7,6 +7,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart' show GoogleFonts;
@@ -18,7 +19,11 @@ import 'package:maelys_imo/shared/models/index.dart';
 import 'package:go_router/go_router.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import '../../core/constants/app_colors.dart' show AppColors;
+import '../../core/domain/models/index.dart';
+import '../../core/manager/state/estate/estate_bloc.dart';
+import '../../core/utils/index.dart';
 import '../../presentation/tenant/pages/contact_agency_page.dart';
 
 // Export QrCodeViewer comme un widget autonome (ne fait pas partie de l'index)
@@ -55,5 +60,7 @@ part 'stats_card_widget.dart';
 part 'scrollable_body_widget.dart';
 part 'icon_button_menu.dart';
 part 'custom_navigation_bar.dart';
+part 'empty_state_widget.dart';
+part 'amenity_chip.dart';
 
 

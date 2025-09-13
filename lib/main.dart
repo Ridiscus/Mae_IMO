@@ -4,12 +4,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart'
     show
-    GlobalCupertinoLocalizations,
-    GlobalMaterialLocalizations,
-    GlobalWidgetsLocalizations;
+        GlobalCupertinoLocalizations,
+        GlobalMaterialLocalizations,
+        GlobalWidgetsLocalizations;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:maelys_imo/core/manager/state/estate/estate_bloc.dart';
 import 'package:maelys_imo/routes/app_route.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:talker_bloc_logger/talker_bloc_logger.dart';
@@ -67,6 +68,7 @@ class MainApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => getIt<AuthBloc>()),
+        BlocProvider(create: (context) => getIt<EstateBloc>()),
         // BlocProvider(
         //   create:
         //       (context) =>

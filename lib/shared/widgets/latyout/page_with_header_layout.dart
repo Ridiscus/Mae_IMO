@@ -36,6 +36,7 @@ class PageWithHeaderLayout extends StatelessWidget {
   /// Whether to wrap the body content in a scrollable view.
   final bool scrollableBody;
 
+  final RefreshCallback? onRefresh;
   /// Creates a page with header layout.
   const PageWithHeaderLayout({
     super.key,
@@ -50,6 +51,7 @@ class PageWithHeaderLayout extends StatelessWidget {
     this.floatingActionButtonLocation =
         FloatingActionButtonLocation.centerFloat,
     this.scrollableBody = true,
+    this.onRefresh,
   });
 
   @override
@@ -70,6 +72,7 @@ class PageWithHeaderLayout extends StatelessWidget {
             ScrollableBodyWidget(
               bodyContent: bodyContent,
               bodyPadding: bodyPadding,
+              onRefresh: onRefresh,
             ),
           ],
         ),
