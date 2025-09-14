@@ -1,12 +1,21 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:maelys_imo/core/constants/app_colors.dart';
 import 'package:maelys_imo/core/constants/assets.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
+import 'package:maelys_imo/core/manager/state/dashboard/dashboard_bloc.dart';
+import 'package:maelys_imo/core/manager/state/payment/payment_bloc.dart';
 import 'package:maelys_imo/presentation/tenant/pages/payment_page.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
 import 'package:maelys_imo/shared/widgets/modals/index.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+
+import '../../../core/domain/models/index.dart';
+import '../../../core/manager/state/auth/auth_bloc.dart';
 
 class HomeTenantPage extends StatefulWidget {
   static const routeName = 'homeTenant';
@@ -19,13 +28,21 @@ class HomeTenantPage extends StatefulWidget {
 }
 
 class _HomeTenantPageState extends State<HomeTenantPage> {
+  late UserModel _userModel;
+  late AuthState _authState;
+  late PaymentState _paymentState;
+  bool _loadingAll = true;
+
+  late TenantDashboardModel _tenantDashboardModel;
+
   /// Affiche le modal avec les détails du paiement
-  void _showPaymentDetails(
-    String month,
-    String amount,
-    String date,
-    bool isPaid,
-  ) {
+  void _showPaymentDetails({
+    required String month,
+    required String amount,
+    required String date,
+    required String paymentMethod,
+    required String reference,
+  }) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -38,22 +55,49 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
             month: month,
             amount: amount,
             date: date,
-            isPaid: isPaid,
-            reference:
-                'REF-${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}',
-            paymentMethod: isPaid ? 'Carte bancaire' : null,
-            recipientName: isPaid ? 'Agence Maelys Immo' : null,
+            isPaid: true,
+            reference: reference,
+            paymentMethod: paymentMethod,
+            recipientName: '${_tenantDashboardModel.locataire?.agency?.name}',
           ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    _authState = context.select((AuthBloc bloc) => bloc.state);
+    _paymentState = context.select((PaymentBloc bloc) => bloc.state);
+    _tenantDashboardModel =
+        context.select(
+          (DashboardBloc bloc) => bloc.state.tenantDashboardModel,
+        )!;
+
+    _userModel = _authState.userModel!;
+    _loadingAll = _authState.isLoading || _paymentState.isLoading;
+
     return PageWithHeaderLayout(
       headerContent: _buildHeaderContent(),
       bodyContent: _buildContent(),
+      onRefresh: () async {
+        final completer = Completer<void>();
 
-      //floatingActionButton: _buildContactButton(),
+        // Écouter les changements d'état pour savoir quand le chargement est terminé
+        late StreamSubscription subscription;
+        subscription = context.read<PaymentBloc>().stream.listen((state) {
+          if (state.isLoading) {
+            subscription.cancel();
+            completer.complete();
+          }
+        });
+
+        // Déclencher le chargement des données
+        context.read<PaymentBloc>().add(
+          FetchHistoryPaymentEvent(tenantId: _userModel.id!),
+        );
+
+        // Attendre que le chargement soit terminé
+        return completer.future;
+      },
     );
   }
 
@@ -67,7 +111,7 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
           children: [
             // CircularBackButton(), // Retiré car dans le shell de navigation
             Text(
-              'Juillet 2025',
+              DateTime.now().monthYear().firstLetter(),
               style:
                   TextStyle(
                     fontSize: 20.r,
@@ -91,19 +135,21 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             _buildRentInfo(),
-            GestureDetector(
-              onTap: () {
-                showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  backgroundColor: Colors.white,
-                  showDragHandle: true,
-                  useSafeArea: true,
-                  builder: (context) => ModalQrCode(),
-                );
-              },
-              child: CustomQrCodeView(data: DateTime.now().human()),
-            ),
+
+            if (_tenantDashboardModel.qrCode != null)
+              GestureDetector(
+                onTap: () {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    backgroundColor: Colors.white,
+                    showDragHandle: true,
+                    useSafeArea: true,
+                    builder: (context) => ModalQrCode(),
+                  );
+                },
+                child: CustomQrCodeView(),
+              ),
           ],
         ),
         CustomSpacer(),
@@ -134,7 +180,7 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
           ],
         ),
         Text(
-          '200 000 FCFA',
+          '${_tenantDashboardModel.locataire?.estate?.prix}'.formatCurrency(),
           style:
               TextStyle(
                 fontSize: 32.r,
@@ -159,80 +205,57 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
   }
 
   Widget _buildContent() {
-    final paymentHistory = [
-      {
-        'month': 'juin',
-        'amount': '200 000 FCFA',
-        'date': '06 juin 2025',
-        'isPaid': true,
-      },
-      {
-        'month': 'mai',
-        'amount': '200 000 FCFA',
-        'date': '06 juin 2025',
-        'isPaid': true,
-      },
-      {
-        'month': 'avril',
-        'amount': '150 000 FCFA',
-        'date': '06 juin 2025',
-        'isPaid': true,
-      },
-      {
-        'month': 'juin',
-        'amount': '200 000 FCFA',
-        'date': '06 juin 2025',
-        'isPaid': true,
-      },
-      {
-        'month': 'mai',
-        'amount': '200 000 FCFA',
-        'date': '06 juin 2025',
-        'isPaid': true,
-      },
-      {
-        'month': 'avril',
-        'amount': '150 000 FCFA',
-        'date': '06 juin 2025',
-        'isPaid': true,
-      },
-    ];
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Historique des paiements',
-          style:
-              TextStyle(
-                fontSize: 20.sp,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ).sourceSansProSemiBold,
-        ),
-        CustomSpacer(),
-        ...paymentHistory
-            .map((payment) {
-              return _buildPaymentHistoryItem(
-                month: payment['month'] as String,
-                amount: payment['amount'] as String,
-                date: payment['date'] as String,
-                isPaid: payment['isPaid'] as bool,
-              );
-            })
-            .expand((element) => [element, CustomSpacer(space: .5)]),
-      ],
-    );
+    final paymentHistory = _paymentState.paymentHistoryModel ?? [];
+    return (paymentHistory.isEmpty)
+        ? SizedBox(
+          height: context.getSize.height,
+          child: EmptyStateWidget(
+            title: "Aucun paiement trouvé !",
+            icon: Icons.search_off,
+          ),
+        )
+        : Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Historique des paiements',
+              style:
+                  TextStyle(
+                    fontSize: 20.sp,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ).sourceSansProSemiBold,
+            ),
+            CustomSpacer(),
+            ...paymentHistory
+                .map((payment) {
+                  return Skeletonizer(
+                    enabled: _paymentState.isLoading,
+                    child: _buildPaymentHistoryItem(payment: payment),
+                  );
+                })
+                .expand((element) => [element, CustomSpacer(space: .5)]),
+          ],
+        );
   }
 
-  Widget _buildPaymentHistoryItem({
-    required String month,
-    required String amount,
-    required String date,
-    required bool isPaid,
-  }) {
+  Widget _buildPaymentHistoryItem({required PaymentHistoryModel payment}) {
+    var month = (payment.moisCouvert as String).monthYear();
+    var amount = (payment.montant as String).formatCurrency();
+    var date = payment.datePaiement?.humanWithoutTime() ?? "";
+    var paymentMethod = (payment.methodePaiement as String);
+
+    var reference = (payment.reference as String);
+
     return GestureDetector(
-      onTap: () => _showPaymentDetails(month, amount, date, isPaid),
+      onTap:
+          () => _showPaymentDetails(
+            month: month,
+            amount: amount,
+            date: date,
+            paymentMethod: paymentMethod,
+            reference: reference,
+          ),
       child: Container(
         decoration: BoxDecoration(
           color: Colors.transparent,
@@ -258,6 +281,8 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
                 children: [
                   Text(
                     'Loyer du mois de $month',
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                     style:
                         TextStyle(
                           fontSize: 16.r,
@@ -279,13 +304,10 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
               ),
             ),
             Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                CustomTag(
-                  label: isPaid ? 'Payé' : 'Impayé',
-                  color: isPaid ? AppColors.success : AppColors.redColor,
-                ),
+                CustomTag(label: "Payé", color: AppColors.success),
                 CustomSpacer(space: .2),
                 Text(
                   date,

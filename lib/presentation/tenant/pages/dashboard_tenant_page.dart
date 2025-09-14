@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:maelys_imo/core/constants/app_colors.dart';
+import 'package:maelys_imo/core/manager/state/auth/auth_bloc.dart';
 import 'package:maelys_imo/presentation/tenant/pages/profile_tenant_page.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
+
+import '../../../core/manager/state/dashboard/dashboard_bloc.dart';
+import '../../../core/utils/index.dart';
 
 class DashboardTenantPage extends StatefulWidget {
   static const routeName = 'dashboardTenant';
@@ -22,6 +27,11 @@ class _DashboardTenantPageState extends State<DashboardTenantPage> {
 
   @override
   Widget build(BuildContext context) {
+    final state = context.select((DashboardBloc bloc) => bloc.state);
+    final userModel = context.select((AuthBloc bloc) => bloc.state.userModel);
+    final dashboardModel = state.tenantDashboardModel?.locataire;
+
+
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(
         statusBarColor: AppColors.primary,
@@ -30,8 +40,9 @@ class _DashboardTenantPageState extends State<DashboardTenantPage> {
       child: Scaffold(
         key: _scaffoldKey,
         drawer: CustomDrawer(
-          name: 'Nom de l\'utilisateur',
-          email: 'utilsateur@gmail.com',
+          name: dashboardModel?.fullName ?? '',
+          email: dashboardModel?.email ?? '',
+          profileImage: CoreHelper.fullLink(userModel?.profileImage ?? ""),
           profileType: "tenant",
           // onDocumentsTap: () {},
           onHomeTap: () {

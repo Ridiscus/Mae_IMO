@@ -31,4 +31,36 @@ extension CurrencyFormater on String {
 
     return DateFormat('dd LLLL, HH:m', 'fr').format(dt);
   }
+
+  String humanWithoutTime() {
+    var date = DateTime.tryParse(this);
+
+    if (date == null) {
+      return "";
+    }
+    return date.humanWithoutTime();
+  }
+
+  String monthYear() {
+    try {
+      if (toLowerCase() == "null") return "";
+      var date = DateTime.parse(this);
+      return date.monthYear();
+    } catch (error) {
+      if (error is FormatException) {
+        var datePart = split("-");
+        var y = datePart.firstWhere((element) => element.length >= 3);
+        var m = datePart[1];
+
+        return DateTime.now()
+            .copyWith(year: int.parse(y), month: int.parse(m))
+            .monthYear();
+      }
+      return "";
+    }
+  }
+
+  String firstLetter() {
+    return this[0].toUpperCase() + substring(1);
+  }
 }

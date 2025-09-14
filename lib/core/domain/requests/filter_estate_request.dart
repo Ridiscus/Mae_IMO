@@ -10,7 +10,7 @@ class FilterEstateRequest extends Dto {
     this.type,
     this.commune,
     this.prixMax,
-    this.perPage = 90,
+    this.perPage = 70,
   });
 
   @override

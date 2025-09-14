@@ -93,7 +93,7 @@ class CustomDrawer extends StatelessWidget {
               ).sourceSansProSemiBold,
             ),
           ),
-          SizedBox(height: 8.sp),
+          SizedBox(height: 2.sp),
           Align(
             alignment: Alignment.centerLeft,
             child: Text(
@@ -117,23 +117,7 @@ class CustomDrawer extends StatelessWidget {
         title: 'Accueil',
         onTap: onHomeTap ?? onCloseTap,
       ),
-      /* _MenuItem(
-        icon: Icons.account_balance_wallet_outlined,
-        title: 'Wallet',
-        onTap: onWalletTap,
-        isSelected: selectedIndex == 1,
-      ), */
-      /* _MenuItem(
-        icon: Icons.swap_horiz_outlined,
-        title: 'Transactions',
-        onTap: onTransactionsTap,
-        isSelected: selectedIndex == 2,
-      ), */
-      // _MenuItem(
-      //   icon: Icons.person_outline,
-      //   title: 'Profil',
-      //   onTap: onProfileTap,
-      //  ),
+
       if (profileType != 'tenant') ...[
         _MenuItem(
           icon: Icons.checklist_outlined,
@@ -143,16 +127,6 @@ class CustomDrawer extends StatelessWidget {
       ],
 
       if (profileType == 'tenant') ...[
-        // _MenuItem(
-        //   icon: Icons.payment,
-        //   title: 'Paiements',
-        //   onTap: onPaymentsTap,
-        //  ),
-        // _MenuItem(
-        //   icon: Icons.picture_as_pdf_outlined,
-        //   title: 'Documents',
-        //   onTap: onDocumentsTap,
-        //  ),
         _MenuItem(
           icon: Icons.phone,
           title: 'Contacter l\'agence',

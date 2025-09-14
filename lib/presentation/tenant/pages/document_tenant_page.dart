@@ -1,10 +1,16 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:maelys_imo/core/constants/app_colors.dart';
 import 'package:maelys_imo/core/constants/assets.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
+import 'package:maelys_imo/core/manager/state/dashboard/dashboard_bloc.dart';
+import 'package:maelys_imo/core/utils/index.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class DocumentsTenantPage extends StatefulWidget {
   static const routeName = 'documentsTenant';
@@ -22,6 +28,24 @@ class _DocumentsTenantPageState extends State<DocumentsTenantPage> {
     return PageWithHeaderLayout(
       headerContent: _buildHeaderContent(),
       bodyContent: _buildContent(),
+      onRefresh: () async {
+        final completer = Completer<void>();
+
+        // Écouter les changements d'état pour savoir quand le chargement est terminé
+        late StreamSubscription subscription;
+        subscription = context.read<DashboardBloc>().stream.listen((state) {
+          if (state.isLoading ?? false) {
+            subscription.cancel();
+            completer.complete();
+          }
+        });
+
+        // Déclencher le chargement des données
+        context.read<DashboardBloc>().add(FetchTenantDashboardEvent());
+
+        // Attendre que le chargement soit terminé
+        return completer.future;
+      },
     );
   }
 
@@ -45,27 +69,44 @@ class _DocumentsTenantPageState extends State<DocumentsTenantPage> {
   }
 
   Widget _buildContent() {
-    final documentsItems = [
-      {'label': 'Contrat de bail'},
-      {'label': "Etat des lieux d'entrée"},
-      {'label': "Etat des lieux de sortie"},
-    ];
+    final state = context.select((DashboardBloc bloc) => bloc.state);
+    final tenantDashboardModel = state.tenantDashboardModel;
+    final isLoading = state.isLoading ?? false;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ...documentsItems
-            .map((payment) {
-              return _buildDocumentItem(label: payment['label'] as String);
-            })
-            .expand((element) => [element, CustomSpacer(space: .5)]),
-      ],
-    );
+    return (tenantDashboardModel?.documents ?? []).isEmpty
+        ? SizedBox(
+          height: context.getSize.height,
+          child: EmptyStateWidget(
+            title: "Aucun document trouvé !",
+            icon: Icons.search_off,
+          ),
+        )
+        : Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ...(tenantDashboardModel?.documents ?? [])
+                .map((document) {
+                  return Skeletonizer(
+                    enabled: isLoading,
+                    child: _buildDocumentItem(
+                      label: document.text,
+                      onTap: () {
+                        CoreHelper.launchLink(document.link);
+                      },
+                    ),
+                  );
+                })
+                .expand((element) => [element, CustomSpacer(space: .5)]),
+          ],
+        );
   }
 
-  Widget _buildDocumentItem({required String label}) {
+  Widget _buildDocumentItem({
+    required String label,
+    required VoidCallback onTap,
+  }) {
     return GestureDetector(
-      onTap: () => {},
+      onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
           color: Colors.transparent,

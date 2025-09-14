@@ -21,7 +21,6 @@ extension EstateExt on EstateModel {
 
     return amenities;
   }
-
   int get imageCount => (images ?? []).length;
 
   String get title => [type, commune].join(' / ').trim();

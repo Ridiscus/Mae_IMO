@@ -31,7 +31,7 @@ class EstateState extends Equatable {
   ];
 
   EstateState copyWith({
-    bool? isLoading = true,
+    bool? isLoading = false,
     List<EstateModel>? estates,
     ApiPaginateResponse<EstateModel>? paginate,
     List<EstateTypeModel>? estatesType,

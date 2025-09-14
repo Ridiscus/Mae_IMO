@@ -8,6 +8,8 @@ import 'package:maelys_imo/core/manager/state/auth/auth_bloc.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
 import 'package:toastification/toastification.dart';
 
+import '../../../core/manager/state/dashboard/dashboard_bloc.dart';
+import '../../../core/manager/state/payment/payment_bloc.dart';
 import '../../../core/utils/toast/notification_toast.dart';
 import '../../agent/pages/home_agent_page.dart';
 import '../../tenant/pages/dashboard_tenant_page.dart';
@@ -182,6 +184,10 @@ class _LoginPageState extends State<LoginPage> {
         }
 
         if (state.userModel!.isTenant) {
+          context.read<DashboardBloc>().add(FetchTenantDashboardEvent());
+          context.read<PaymentBloc>().add(
+            FetchHistoryPaymentEvent(tenantId: state.userModel!.id!),
+          );
           context.goNamed(DashboardTenantPage.routeName);
           return;
         }

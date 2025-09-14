@@ -15,6 +15,8 @@ class TenantModel extends UserModel {
   final String? contrat;
   final int? bienId;
   final dynamic comptableId;
+  final EstateModel? estate;
+  final AgencyModel? agency;
 
   // Implémentation du polymorphisme
   @override
@@ -49,6 +51,8 @@ class TenantModel extends UserModel {
     this.contrat,
     this.bienId,
     this.comptableId,
+    this.estate,
+    this.agency,
   });
 
   TenantModel copyWith({
@@ -78,6 +82,8 @@ class TenantModel extends UserModel {
     String? contrat,
     int? bienId,
     dynamic comptableId,
+    EstateModel? estate,
+    AgencyModel? agency,
   }) => TenantModel(
     id: id ?? this.id,
     codeId: codeId ?? this.codeId,
@@ -105,6 +111,8 @@ class TenantModel extends UserModel {
     contrat: contrat ?? this.contrat,
     bienId: bienId ?? this.bienId,
     comptableId: comptableId ?? this.comptableId,
+    estate: estate ?? this.estate,
+    agency: agency ?? this.agency,
   );
 
   factory TenantModel.fromJson(String str) =>
@@ -143,6 +151,8 @@ class TenantModel extends UserModel {
       contrat: json["contrat"],
       bienId: json["bien_id"],
       comptableId: json["comptable_id"],
+      estate: json["bien"] == null ? null : EstateModel.fromMap(json["bien"]),
+      agency: json["agence"] == null ? null : AgencyModel.fromMap(json["agence"]),
     );
   }
 
@@ -164,6 +174,8 @@ class TenantModel extends UserModel {
       "contrat": contrat,
       "bien_id": bienId,
       "comptable_id": comptableId,
+      "bien": estate?.toMap(),
+      "agence": agency?.toMap(),
     });
     return baseMap;
   }

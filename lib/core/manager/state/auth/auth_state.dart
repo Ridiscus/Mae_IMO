@@ -2,10 +2,10 @@ part of 'auth_bloc.dart';
 
 class AuthState extends Equatable {
   final UserModel? userModel;
-  final bool? isLoading;
+  final bool isLoading;
   final Failure? failure;
 
-  const AuthState({this.userModel, this.isLoading, this.failure});
+  const AuthState({this.userModel, this.isLoading = false, this.failure});
 
   AuthState copyWith({
     UserModel? userModel,
@@ -18,7 +18,7 @@ class AuthState extends Equatable {
   );
 
   factory AuthState.fromJson(Map<String, dynamic> json) => AuthState(
-    userModel: json["user"] == null ? null : UserModel.fromMap(json["user"]),
+    userModel: json["user"] == null ? null : UserModel.fromJson(json["user"]),
   );
 
   Map<String, dynamic> toJson() => {"user": userModel?.toJson()};

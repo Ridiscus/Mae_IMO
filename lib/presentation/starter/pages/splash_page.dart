@@ -26,7 +26,7 @@ class _SplashPageState extends State<SplashPage> {
     context.read<EstateBloc>().add(FetchEstateTypesEvent());
     context.read<EstateBloc>().add(FetchEstateEvent());
 
-    await Future.delayed(const Duration(seconds: 3)).whenComplete(() {
+    await Future.delayed(const Duration(seconds: 2)).whenComplete(() {
       _next();
     });
   }
@@ -38,21 +38,6 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   Future<void> _next() async {
-
-    // final userModel = context.read<AuthBloc>().state.userModel;
-    // final hasUserToken = await TokenManager().hasUserToken();
-    //
-    // if (kDebugMode) {
-    //   print("userModel $userModel && token $hasUserToken");
-    // }
-    //
-    // if (userModel != null && hasUserToken) {
-    //   context.goNamed(MainHomePage.routeName);
-    // } else {
-    //   context.goNamed(MainAuthPage.routeName);
-    // }
-
-    // Navigate to onboarding page
     context.goNamed(PortalPage.routeName);
   }
 

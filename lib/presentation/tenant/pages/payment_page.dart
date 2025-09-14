@@ -158,7 +158,7 @@ class _PaymentPageState extends State<PaymentPage> {
 
         CustomDropdownFactory.createDropdown<String>(
           value: selectedPaymentMethod,
-          items: <String>['Option 1', 'Option 2', 'Option 3'],
+          items: <String>['Virement', 'Espace', 'Option 3'],
           onChanged: (String? newValue) {
             if (newValue != null) {
               setState(() {

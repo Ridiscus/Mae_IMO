@@ -10,7 +10,9 @@ import 'package:flutter_localizations/flutter_localizations.dart'
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:maelys_imo/core/manager/state/dashboard/dashboard_bloc.dart';
 import 'package:maelys_imo/core/manager/state/estate/estate_bloc.dart';
+import 'package:maelys_imo/core/manager/state/payment/payment_bloc.dart';
 import 'package:maelys_imo/routes/app_route.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:talker_bloc_logger/talker_bloc_logger.dart';
@@ -69,6 +71,8 @@ class MainApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => getIt<AuthBloc>()),
         BlocProvider(create: (context) => getIt<EstateBloc>()),
+        BlocProvider(create: (context) => getIt<DashboardBloc>()),
+        BlocProvider(create: (context) => getIt<PaymentBloc>()),
         // BlocProvider(
         //   create:
         //       (context) =>

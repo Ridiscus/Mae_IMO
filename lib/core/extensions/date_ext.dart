@@ -36,4 +36,13 @@ extension DateFormaterExt on DateTime {
       return "-";
     }
   }
+
+  String monthYear() {
+    try {
+      return DateFormat('LLLL y', 'fr').format(this);
+    } catch (e) {
+      return "-";
+    }
+  }
+
 }

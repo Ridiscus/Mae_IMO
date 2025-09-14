@@ -21,6 +21,9 @@ class _PropertyCardState extends State<PropertyCard> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.property.id == null) {
+      return SizedBox.shrink();
+    }
     return GestureDetector(
       onTap: widget.onPressed,
       child: Container(
@@ -55,7 +58,7 @@ class _PropertyCardState extends State<PropertyCard> {
                         },
                         itemBuilder: (context, index) {
                           return UIHelper.cachedNetworkImage(
-                            CoreHelper.fullLink(widget.property.images![index],),
+                            CoreHelper.fullLink(widget.property.images![index]),
                             height: double.infinity,
                             fit: BoxFit.cover,
                           );
@@ -95,7 +98,7 @@ class _PropertyCardState extends State<PropertyCard> {
                         ).sourceSansProSemiBold,
                   ),
                   SizedBox(height: 12.r),
-                  AmenityChip(amenities: widget.property.amenities)
+                  AmenityChip(amenities: widget.property.amenities),
                 ],
               ),
             ],
@@ -108,5 +111,4 @@ class _PropertyCardState extends State<PropertyCard> {
   Widget _buildPaginationDot(bool isActive) {
     return PaginationDot(isActive: isActive);
   }
-
 }

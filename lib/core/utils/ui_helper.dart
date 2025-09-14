@@ -1,13 +1,17 @@
 part of 'index.dart';
 
 class UIHelper {
-  static cachedNetworkImage(String? imageUrl, {double height = 100, BoxFit? fit}) {
+  static cachedNetworkImage(
+    String? imageUrl, {
+    double height = 100,
+    BoxFit? fit,
+  }) {
     return CachedNetworkImage(
       imageUrl: imageUrl ?? "",
       repeat: ImageRepeat.noRepeat,
       height: height.h,
       width: height.h,
-      fit: fit?? BoxFit.contain,
+      fit: fit ?? BoxFit.contain,
 
       errorWidget:
           (context, url, error) => Icon(Icons.error, color: Colors.red),
@@ -20,12 +24,22 @@ class UIHelper {
               alignment: Alignment.center,
               width: 20.sp,
               height: 20.sp,
-              child: CircularProgressIndicator.adaptive(strokeCap: StrokeCap.round),
+              child: CircularProgressIndicator.adaptive(
+                strokeCap: StrokeCap.round,
+              ),
             ),
           ],
         );
       },
     );
+  }
+
+  static cachedNetworkImageProvider(
+    String? imageUrl, {
+    double height = 100,
+    BoxFit? fit,
+  }) {
+    return CachedNetworkImageProvider(imageUrl ?? "");
   }
 
   static networkImage(String? imageUrl, {double height = 100}) {
@@ -39,23 +53,22 @@ class UIHelper {
           (context, url, error) => Icon(Icons.error, color: Colors.red),
       loadingBuilder:
           (context, child, loadingProgress) =>
-      loadingProgress == null
-          ? child
-          : Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            alignment: Alignment.center,
-            width: 20.sp,
-            height: 20.sp,
-            child: CircularProgressIndicator.adaptive(
-              strokeCap: StrokeCap.round,
-            ),
-          ),
-        ],
-      ),
+              loadingProgress == null
+                  ? child
+                  : Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        alignment: Alignment.center,
+                        width: 20.sp,
+                        height: 20.sp,
+                        child: CircularProgressIndicator.adaptive(
+                          strokeCap: StrokeCap.round,
+                        ),
+                      ),
+                    ],
+                  ),
     );
   }
-
 }

@@ -54,7 +54,7 @@ class CustomCircleAvatarUser extends StatelessWidget {
             shape: BoxShape.circle,
             image: profileImage != null
                 ? DecorationImage(
-                    image: NetworkImage(profileImage!),
+                    image: UIHelper.cachedNetworkImageProvider(profileImage!),
                     fit: BoxFit.cover,
                   )
                 : null,

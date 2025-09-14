@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:maelys_imo/core/constants/app_colors.dart';
@@ -6,7 +7,9 @@ import 'package:maelys_imo/core/constants/assets.dart';
 import 'package:maelys_imo/core/domain/models/index.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
+import '../../../core/manager/state/dashboard/dashboard_bloc.dart';
 import '../../portal/pages/portal_detail_page.dart';
 import 'profile_tenant_page.dart';
 
@@ -18,9 +21,6 @@ class DashboardContentPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Access the nearest Scaffold to open the drawer
-    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-
     return Column(
       children: [
         AppHeaderLayout(content: _buildHeader(context)),
@@ -92,58 +92,91 @@ class DashboardContentPage extends StatelessWidget {
   }
 
   Widget _buildPropertyInfoCard(BuildContext context) {
-    return PropertyCard(
-      property: EstateModel(),
-      showMoreInfo: false,
-      onPressed: () {
-        context.pushNamed(
-          PortalDetailPage.routeName,
-          pathParameters: {'id': '1', 'type': 'tenant'},
-        );
-      },
+    final state = context.select((DashboardBloc bloc) => bloc.state);
+    final dashboardModel = state.tenantDashboardModel;
+    final isLoading = (state.isLoading ?? true) || dashboardModel == null;
+
+    return Skeletonizer(
+      enabled: isLoading,
+      child: PropertyCard(
+        property: dashboardModel?.locataire!.estate! ?? EstateModel(),
+        showMoreInfo: false,
+        onPressed: () {
+          context.pushNamed(
+            PortalDetailPage.routeName,
+            pathParameters: {
+              'id': '${dashboardModel!.locataire!.bienId}',
+              'type': 'tenant',
+            },
+          );
+        },
+      ),
     );
   }
 
   Widget _buildPAgencyInfoCard(BuildContext context) {
-    return InfoCardWidget(
-      title: 'Informations sur l\'agence',
-      child: Column(
-        children: [
-          InfoRowWidget(
-            icon: Icons.phone,
-            text: 'Contact : +225 06 75 76 56 57',
-          ),
-          SizedBox(height: 16.sp),
-          InfoRowWidget(
-            icon: Icons.location_on_outlined,
-            text: 'Localisation : Cote d\'ivoire, Abidjan, zone 4',
-          ),
-        ],
+    final state = context.select((DashboardBloc bloc) => bloc.state);
+    final agencyModel = state.tenantDashboardModel?.locataire!.agency;
+    final isLoading = (state.isLoading ?? true) || agencyModel == null;
+
+    return Skeletonizer(
+      enabled: isLoading,
+      child: InfoCardWidget(
+        title: 'Informations sur l\'agence',
+        child: Column(
+          children: [
+            InfoRowWidget(
+              icon: Icons.phone,
+              text: 'Contact : ${agencyModel?.contact ?? ''}',
+            ),
+            SizedBox(height: 16.sp),
+            InfoRowWidget(
+              icon: Icons.location_on_outlined,
+              text: 'Localisation : ${agencyModel?.adresse ?? ''}',
+            ),
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildBillingPaymentsCard(BuildContext context) {
-    return StatsCardWidget(
-      title: 'Loyer mensuel',
-      value: '200 000 FCFA',
-      iconData: Icons.credit_card_outlined,
-      iconBackgroundColor: AppColors.redColor,
-      arrowColor: AppColors.redColor,
-      valueColor: AppColors.redColor,
-      onTap: () {},
+    final state = context.select((DashboardBloc bloc) => bloc.state);
+    final estateModel = state.tenantDashboardModel?.locataire!.estate;
+    final isLoading = (state.isLoading ?? true) || estateModel == null;
+
+    return Skeletonizer(
+      enabled: isLoading,
+      child: StatsCardWidget(
+        title: 'Loyer mensuel',
+        value: "${estateModel?.prix}".formatCurrency(),
+        iconData: Icons.credit_card_outlined,
+        iconBackgroundColor: AppColors.redColor,
+        arrowColor: AppColors.redColor,
+        valueColor: AppColors.redColor,
+        onTap: () {},
+      ),
     );
   }
 
   Widget _buildDatePaymentsCard(BuildContext context) {
-    return StatsCardWidget(
-      title: 'Date limite de paiement',
-      value: DateTime.now().add(Duration(days: 5)).humanWithoutTime(),
-      iconData: Icons.calendar_month_outlined,
-      iconBackgroundColor: AppColors.primary,
-      arrowColor: AppColors.primary,
-      valueColor: AppColors.primary,
-      onTap: () {},
+    final state = context.select((DashboardBloc bloc) => bloc.state);
+    final estateModel = state.tenantDashboardModel?.locataire!.estate;
+    final isLoading = (state.isLoading ?? true) || estateModel == null;
+    return Skeletonizer(
+      enabled: isLoading,
+      child: StatsCardWidget(
+        title: 'Date limite de paiement',
+        value:
+            DateTime.now()
+                .copyWith(day: int.tryParse(estateModel?.dateFixe ?? ""))
+                .humanWithoutTime(),
+        iconData: Icons.calendar_month_outlined,
+        iconBackgroundColor: AppColors.primary,
+        arrowColor: AppColors.primary,
+        valueColor: AppColors.primary,
+        onTap: () {},
+      ),
     );
   }
 }

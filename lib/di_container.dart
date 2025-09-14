@@ -1,5 +1,9 @@
 import 'package:get_it/get_it.dart' show GetIt;
+import 'package:maelys_imo/core/manager/state/dashboard/dashboard_bloc.dart';
+import 'package:maelys_imo/core/manager/state/payment/payment_bloc.dart';
+import 'package:maelys_imo/core/services/dashboard_service.dart';
 import 'package:maelys_imo/core/services/estate_service.dart';
+import 'package:maelys_imo/core/services/payment_service.dart';
 import 'package:maelys_imo/presentation/auth/pages/login_page.dart';
 
 import 'core/api_manager/api_client.dart' show ApiClient, LogoutRedirectConfig;
@@ -46,6 +50,12 @@ Future<void> _initBlocs() async {
   getIt.registerLazySingleton<EstateBloc>(
     () => EstateBloc(service: getIt<EstateService>()),
   );
+  getIt.registerLazySingleton<DashboardBloc>(
+    () => DashboardBloc(service: getIt<DashboardService>()),
+  );
+  getIt.registerLazySingleton<PaymentBloc>(
+    () => PaymentBloc(service: getIt<PaymentService>()),
+  );
 }
 
 /// Initialise les services de l'application
@@ -59,6 +69,20 @@ Future<void> _initServices() async {
 
   getIt.registerLazySingleton<EstateService>(
     () => EstateServiceImpl(
+      apiClient: getIt<ApiClient>(),
+      endpoints: getIt<Endpoints>(),
+    ),
+  );
+
+  getIt.registerLazySingleton<DashboardService>(
+    () => DashboardServiceImpl(
+      apiClient: getIt<ApiClient>(),
+      endpoints: getIt<Endpoints>(),
+    ),
+  );
+
+  getIt.registerLazySingleton<PaymentService>(
+    () => PaymentServiceImpl(
       apiClient: getIt<ApiClient>(),
       endpoints: getIt<Endpoints>(),
     ),
