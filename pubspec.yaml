@@ -50,6 +50,7 @@ dependencies:
   skeletonizer: ^1.4.3
   cached_network_image: ^3.4.1
   url_launcher: ^6.3.2
+  file_picker: ^10.3.3
 
 dev_dependencies:
   flutter_test:

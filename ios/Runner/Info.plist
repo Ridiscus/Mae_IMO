@@ -47,6 +47,10 @@
 	</array>
 	<key>NSCameraUsageDescription</key>
     <string>Nous avons besoin d'accéder à votre caméra pour capturer des photos.</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Nous avons besoin d'accéder à votre galerie photo pour sélectionner des images.</string>
+    <key>NSDocumentsFolderUsageDescription</key>
+    <string>Nous avons besoin d'accéder à vos documents pour sélectionner des fichiers.</string>
     <key>LSApplicationQueriesSchemes</key>
     <array>
       <string>sms</string>

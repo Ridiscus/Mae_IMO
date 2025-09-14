@@ -127,7 +127,29 @@ class ProfilePageLayout extends StatelessWidget {
             iconSize: 60,
             profileImage: CoreHelper.fullLink(profileImage),
             uploadedImage: true,
-            onUploadImage: () {},
+            onUploadImage: () async {
+              final File? selectedFile = await UIHelper.pickImage(context);
+              if (selectedFile != null) {
+                try {
+                  // Convertir le fichier en MultipartFile
+                  final MultipartFile multipartFile =
+                      await MultipartFile.fromFile(
+                        selectedFile.path,
+                        filename: selectedFile.path.split('/').last,
+                      );
+
+                  // Créer la requête et déclencher l'événement
+                  final request = UpdateProfileImageRequest(
+                    image: multipartFile,
+                  );
+                  context.read<AuthBloc>().add(
+                    UpdateProfileImagEvent(dto: request),
+                  );
+                } catch (e) {
+                  showToast(msg: "Erreur lors du traitement de l'image");
+                }
+              }
+            },
           ),
           CustomSpacer(),
           Text(

@@ -153,11 +153,13 @@ class AuthBloc extends HydratedBloc<AuthEvent, AuthState> {
       final result = await _service.updateProfileImage(dto: event.dto);
       if (result.success) {
         showToast(msg: result.message!, type: ToastificationType.success);
-        state.copyWith(
-          isLoading: false,
-          updatedImage: true,
-          userModel: state.userModel!.asTenant()!.copyWith(
-            profileImage: result.data,
+        emit(
+          state.copyWith(
+            isLoading: false,
+            updatedImage: true,
+            userModel: state.userModel!.asTenant()!.copyWith(
+              profileImage: result.data,
+            ),
           ),
         );
       } else {
@@ -165,14 +167,14 @@ class AuthBloc extends HydratedBloc<AuthEvent, AuthState> {
         emit(
           state.copyWith(
             isLoading: false,
-            updatedPassword: false,
+            updatedImage: false,
             failure: Failure(message: result.message!),
           ),
         );
       }
     } catch (e) {
       showToast(msg: "Echèc de la mise à jour photo de profil");
-      emit(state.copyWith(isLoading: false, updatedPassword: false));
+      emit(state.copyWith(isLoading: false, updatedImage: false));
       if (kDebugMode) {
         rethrow;
       }
