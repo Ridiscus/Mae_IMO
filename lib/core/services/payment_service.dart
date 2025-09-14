@@ -22,11 +22,17 @@ class PaymentServiceImpl implements PaymentService {
     final response = await apiClient.get(
       Endpoints.paymentsHistory(tenantId),
       fromJson: (res) {
-        return List<PaymentHistoryModel>.from(
+        var items = List<PaymentHistoryModel>.from(
           (res['locataire']['paiements'] ?? []).map(
             (x) => PaymentHistoryModel.fromMap(x),
           ),
         );
+        items.sort(
+          (a, b) => (b.createdAt?.toIso8601String() ?? "").compareTo(
+            (a.createdAt?.toIso8601String() ?? ""),
+          ),
+        );
+        return items;
       },
     );
     return response;

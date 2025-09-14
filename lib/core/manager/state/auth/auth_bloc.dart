@@ -24,7 +24,8 @@ class AuthBloc extends HydratedBloc<AuthEvent, AuthState> {
     : _service = service,
       super(AuthInitial()) {
     on<UserSignInEvent>(_onUserSignIn);
-
+    on<UpdateEmailEvent>(_onUpdateEmailEvent);
+    on<UpdatePasswordEvent>(_onUpdatePasswordEvent);
     on<LogoutEvent>(_onLogout);
   }
 
@@ -69,6 +70,73 @@ class AuthBloc extends HydratedBloc<AuthEvent, AuthState> {
     } catch (e) {
       showToast(msg: "Connexion échouée");
       emit(state.copyWith(isLoading: false, failure: null));
+      if (kDebugMode) {
+        rethrow;
+      }
+    }
+  }
+
+  Future<void> _onUpdateEmailEvent(
+    UpdateEmailEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(state.copyWith(isLoading: true));
+    try {
+      final result = await _service.updateEmail(dto: event.dto);
+      if (result.success) {
+        showToast(msg: result.message!, type: ToastificationType.success);
+
+        emit(
+          state.copyWith(
+            isLoading: false,
+            updatedEmail: true,
+            userModel: state.userModel!.asTenant()!.copyWith(
+              email: result.data,
+            ),
+          ),
+        );
+      } else {
+        showToast(msg: result.message!);
+        emit(
+          state.copyWith(
+            isLoading: false,
+            updatedEmail: false,
+            failure: Failure(message: result.message!),
+          ),
+        );
+      }
+    } catch (e) {
+      showToast(msg: "Echèc de la mise à jour de l'email");
+      emit(state.copyWith(isLoading: false, updatedEmail: false));
+      if (kDebugMode) {
+        rethrow;
+      }
+    }
+  }
+
+  Future<void> _onUpdatePasswordEvent(
+    UpdatePasswordEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(state.copyWith(isLoading: true));
+    try {
+      final result = await _service.updatePassword(dto: event.dto);
+      if (result.success) {
+        showToast(msg: result.message!, type: ToastificationType.success);
+        emit(state.copyWith(isLoading: false, updatedPassword: true));
+      } else {
+        showToast(msg: result.message!);
+        emit(
+          state.copyWith(
+            isLoading: false,
+            updatedPassword: false,
+            failure: Failure(message: result.message!),
+          ),
+        );
+      }
+    } catch (e) {
+      showToast(msg: "Echèc de la mise à jour du mot de passe");
+      emit(state.copyWith(isLoading: false, updatedPassword: false));
       if (kDebugMode) {
         rethrow;
       }

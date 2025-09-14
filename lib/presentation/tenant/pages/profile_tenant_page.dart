@@ -5,12 +5,14 @@ import 'package:maelys_imo/core/constants/app_colors.dart';
 import 'package:maelys_imo/core/manager/state/auth/auth_bloc.dart';
 import 'package:maelys_imo/presentation/portal/pages/portal_detail_page.dart';
 import 'package:maelys_imo/presentation/portal/pages/portal_page.dart';
+import 'package:maelys_imo/presentation/tenant/pages/update_email_page.dart';
+import 'package:maelys_imo/presentation/tenant/pages/update_password_page.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
 
 import '../../../core/domain/models/index.dart';
 
 class ProfileTenantPage extends StatefulWidget {
-  static const routeName = 'profile-tenant';
+  static const routeName = 'profileTenant';
   static const routePath = '/profile-tenant';
 
   const ProfileTenantPage({super.key});
@@ -53,25 +55,25 @@ class _ProfileTenantPageState extends State<ProfileTenantPage> {
           );
         },
       ),
-      ProfileEditOption(
-        icon: Icons.adaptive.flip_camera,
-        title: 'Modifier ma photo',
-        onTap: () {
-          // Handle photo edit
-        },
-      ),
+      // ProfileEditOption(
+      //   icon: Icons.adaptive.flip_camera,
+      //   title: 'Modifier ma photo',
+      //   onTap: () {
+      //     // Handle photo edit
+      //   },
+      // ),
       ProfileEditOption(
         icon: Icons.alternate_email,
         title: 'Modifier mon email',
         onTap: () {
-          // Handle email edit
+          context.pushNamed(UpdateEmailPage.routeName);
         },
       ),
       ProfileEditOption(
         icon: Icons.lock_outline,
         title: 'Modifier mon mot de passe',
         onTap: () {
-          // Handle password edit
+          context.pushNamed(UpdatePasswordPage.routeName);
         },
       ),
 
@@ -86,7 +88,7 @@ class _ProfileTenantPageState extends State<ProfileTenantPage> {
         icon: Icons.logout_outlined,
         title: 'Déconnexion',
         onTap: () {
-          // context.read<AuthBloc>().add(AuthEvent.logout());
+          context.read<AuthBloc>().add(LogoutEvent());
           context.goNamed(PortalPage.routeName);
         },
       ),

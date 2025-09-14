@@ -27,9 +27,7 @@ class _DashboardTenantPageState extends State<DashboardTenantPage> {
 
   @override
   Widget build(BuildContext context) {
-    final state = context.select((DashboardBloc bloc) => bloc.state);
     final userModel = context.select((AuthBloc bloc) => bloc.state.userModel);
-    final dashboardModel = state.tenantDashboardModel?.locataire;
 
 
     return AnnotatedRegion(
@@ -40,8 +38,8 @@ class _DashboardTenantPageState extends State<DashboardTenantPage> {
       child: Scaffold(
         key: _scaffoldKey,
         drawer: CustomDrawer(
-          name: dashboardModel?.fullName ?? '',
-          email: dashboardModel?.email ?? '',
+          name: userModel?.fullName ?? '',
+          email: userModel?.email ?? '',
           profileImage: CoreHelper.fullLink(userModel?.profileImage ?? ""),
           profileType: "tenant",
           // onDocumentsTap: () {},

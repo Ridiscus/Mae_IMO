@@ -50,21 +50,23 @@ class _DocumentsTenantPageState extends State<DocumentsTenantPage> {
   }
 
   Widget _buildHeaderContent() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // CircularBackButton(), // Retiré comme demandé
-        CustomSpacer(),
-        Text(
-          'Mes documents',
-          style:
-              TextStyle(
-                fontSize: 32.sp,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ).sourceSansProBold,
-        ),
-      ],
+    return SizedBox(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // CircularBackButton(), // Retiré comme demandé
+          CustomSpacer(),
+          Text(
+            'Mes documents',
+            style:
+                TextStyle(
+                  fontSize: 32.sp,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ).sourceSansProBold,
+          ),
+        ],
+      ),
     );
   }
 
@@ -81,23 +83,26 @@ class _DocumentsTenantPageState extends State<DocumentsTenantPage> {
             icon: Icons.search_off,
           ),
         )
-        : Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ...(tenantDashboardModel?.documents ?? [])
-                .map((document) {
-                  return Skeletonizer(
-                    enabled: isLoading,
-                    child: _buildDocumentItem(
-                      label: document.text,
-                      onTap: () {
-                        CoreHelper.launchLink(document.link);
-                      },
-                    ),
-                  );
-                })
-                .expand((element) => [element, CustomSpacer(space: .5)]),
-          ],
+        : SizedBox(
+          height: context.getSize.height,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ...(tenantDashboardModel?.documents ?? [])
+                  .map((document) {
+                    return Skeletonizer(
+                      enabled: isLoading,
+                      child: _buildDocumentItem(
+                        label: document.text,
+                        onTap: () {
+                          CoreHelper.launchLink(document.link);
+                        },
+                      ),
+                    );
+                  })
+                  .expand((element) => [element, CustomSpacer(space: .5)]),
+            ],
+          ),
         );
   }
 

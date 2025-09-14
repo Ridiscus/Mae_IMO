@@ -13,6 +13,24 @@ final class UserSignInEvent extends AuthEvent {
   List<Object> get props => [dto];
 }
 
+final class UpdateEmailEvent extends AuthEvent {
+  final UpdateEmailRequest dto;
+
+  const UpdateEmailEvent({required this.dto});
+
+  @override
+  List<Object> get props => [dto];
+}
+
+final class UpdatePasswordEvent extends AuthEvent {
+  final UpdatePasswordRequest dto;
+
+  const UpdatePasswordEvent({required this.dto});
+
+  @override
+  List<Object> get props => [dto];
+}
+
 final class LogoutEvent extends AuthEvent {
   const LogoutEvent();
 

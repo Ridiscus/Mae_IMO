@@ -42,6 +42,7 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
     required String date,
     required String paymentMethod,
     required String reference,
+    required PaymentStatusModel status,
   }) {
     showModalBottomSheet(
       context: context,
@@ -54,8 +55,8 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
           (context) => ModalPaymentInfo(
             month: month,
             amount: amount,
+            status: status,
             date: date,
-            isPaid: true,
             reference: reference,
             paymentMethod: paymentMethod,
             recipientName: '${_tenantDashboardModel.locataire?.agency?.name}',
@@ -214,28 +215,31 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
             icon: Icons.search_off,
           ),
         )
-        : Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Historique des paiements',
-              style:
-                  TextStyle(
-                    fontSize: 20.sp,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ).sourceSansProSemiBold,
-            ),
-            CustomSpacer(),
-            ...paymentHistory
-                .map((payment) {
-                  return Skeletonizer(
-                    enabled: _paymentState.isLoading,
-                    child: _buildPaymentHistoryItem(payment: payment),
-                  );
-                })
-                .expand((element) => [element, CustomSpacer(space: .5)]),
-          ],
+        : SizedBox(
+          height: context.getSize.height,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Historique des paiements',
+                style:
+                    TextStyle(
+                      fontSize: 20.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ).sourceSansProSemiBold,
+              ),
+              CustomSpacer(),
+              ...paymentHistory
+                  .map((payment) {
+                    return Skeletonizer(
+                      enabled: _paymentState.isLoading,
+                      child: _buildPaymentHistoryItem(payment: payment),
+                    );
+                  })
+                  .expand((element) => [element, CustomSpacer(space: .5)]),
+            ],
+          ),
         );
   }
 
@@ -244,9 +248,9 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
     var amount = (payment.montant as String).formatCurrency();
     var date = payment.datePaiement?.humanWithoutTime() ?? "";
     var paymentMethod = (payment.methodePaiement as String);
-
     var reference = (payment.reference as String);
-
+    var status = PaymentStatusModel.fromText(payment.statut);
+    // En attente
     return GestureDetector(
       onTap:
           () => _showPaymentDetails(
@@ -255,6 +259,7 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
             date: date,
             paymentMethod: paymentMethod,
             reference: reference,
+            status: status,
           ),
       child: Container(
         decoration: BoxDecoration(
@@ -274,13 +279,13 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
               ),
               child: Icon(Icons.image, color: Colors.grey[600]),
             ),
-            SizedBox(width: 16.r),
+            SizedBox(width: 12.r),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Loyer du mois de $month',
+                    'Loyer de $month',
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style:
@@ -307,7 +312,7 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
               crossAxisAlignment: CrossAxisAlignment.end,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                CustomTag(label: "Payé", color: AppColors.success),
+                CustomTag(label: status.label, color: status.color),
                 CustomSpacer(space: .2),
                 Text(
                   date,

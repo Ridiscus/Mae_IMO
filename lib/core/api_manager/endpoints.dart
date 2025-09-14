@@ -8,6 +8,9 @@ class Endpoints {
   static const String tenantDashboard = "/tenant/dashboard";
   static const String contactAgency = "/tenant/contact/agency";
 
+  static const String updateEmail = "/tenant/profile/update-email";
+  static const String updatePassword = "/tenant/profile/update-password";
+
   static String paymentsHistory(int tenantId) => "/tenant/$tenantId/paiements";
 
 }

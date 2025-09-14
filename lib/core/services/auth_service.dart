@@ -7,6 +7,12 @@ import '../manager/token_manager.dart';
 
 abstract interface class AuthService {
   Future<ApiResponse<UserModel>> signIn({required LoginRequest dto});
+
+  Future<ApiResponse<String>> updateEmail({required UpdateEmailRequest dto});
+
+  Future<ApiResponse<String>> updatePassword({
+    required UpdatePasswordRequest dto,
+  });
 }
 
 class AuthServiceImpl implements AuthService {
@@ -32,5 +38,45 @@ class AuthServiceImpl implements AuthService {
       );
     }
     return ApiResponse.error(message: response.message);
+  }
+
+  @override
+  Future<ApiResponse<String>> updateEmail({
+    required UpdateEmailRequest dto,
+  }) async {
+    final response = await apiClient.post(
+      Endpoints.updateEmail,
+      data: dto.toJson(),
+    );
+
+    if (response.success) {
+      return ApiResponse.success(
+        message: response.message ?? "Email mis à jour avec succès",
+        data: response.data['new_email'],
+      );
+    }
+    return ApiResponse.error(
+      message: response.message ?? "Echèc de la mise à jour de l'email",
+    );
+  }
+
+  @override
+  Future<ApiResponse<String>> updatePassword({
+    required UpdatePasswordRequest dto,
+  }) async {
+    final response = await apiClient.post(
+      Endpoints.updatePassword,
+      data: dto.toJson(),
+    );
+
+    if (response.success) {
+      return ApiResponse.success(
+        message:
+            response.data['message'] ?? "Mot de passe mis à jour avec succès",
+      );
+    }
+    return ApiResponse.error(
+      message: response.message ?? "Echèc de la mise à jour du mot de passe",
+    );
   }
 }

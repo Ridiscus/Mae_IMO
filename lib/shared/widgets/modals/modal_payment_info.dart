@@ -1,23 +1,24 @@
 part of 'index.dart';
+
 class ModalPaymentInfo extends StatelessWidget {
   /// Le mois du paiement
   final String month;
-  
+
   /// Le montant du paiement
   final String amount;
-  
+
   /// La date du paiement
   final String date;
-  
+
   /// Le statut du paiement
-  final bool isPaid;
-  
+  final PaymentStatusModel status;
+
   /// Numéro de référence du paiement
   final String? reference;
-  
+
   /// Méthode de paiement utilisée
   final String? paymentMethod;
-  
+
   /// Nom du bénéficiaire
   final String? recipientName;
 
@@ -26,7 +27,7 @@ class ModalPaymentInfo extends StatelessWidget {
     required this.month,
     required this.amount,
     required this.date,
-    required this.isPaid,
+    required this.status,
     this.reference,
     this.paymentMethod,
     this.recipientName,
@@ -67,20 +68,22 @@ class ModalPaymentInfo extends StatelessWidget {
         children: [
           Text(
             'Détails du paiement',
-            style: TextStyle(
-              fontSize: 24.sp,
-              fontWeight: FontWeight.bold,
-              color: AppColors.black,
-            ).sourceSansProBold,
+            style:
+                TextStyle(
+                  fontSize: 24.sp,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.black,
+                ).sourceSansProBold,
           ),
           CustomSpacer(space: 0.5),
           Text(
             'Loyer du mois de $month',
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 16.sp,
-              color: Colors.grey[600],
-            ).sourceSansProRegular,
+            style:
+                TextStyle(
+                  fontSize: 16.sp,
+                  color: Colors.grey[600],
+                ).sourceSansProRegular,
           ),
         ],
       ),
@@ -96,14 +99,10 @@ class ModalPaymentInfo extends StatelessWidget {
             width: 80.w,
             height: 80.w,
             decoration: BoxDecoration(
-              color: isPaid ? AppColors.success.withValues(alpha: 0.1) : AppColors.redColor.withValues(alpha: 0.1),
+              color: status.color.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
-            child: Icon(
-              isPaid ? Icons.check_circle : Icons.error,
-              color: isPaid ? AppColors.success : AppColors.redColor,
-              size: 40.sp,
-            ),
+            child: Icon(status.icon, color: status.color, size: 40.sp),
           ),
         ),
         CustomSpacer(),
@@ -112,17 +111,15 @@ class ModalPaymentInfo extends StatelessWidget {
             children: [
               Text(
                 amount,
-                style: TextStyle(
-                  fontSize: 32.sp,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.primary,
-                ).sourceSansProBold,
+                style:
+                    TextStyle(
+                      fontSize: 32.sp,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.primary,
+                    ).sourceSansProBold,
               ),
               CustomSpacer(space: 0.5),
-              CustomTag(
-                label: isPaid ? 'Payé' : 'Impayé',
-                color: isPaid ? AppColors.success : AppColors.redColor,
-              ),
+              CustomTag(label: status.label, color: status.color),
             ],
           ),
         ),
@@ -188,11 +185,7 @@ class ModalPaymentInfo extends StatelessWidget {
             color: AppColors.primary.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8.r),
           ),
-          child: Icon(
-            icon,
-            color: AppColors.primary,
-            size: 20.sp,
-          ),
+          child: Icon(icon, color: AppColors.primary, size: 20.sp),
         ),
         SizedBox(width: 16.sp),
         Expanded(
@@ -201,18 +194,20 @@ class ModalPaymentInfo extends StatelessWidget {
             children: [
               Text(
                 label,
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  color: Colors.grey[600],
-                ).sourceSansProRegular,
+                style:
+                    TextStyle(
+                      fontSize: 14.sp,
+                      color: Colors.grey[600],
+                    ).sourceSansProRegular,
               ),
               Text(
                 value,
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black87,
-                ).sourceSansProSemiBold,
+                style:
+                    TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ).sourceSansProSemiBold,
               ),
             ],
           ),
@@ -227,11 +222,12 @@ class ModalPaymentInfo extends StatelessWidget {
         text: 'Fermer',
         onPressed: () => Navigator.pop(context),
         buttonVariant: ButtonVariant.primary,
-        textStyle: TextStyle(
-          fontSize: 16.sp,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
-        ).sourceSansProBold,
+        textStyle:
+            TextStyle(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ).sourceSansProBold,
       ),
     );
   }
