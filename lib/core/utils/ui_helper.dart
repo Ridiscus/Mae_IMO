@@ -72,29 +72,79 @@ class UIHelper {
     );
   }
 
-  /// Fonction pour sélectionner une image depuis la galerie
+  /// Fonction pour sélectionner une image depuis la galerie ou prendre une photo
   static Future<File?> pickImage(BuildContext context) async {
     try {
-      // Vérifier les permissions pour le stockage
-      final storagePermission = await Permission.photos.request();
-
-      if (storagePermission.isDenied) {
-        showToast(msg: "Permission requise pour accéder à la galerie");
-        return null;
-      }
-
-      // Utiliser FilePicker pour sélectionner une image
-      FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: FileType.image,
-        // allowedExtensions: ['png', 'jpg', 'jpeg', 'webp', 'svg'],
-        allowMultiple: false,
+      // Afficher le modal de sélection
+      final String? source = await showModalBottomSheet<String>(
+        context: context,
+        useSafeArea: true,
+        builder: (BuildContext context) {
+          return SafeArea(
+            child: Wrap(
+              children: [
+                ListTile(
+                  leading: Icon(Icons.photo_library),
+                  title: Text('Galerie'),
+                  onTap: () => Navigator.of(context).pop('gallery'),
+                ),
+                ListTile(
+                  leading: Icon(Icons.photo_camera),
+                  title: Text('Caméra'),
+                  onTap: () => Navigator.of(context).pop('camera'),
+                ),
+              ],
+            ),
+          );
+        },
       );
 
-      if (result == null || result.xFiles.isEmpty) {
-        return null;
+      if (source == null) return null;
+
+      File? file;
+
+      if (source == 'gallery') {
+        // Vérifier les permissions pour le stockage
+        final storagePermission = await Permission.photos.request();
+        if (storagePermission.isDenied) {
+          showToast(msg: "Permission requise pour accéder à la galerie");
+          return null;
+        }
+
+        // Utiliser FilePicker pour sélectionner une image depuis la galerie
+        FilePickerResult? result = await FilePicker.platform.pickFiles(
+          type: FileType.image,
+          allowMultiple: false,
+        );
+
+        if (result == null || result.xFiles.isEmpty) {
+          return null;
+        }
+
+        file = File(result.xFiles.first.path);
+      } else if (source == 'camera') {
+        // Vérifier les permissions pour la caméra
+        final cameraPermission = await Permission.camera.request();
+        if (cameraPermission.isDenied) {
+          showToast(msg: "Permission requise pour accéder à la caméra");
+          return null;
+        }
+
+        // Utiliser ImagePicker pour prendre une photo
+        final ImagePicker picker = ImagePicker();
+        final XFile? image = await picker.pickImage(
+          source: ImageSource.camera,
+          maxWidth: 1024,
+          maxHeight: 1024,
+          imageQuality: 85,
+          preferredCameraDevice: CameraDevice.front,
+        );
+
+        if (image == null) return null;
+        file = File(image.path);
       }
 
-      final File file = File(result.xFiles.first.path);
+      if (file == null) return null;
 
       // Vérifier que le fichier existe
       if (!await file.exists()) {
@@ -113,10 +163,10 @@ class UIHelper {
 
       // Vérifier le format de l'image
       final String extension = file.path.toLowerCase().split('.').last;
-      final List<String> allowedFormats = ['png', 'jpg', 'jpeg', 'webp', 'svg'];
+      final List<String> allowedFormats = ['png', 'jpg', 'jpeg', 'webp'];
 
       if (!allowedFormats.contains(extension)) {
-        showToast(msg: "Format non supporté. Utilisez PNG, JPG, JPEG, WebP ou SVG");
+        showToast(msg: "Format non supporté. Utilisez PNG, JPG, JPEG ou WebP");
         return null;
       }
 
