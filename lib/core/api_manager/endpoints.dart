@@ -2,6 +2,7 @@ class Endpoints {
   static const String baseUrl = "https://maelysimo.com/api";
   static const String estateType = "/biens/all";
   static const String estatesAvailable = "/biens/available";
+
   static String estatesDetail(int id) => "/biens/$id";
   static String sendVisiteEstates = "/visit/store";
   static const String login = "/login";
@@ -10,7 +11,7 @@ class Endpoints {
 
   static const String updateEmail = "/tenant/profile/update-email";
   static const String updatePassword = "/tenant/profile/update-password";
+  static const String updateProfileImage = "/tenant/profile/photo";
 
   static String paymentsHistory(int tenantId) => "/tenant/$tenantId/paiements";
-
 }

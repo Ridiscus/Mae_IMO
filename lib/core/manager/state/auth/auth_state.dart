@@ -5,6 +5,7 @@ class AuthState extends Equatable {
   final bool isLoading;
   final bool? updatedEmail;
   final bool? updatedPassword;
+  final bool? updatedImage;
   final Failure? failure;
 
   const AuthState({
@@ -13,6 +14,7 @@ class AuthState extends Equatable {
     this.failure,
     this.updatedEmail,
     this.updatedPassword,
+    this.updatedImage,
   });
 
   AuthState copyWith({
@@ -21,12 +23,14 @@ class AuthState extends Equatable {
     Failure? failure,
     bool? updatedEmail,
     bool? updatedPassword,
+    bool? updatedImage,
   }) => AuthState(
     isLoading: isLoading ?? this.isLoading,
     userModel: userModel ?? this.userModel,
     failure: failure,
     updatedEmail: updatedEmail,
     updatedPassword: updatedPassword,
+    updatedImage: updatedImage,
   );
 
   factory AuthState.fromJson(Map<String, dynamic> json) => AuthState(

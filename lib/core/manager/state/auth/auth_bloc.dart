@@ -27,6 +27,7 @@ class AuthBloc extends HydratedBloc<AuthEvent, AuthState> {
     on<UpdateEmailEvent>(_onUpdateEmailEvent);
     on<UpdatePasswordEvent>(_onUpdatePasswordEvent);
     on<LogoutEvent>(_onLogout);
+    on<UpdateProfileImagEvent>(_onUpdateProfileImagEvent);
   }
 
   @override
@@ -136,6 +137,41 @@ class AuthBloc extends HydratedBloc<AuthEvent, AuthState> {
       }
     } catch (e) {
       showToast(msg: "Echèc de la mise à jour du mot de passe");
+      emit(state.copyWith(isLoading: false, updatedPassword: false));
+      if (kDebugMode) {
+        rethrow;
+      }
+    }
+  }
+
+  FutureOr<void> _onUpdateProfileImagEvent(
+    UpdateProfileImagEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(state.copyWith(isLoading: true));
+    try {
+      final result = await _service.updateProfileImage(dto: event.dto);
+      if (result.success) {
+        showToast(msg: result.message!, type: ToastificationType.success);
+        state.copyWith(
+          isLoading: false,
+          updatedImage: true,
+          userModel: state.userModel!.asTenant()!.copyWith(
+            profileImage: result.data,
+          ),
+        );
+      } else {
+        showToast(msg: result.message!);
+        emit(
+          state.copyWith(
+            isLoading: false,
+            updatedPassword: false,
+            failure: Failure(message: result.message!),
+          ),
+        );
+      }
+    } catch (e) {
+      showToast(msg: "Echèc de la mise à jour photo de profil");
       emit(state.copyWith(isLoading: false, updatedPassword: false));
       if (kDebugMode) {
         rethrow;

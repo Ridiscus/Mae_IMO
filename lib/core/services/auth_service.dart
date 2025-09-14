@@ -13,6 +13,10 @@ abstract interface class AuthService {
   Future<ApiResponse<String>> updatePassword({
     required UpdatePasswordRequest dto,
   });
+
+  Future<ApiResponse<String>> updateProfileImage({
+    required UpdateProfileImageRequest dto,
+  });
 }
 
 class AuthServiceImpl implements AuthService {
@@ -77,6 +81,28 @@ class AuthServiceImpl implements AuthService {
     }
     return ApiResponse.error(
       message: response.message ?? "Echèc de la mise à jour du mot de passe",
+    );
+  }
+
+  @override
+  Future<ApiResponse<String>> updateProfileImage({
+    required UpdateProfileImageRequest dto,
+  }) async {
+    final response = await apiClient.post(
+      Endpoints.updateProfileImage,
+      data: dto.toMultipart(),
+    );
+
+    if (response.success) {
+      return ApiResponse.success(
+        message:
+            response.data['message'] ??
+            "Photo de profil mise à jour avec succès",
+        data: response.data['profile_image_url'],
+      );
+    }
+    return ApiResponse.error(
+      message: response.message ?? "Echèc de la mise à jour photo de profil",
     );
   }
 }

@@ -126,6 +126,8 @@ class ProfilePageLayout extends StatelessWidget {
             iconColor: AppColors.black,
             iconSize: 60,
             profileImage: CoreHelper.fullLink(profileImage),
+            uploadedImage: true,
+            onUploadImage: () {},
           ),
           CustomSpacer(),
           Text(

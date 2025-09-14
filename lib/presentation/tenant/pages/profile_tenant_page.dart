@@ -100,8 +100,9 @@ class _ProfileTenantPageState extends State<ProfileTenantPage> {
       contactInfo: contactInfo,
       editOptions: editOptions,
       profileBackgroundColor: AppColors.primary,
+
       onLogoutPressed: () {
-        context.goNamed(PortalPage.routeName);
+        // context.goNamed(PortalPage.routeName);
       },
     );
   }

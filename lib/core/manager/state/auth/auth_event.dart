@@ -37,3 +37,12 @@ final class LogoutEvent extends AuthEvent {
   @override
   List<Object> get props => [];
 }
+
+final class UpdateProfileImagEvent extends AuthEvent {
+  final UpdateProfileImageRequest dto;
+
+  const UpdateProfileImagEvent({required this.dto});
+
+  @override
+  List<Object> get props => [dto];
+}
