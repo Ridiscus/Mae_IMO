@@ -59,7 +59,7 @@ class CustomCircleAvatarUser extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 image:
-                    profileImage != null
+                    profileImage != null && profileImage!.isEmpty
                         ? DecorationImage(
                           image: UIHelper.cachedNetworkImageProvider(
                             profileImage!,
@@ -81,7 +81,7 @@ class CustomCircleAvatarUser extends StatelessWidget {
                       : null,
             ),
           ),
-          if (uploadedImage && onUploadImage!= null)
+          if (uploadedImage && onUploadImage != null)
             Positioned(
               right: (17 / 4).r,
               bottom: 0,

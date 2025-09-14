@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:maelys_imo/core/domain/requests/index.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
+import 'package:maelys_imo/core/manager/state/reset-password/reset_password_bloc.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
+
+import '../../../core/utils/toast/notification_toast.dart';
+import '../../../di_container.dart';
 
 class ForgetPasswordPage extends StatefulWidget {
   static const routeName = 'forgetPassword';
@@ -14,19 +21,22 @@ class ForgetPasswordPage extends StatefulWidget {
 }
 
 class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _codeIdController = TextEditingController();
 
   @override
   void dispose() {
-    _emailController.dispose();
+    _codeIdController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return FormWithHeaderLayout(
-      headerTitle: 'Réinitialiser le mot de passe',
-      content: _buildResetForm(),
+    return BlocProvider(
+      create: (context) => getIt<ResetPasswordBloc>(),
+      child: FormWithHeaderLayout(
+        headerTitle: 'Réinitialiser le mot de passe',
+        content: _buildResetForm(),
+      ),
     );
   }
 
@@ -34,7 +44,6 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-
         Text(
           'Mot de passe oublié',
           style:
@@ -55,9 +64,9 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
         ),
         SizedBox(height: 32.r),
         _buildInputField(
-          label: 'Adresse email',
-          controller: _emailController,
-          hintText: 'Entrez votre adresse email de connexion',
+          label: 'Identifiant',
+          controller: _codeIdController,
+          hintText: 'Entrez votre identifiant de connexion',
         ),
         Spacer(),
         _buildSendLinkButton(),
@@ -87,28 +96,49 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
         CustomInputTextFactory.createTextInput(
           controller: controller,
           hintText: hintText,
-          validator: (value) {
-            return null;
-          },
         ),
       ],
     );
   }
 
   Widget _buildSendLinkButton() {
-    return CustomButton(
-      text: 'Envoyer le lien',
-      showArrow: true,
-      onPressed: () {
-        // Handle password reset
+    return BlocConsumer<ResetPasswordBloc, ResetPasswordState>(
+      listenWhen: (previous, current) => current.emailSent != null,
+      listener: (context, state) {
+        if (state.emailSent == true) {
+          // Retourner à la page précédente après succès
+          context.pop();
+        }
       },
-      buttonVariant: ButtonVariant.primary,
-      textStyle:
-          TextStyle(
-            fontSize: 16.sp,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ).sourceSansProBold,
+      buildWhen: (previous, current) => 
+          current.emailSent != null || current.isLoading != previous.isLoading,
+      builder: (context, state) {
+        return CustomButton(
+          text: 'Envoyer le lien',
+          isLoading: state.isLoading,
+          showArrow: true,
+          onPressed: () {
+            if (_codeIdController.text.isEmpty) {
+              showToast(msg: 'Veuillez entrer votre identifiant');
+              return;
+            }
+
+            // Déclencher l'événement de réinitialisation de mot de passe
+            context.read<ResetPasswordBloc>().add(
+              ForgotPasswordEvent(
+                dto: ForgotPasswordRequest(codeId: _codeIdController.text),
+              ),
+            );
+          },
+          buttonVariant: ButtonVariant.primary,
+          textStyle:
+              TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ).sourceSansProBold,
+        );
+      },
     );
   }
 }

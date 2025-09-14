@@ -44,10 +44,10 @@ class AuthBloc extends HydratedBloc<AuthEvent, AuthState> {
     // Réinitialiser l'état à son état initial (sans utilisateur connecté)
     emit(AuthInitial());
     TokenManager().removeUserToken();
-    showToast(
-      msg: "Vous avez été déconnecté ! à bientôt",
-      type: ToastificationType.success,
-    );
+    // showToast(
+    //   msg: "Vous avez été déconnecté ! à bientôt",
+    //   type: ToastificationType.success,
+    // );
   }
 
   Future<void> _onUserSignIn(

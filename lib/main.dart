@@ -21,6 +21,7 @@ import 'package:toastification/toastification.dart';
 import 'core/config/themes/app_theme.dart';
 import 'core/constants/constants.dart';
 import 'core/manager/state/auth/auth_bloc.dart';
+import 'core/manager/state/reset-password/reset_password_bloc.dart';
 import 'core/manager/token_manager.dart';
 import 'di_container.dart';
 
@@ -73,6 +74,7 @@ class MainApp extends StatelessWidget {
         BlocProvider(create: (context) => getIt<EstateBloc>()),
         BlocProvider(create: (context) => getIt<DashboardBloc>()),
         BlocProvider(create: (context) => getIt<PaymentBloc>()),
+        BlocProvider(create: (context) => getIt<ResetPasswordBloc>()),
         // BlocProvider(
         //   create:
         //       (context) =>
