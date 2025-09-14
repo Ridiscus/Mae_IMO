@@ -50,12 +50,9 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
       children: [
         _buildCurrentPasswordField(),
         CustomSpacer(),
-
         _buildNewPasswordField(),
         CustomSpacer(),
-
         _buildConfirmPasswordField(),
-
         Spacer(),
         _buildSendButton(),
         SpacerPlatform(),
@@ -155,7 +152,9 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
           _clearState();
         }
       },
-      buildWhen: (previous, current) => current.updatedPassword != null || current.isLoading,
+      buildWhen:
+          (previous, current) =>
+              current.updatedPassword != null || current.isLoading,
       builder: (context, state) {
         return CustomButton(
           text: 'Modifier mon mot de passe',
