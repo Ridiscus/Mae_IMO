@@ -13,6 +13,7 @@ class Endpoints {
   static const String updatePassword = "/tenant/profile/update-password";
   static const String updateProfileImage = "/tenant/profile/photo";
   static const String forgotPassword = "/password/forgot";
+  static const String resetPassword = "/password/reset";
 
   static String paymentsHistory(int tenantId) => "/tenant/$tenantId/paiements";
 }

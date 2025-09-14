@@ -5,6 +5,7 @@ import 'package:maelys_imo/core/domain/requests/index.dart';
 
 abstract interface class ResetPasswordService {
   Future<ApiResponse<String>> forgotPassword({required ForgotPasswordRequest dto});
+  Future<ApiResponse<String>> resetPassword({required ResetPasswordRequest dto});
 }
 
 class ResetPasswordServiceImpl implements ResetPasswordService {
@@ -29,6 +30,26 @@ class ResetPasswordServiceImpl implements ResetPasswordService {
     }
     return ApiResponse.error(
       message: response.message ?? "Erreur lors de l'envoi du lien de réinitialisation",
+    );
+  }
+
+  @override
+  Future<ApiResponse<String>> resetPassword({
+    required ResetPasswordRequest dto,
+  }) async {
+    final response = await apiClient.post(
+      Endpoints.resetPassword,
+      data: dto.toJson(),
+    );
+
+    if (response.success) {
+      return ApiResponse.success(
+        message: response.data['message'] ?? "Mot de passe réinitialisé avec succès",
+        data: response.data['message'],
+      );
+    }
+    return ApiResponse.error(
+      message: response.message ?? "Erreur lors de la réinitialisation du mot de passe",
     );
   }
 }

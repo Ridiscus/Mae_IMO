@@ -60,5 +60,32 @@
       <string>sms</string>
       <string>tel</string>
     </array>
+    
+    <!-- Deep link URL schemes configuration -->
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleURLName</key>
+            <string>maelysimo.deeplink</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>maelysimo</string>
+            </array>
+        </dict>
+        <dict>
+            <key>CFBundleURLName</key>
+            <string>maelysimo.https</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>https</string>
+            </array>
+        </dict>
+    </array>
+    
+    <!-- Associated Domains for Universal Links -->
+    <key>com.apple.developer.associated-domains</key>
+    <array>
+        <string>applinks:maelysimo.com</string>
+    </array>
 </dict>
 </plist>

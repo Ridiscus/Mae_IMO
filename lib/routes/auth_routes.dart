@@ -9,6 +9,7 @@ import '../core/manager/state/payment/payment_bloc.dart';
 import '../core/manager/token_manager.dart';
 import '../presentation/auth/pages/forget_passord_page.dart';
 import '../presentation/auth/pages/login_page.dart';
+import '../presentation/auth/pages/reset_passord_page.dart';
 import '../presentation/tenant/pages/dashboard_tenant_page.dart';
 
 class AuthRoutes {
@@ -43,6 +44,11 @@ class AuthRoutes {
       name: ForgetPasswordPage.routeName,
       path: ForgetPasswordPage.routePath,
       builder: (context, state) => const ForgetPasswordPage(),
+    ),
+    GoRoute(
+      name: ResetPasswordPage.routeName,
+      path: ResetPasswordPage.routePath,
+      builder: (context, state) => const ResetPasswordPage(),
     ),
   ];
 }

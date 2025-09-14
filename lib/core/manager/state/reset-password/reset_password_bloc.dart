@@ -21,6 +21,7 @@ class ResetPasswordBloc extends Bloc<ResetPasswordEvent, ResetPasswordState> {
   }) : _service = service,
       super(ResetPasswordInitial()) {
     on<ForgotPasswordEvent>(_onForgotPasswordEvent);
+    on<ResetPasswordWithTokenEvent>(_onResetPasswordWithTokenEvent);
   }
 
   Future<void> _onForgotPasswordEvent(
@@ -54,6 +55,43 @@ class ResetPasswordBloc extends Bloc<ResetPasswordEvent, ResetPasswordState> {
     } catch (e) {
       showToast(msg: "Erreur lors de l'envoi du lien de réinitialisation");
       emit(state.copyWith(isLoading: false, emailSent: false));
+      if (kDebugMode) {
+        rethrow;
+      }
+    }
+  }
+
+  Future<void> _onResetPasswordWithTokenEvent(
+    ResetPasswordWithTokenEvent event,
+    Emitter<ResetPasswordState> emit,
+  ) async {
+    emit(state.copyWith(isLoading: true));
+    try {
+      final result = await _service.resetPassword(dto: event.dto);
+      if (result.success) {
+        showToast(
+          msg: result.message!,
+          type: ToastificationType.success,
+        );
+        emit(
+          state.copyWith(
+            isLoading: false,
+            passwordReset: true,
+          ),
+        );
+      } else {
+        showToast(msg: result.message!);
+        emit(
+          state.copyWith(
+            isLoading: false,
+            passwordReset: false,
+            failure: Failure(message: result.message!),
+          ),
+        );
+      }
+    } catch (e) {
+      showToast(msg: "Erreur lors de la réinitialisation du mot de passe");
+      emit(state.copyWith(isLoading: false, passwordReset: false));
       if (kDebugMode) {
         rethrow;
       }
