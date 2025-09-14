@@ -7,6 +7,10 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:maelys_imo/core/domain/models/index.dart';
 import 'package:maelys_imo/core/services/payment_service.dart';
 import 'package:maelys_imo/core/utils/index.dart';
+import 'package:maelys_imo/core/utils/toast/notification_toast.dart';
+import 'package:toastification/toastification.dart';
+
+import '../../../domain/requests/index.dart';
 
 part 'payment_event.dart';
 part 'payment_state.dart';
@@ -18,6 +22,7 @@ class PaymentBloc extends HydratedBloc<PaymentEvent, PaymentState> {
     : _service = service,
       super(PaymentInitial()) {
     on<FetchHistoryPaymentEvent>(_onFetchHistoryPaymentEvent);
+    on<MakePaymentEvent>(_onMakePaymentEvent);
   }
 
   FutureOr<void> _onFetchHistoryPaymentEvent(
@@ -51,6 +56,47 @@ class PaymentBloc extends HydratedBloc<PaymentEvent, PaymentState> {
       }
     }
   }
+
+  Future<void> _onMakePaymentEvent(
+    MakePaymentEvent event,
+    Emitter<PaymentState> emit,
+  ) async {
+    emit(state.copyWith(isLoading: true));
+    try {
+      final result = await _service.makePayment(
+        tenantId: event.tenantId,
+        request: event.dto,
+      );
+      if (result.success) {
+        showToast(
+          msg: result.message ?? 'Paiement effectué avec succès',
+          type: ToastificationType.success,
+        );
+        emit(state.copyWith(isLoading: false, paymentSuccess: true));
+
+        // Déclencher automatiquement la récupération de l'historique des paiements
+        add(FetchHistoryPaymentEvent(tenantId: event.tenantId));
+      } else {
+        showToast(msg: result.message!);
+        emit(
+          state.copyWith(
+            isLoading: false,
+            paymentSuccess: false,
+            failure: Failure(message: result.message!),
+          ),
+        );
+      }
+    } catch (e) {
+      console.log("ERROR:: ${e.toString()}", name: "catch _onMakePaymentEvent");
+      showToast(msg: 'Erreur lors du paiement');
+      emit(state.copyWith(isLoading: false, paymentSuccess: false));
+
+      if (kDebugMode) {
+        rethrow;
+      }
+    }
+  }
+
 
   @override
   PaymentState? fromJson(Map<String, dynamic> json) {

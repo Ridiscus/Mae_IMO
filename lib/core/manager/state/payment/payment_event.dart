@@ -12,3 +12,16 @@ class FetchHistoryPaymentEvent extends PaymentEvent {
   @override
   List<Object?> get props => [tenantId];
 }
+
+final class MakePaymentEvent extends PaymentEvent {
+  final int tenantId;
+  final MakePaymentRequest dto;
+
+  const MakePaymentEvent({
+    required this.tenantId,
+    required this.dto,
+  });
+
+  @override
+  List<Object> get props => [tenantId, dto];
+}

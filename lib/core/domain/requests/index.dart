@@ -12,3 +12,4 @@ part 'update_password_request.dart';
 part 'update_profile_image_request.dart';
 part 'forgot_password_request.dart';
 part 'reset_password_request.dart';
+part 'make_payment_request.dart';

@@ -16,4 +16,6 @@ class Endpoints {
   static const String resetPassword = "/password/reset";
 
   static String paymentsHistory(int tenantId) => "/tenant/$tenantId/paiements";
+
+  static String makePayment(int tenantId) => "/tenant/$tenantId/paiements";
 }

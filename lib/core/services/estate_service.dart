@@ -56,6 +56,7 @@ class EstateServiceImpl implements EstateService {
       Endpoints.estatesDetail(id),
       fromJson: (res) => EstateModel.fromMap(res),
     );
+
     return response;
   }
 

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -22,7 +23,7 @@ class ForgetPasswordPage extends StatefulWidget {
 }
 
 class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
-  final TextEditingController _codeIdController = TextEditingController(text: "MA935006");
+  final TextEditingController _codeIdController = TextEditingController(text: kDebugMode ? "": "MA935006");
 
   @override
   void dispose() {

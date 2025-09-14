@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:maelys_imo/core/constants/app_colors.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
+import 'package:maelys_imo/core/manager/state/dashboard/dashboard_bloc.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
 
 class PropertyInspectionPage extends StatefulWidget {
@@ -48,7 +50,7 @@ class _PropertyInspectionPageState extends State<PropertyInspectionPage> {
       children: [
         // CircularBackButton(), // Retiré car dans le shell de navigation
         CustomSpacer(),
-        
+
         Text(
           'État des lieux',
           style:
@@ -68,19 +70,26 @@ class _PropertyInspectionPageState extends State<PropertyInspectionPage> {
       children: [
         _buildPropertySummary(),
         CustomSpacer(space: 2),
-        _buildRoomsList(),
-        CustomSpacer(),
+        EmptyStateWidget(
+          title: "Aucun état des lieux disponible",
+          icon: Icons.search_off,
+        ),
+        // _buildRoomsList(),
+        // CustomSpacer(),
       ],
     );
   }
 
   Widget _buildPropertySummary() {
-    // Sample property data - replace with actual data
+    final dashboard = context.select(
+      (DashboardBloc bloc) => bloc.state.tenantDashboardModel,
+    );
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Villa Marcory',
+          '${dashboard?.locataire?.estate?.title}',
           style:
               TextStyle(
                 fontSize: 20.sp,
@@ -89,11 +98,14 @@ class _PropertyInspectionPageState extends State<PropertyInspectionPage> {
               ).sourceSansProBold,
         ),
         SizedBox(height: 8.sp),
-        _buildSummaryItem(icon: Icons.home_outlined, label: 'Type: Villa'),
+        _buildSummaryItem(
+          icon: Icons.home_outlined,
+          label: 'Type: ${dashboard?.locataire?.estate?.type ?? ''}',
+        ),
         SizedBox(height: 8.sp),
         _buildSummaryItem(
           icon: Icons.location_on_outlined,
-          label: 'Adresse: Marcory, Abidjan',
+          label: 'Adresse: ${dashboard?.locataire?.estate?.commune ?? ''}',
         ),
       ],
     );
@@ -130,6 +142,7 @@ class _PropertyInspectionPageState extends State<PropertyInspectionPage> {
               ).sourceSansProSemiBold,
         ),
         CustomSpacer(),
+
         ..._rooms.map((room) => _buildRoomItem(room)),
       ],
     );

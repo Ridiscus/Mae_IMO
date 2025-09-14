@@ -3,22 +3,24 @@ part of 'payment_bloc.dart';
 class PaymentState extends Equatable {
   final List<PaymentHistoryModel>? paymentHistoryModel;
   final bool isLoading;
+  final bool? paymentSuccess;
   final Failure? failure;
 
   const PaymentState({
     this.paymentHistoryModel,
     this.isLoading = false,
+    this.paymentSuccess,
     this.failure,
   });
-
-  const PaymentState.loading() : this(isLoading: true);
 
   PaymentState copyWith({
     List<PaymentHistoryModel>? paymentHistoryModel,
     bool? isLoading,
+    bool? paymentSuccess,
     Failure? failure,
   }) => PaymentState(
     isLoading: isLoading ?? this.isLoading,
+    paymentSuccess: paymentSuccess,
     failure: failure,
     paymentHistoryModel: paymentHistoryModel ?? this.paymentHistoryModel,
   );
@@ -42,7 +44,7 @@ class PaymentState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [isLoading, paymentHistoryModel];
+  List<Object?> get props => [isLoading, paymentSuccess, failure, paymentHistoryModel];
 }
 
 final class PaymentInitial extends PaymentState {

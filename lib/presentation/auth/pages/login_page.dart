@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -27,10 +28,10 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController(
-    text: "MA935006",
+    text: kDebugMode ? "":  "MA935006",
   );
   final TextEditingController _passwordController = TextEditingController(
-    text: "12345678",
+    text: kDebugMode ? "": "12345678",
   );
   bool _obscureText = true;
 
