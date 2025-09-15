@@ -26,19 +26,19 @@ class _ProfileTenantPageState extends State<ProfileTenantPage> {
 
   @override
   Widget build(BuildContext context) {
-    _userModel = context.select((AuthBloc bloc) => bloc.state).userModel;
+    // _userModel = context.select((AuthBloc bloc) => bloc.state).userModel;
 
     // Define contact info
-    final List<ProfileContactInfo> contactInfo = [
-      ProfileContactInfo(
-        icon: Icons.email_outlined,
-        text: _userModel?.email ?? '',
-      ),
-      ProfileContactInfo(
-        icon: Icons.phone_outlined,
-        text: _userModel?.contact ?? '',
-      ),
-    ];
+    // final List<ProfileContactInfo> contactInfo = [
+    //   ProfileContactInfo(
+    //     icon: Icons.email_outlined,
+    //     text: _userModel?.email ?? '',
+    //   ),
+    //   ProfileContactInfo(
+    //     icon: Icons.phone_outlined,
+    //     text: _userModel?.contact ?? '',
+    //   ),
+    // ];
 
     // Define edit options with tenant-specific options
     final List<ProfileEditOption> editOptions = [
@@ -95,9 +95,9 @@ class _ProfileTenantPageState extends State<ProfileTenantPage> {
     ];
 
     return ProfilePageLayout(
-      userName: _userModel?.fullName ?? '',
-      userId: _userModel?.codeId ?? '',
-      contactInfo: contactInfo,
+      // userName: _userModel?.fullName ?? '',
+      // userId: _userModel?.codeId ?? '',
+      // contactInfo: contactInfo,
       editOptions: editOptions,
       profileBackgroundColor: AppColors.primary,
 

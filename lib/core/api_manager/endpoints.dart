@@ -15,7 +15,12 @@ class Endpoints {
   static const String forgotPassword = "/password/forgot";
   static const String resetPassword = "/password/reset";
 
+  static String agentDashboard = "/agent/dashboard";
+  static String tenantByStatus(String status) => "/agent/locataires/$status";
+
   static String paymentsHistory(int tenantId) => "/tenant/$tenantId/paiements";
 
   static String makePayment(int tenantId) => "/tenant/$tenantId/paiements";
+
+  static String showDetailTenant(dynamic id) => "/agent/locataire/$id/details";
 }

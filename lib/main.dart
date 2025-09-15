@@ -13,6 +13,7 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:maelys_imo/core/manager/state/dashboard/dashboard_bloc.dart';
 import 'package:maelys_imo/core/manager/state/estate/estate_bloc.dart';
 import 'package:maelys_imo/core/manager/state/payment/payment_bloc.dart';
+import 'package:maelys_imo/core/manager/state/tenant/tenant_bloc.dart';
 import 'package:maelys_imo/routes/app_route.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:talker_bloc_logger/talker_bloc_logger.dart';
@@ -75,6 +76,7 @@ class MainApp extends StatelessWidget {
         BlocProvider(create: (context) => getIt<DashboardBloc>()),
         BlocProvider(create: (context) => getIt<PaymentBloc>()),
         BlocProvider(create: (context) => getIt<ResetPasswordBloc>()),
+        BlocProvider(create: (context) => getIt<TenantBloc>()),
         // BlocProvider(
         //   create:
         //       (context) =>

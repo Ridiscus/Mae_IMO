@@ -17,3 +17,6 @@ part 'document_model.dart';
 part 'amenity_model.dart';
 part 'payment_history_model.dart';
 part 'payment_status_model.dart';
+part 'agent_dashboard_model.dart';
+part 'tenant_item_model.dart';
+part 'tenant_detail_model.dart';

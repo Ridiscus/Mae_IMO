@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:maelys_imo/core/constants/app_colors.dart';
 import 'package:maelys_imo/presentation/portal/pages/portal_page.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
+
+import '../../../core/domain/models/index.dart';
 
 class ProfileAgentPage extends StatefulWidget {
   static const routeName = 'profileAgent';
@@ -15,19 +18,24 @@ class ProfileAgentPage extends StatefulWidget {
 }
 
 class _ProfileAgentPageState extends State<ProfileAgentPage> {
+
+  late UserModel? _userModel;
+
   @override
   Widget build(BuildContext context) {
-    // Define contact info
-    final List<ProfileContactInfo> contactInfo = [
-      ProfileContactInfo(
-        icon: Icons.email_outlined,
-        text: 'user@gmail.com',
-      ),
-      ProfileContactInfo(
-        icon: Icons.phone_outlined,
-        text: '+225 0578687749',
-      ),
-    ];
+    // _userModel = context.select((AuthBloc bloc) => bloc.state).userModel;
+
+    // // Define contact info
+    // final List<ProfileContactInfo> contactInfo = [
+    //   ProfileContactInfo(
+    //     icon: Icons.email_outlined,
+    //     text: _userModel?.email ?? '',
+    //   ),
+    //   ProfileContactInfo(
+    //     icon: Icons.phone_outlined,
+    //     text: _userModel?.contact ?? '',
+    //   ),
+    // ];
 
     // Define edit options for agent
     final List<ProfileEditOption> editOptions = [
@@ -63,9 +71,9 @@ class _ProfileAgentPageState extends State<ProfileAgentPage> {
     ];
 
     return ProfilePageLayout(
-      userName: 'Nom de l\'agent',
-      userId: '132Mo7E',
-      contactInfo: contactInfo,
+      // userName: _userModel?.fullName ?? '',
+      // userId: _userModel?.codeId ?? '',
+      // contactInfo: contactInfo,
       editOptions: editOptions,
       profileBackgroundColor: AppColors.primary,
       onLogoutPressed: () {

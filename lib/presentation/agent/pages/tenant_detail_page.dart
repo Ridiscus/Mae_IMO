@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:maelys_imo/core/constants/app_colors.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
+import 'package:maelys_imo/core/manager/state/tenant/tenant_bloc.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
 import 'package:maelys_imo/shared/widgets/modals/index.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+
+import '../../../core/domain/models/index.dart';
 
 class TenantDetailPage extends StatefulWidget {
   static const routeName = 'tenantDetail';
@@ -18,12 +24,29 @@ class TenantDetailPage extends StatefulWidget {
 }
 
 class _TenantDetailPageState extends State<TenantDetailPage> {
+  late TenantState _tenantState;
+  TenantDetailModel? _tenant;
+  bool _isLoading = false;
+
   @override
   Widget build(BuildContext context) {
-    return FormWithHeaderLayout(
-      headerTitle: 'Détails du locataire',
-      contentColor: AppColors.scaffold,
-      content: _buildDetailContent(),
+    _tenantState = context.select((TenantBloc bloc) => bloc.state);
+    _tenant = _tenantState.tenant;
+    _isLoading = _tenantState.isLoading ?? false;
+
+    return BlocListener<TenantBloc, TenantState>(
+      listener: (context, state) {
+        if (state.isLoading == false &&
+            state.tenant == null &&
+            state.failure == null) {
+          context.pop();
+        }
+      },
+      child: FormWithHeaderLayout(
+        headerTitle: 'Détails du locataire',
+        contentColor: AppColors.scaffold,
+        content: _buildDetailContent(),
+      ),
     );
   }
 
@@ -44,76 +67,103 @@ class _TenantDetailPageState extends State<TenantDetailPage> {
   }
 
   Widget _buildTenantInfoCard() {
-    return InfoCardWidget(
-      title: 'Données du locataire',
-      child: Column(
-        children: [
-          InfoRowWidget(icon:  Icons.person,  text: 'Nom : John Doe'),
-          SizedBox(height: 16.sp),
-          InfoRowWidget(icon:  Icons.email_outlined, text:  'Email : email@locataire.com'),
-          SizedBox(height: 16.sp),
-          InfoRowWidget(icon:  Icons.phone_outlined, text:  'Contact : +225 09898765454'),
-        ],
+    return Skeletonizer(
+      enabled: _isLoading,
+      child: InfoCardWidget(
+        title: 'Données du locataire',
+        child: Column(
+          children: [
+            InfoRowWidget(
+              icon: Icons.person,
+              text: 'Nom : ${_tenant?.locataire?.fullName ?? ''}',
+            ),
+            SizedBox(height: 16.sp),
+            InfoRowWidget(
+              icon: Icons.email_outlined,
+              text: 'Email : ${_tenant?.locataire?.email ?? ''}',
+            ),
+            SizedBox(height: 16.sp),
+            InfoRowWidget(
+              icon: Icons.phone_outlined,
+              text: 'Contact : ${_tenant?.locataire?.contact ?? ''}',
+            ),
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildPropertyInfoCard() {
-    return InfoCardWidget(
-      title: 'Bien loué',
-      child: Column(
-        children: [
-          InfoRowWidget(icon: Icons.home_outlined, text: 'Type : villa'),
-          SizedBox(height: 16.sp),
-          InfoRowWidget(
-            icon: Icons.location_on_outlined,
-            text: 'Localisation : Marcory',
-          ),
-          SizedBox(height: 16.sp),
-          InfoRowWidget(
-            icon: Icons.money_outlined,
-            text: 'loyer : 200 000 FCFA',
-          ),
-          SizedBox(height: 16.sp),
-          InfoRowWidget(
-            icon: Icons.calendar_today_outlined,
-            text: 'Période : Juin 2025',
-          ),
-          SizedBox(height: 16.sp),
-          InfoRowWidget(
-            icon: Icons.money_outlined,
-            text: 'Montant dû : 200 000 FCFA',
-            textColor: Colors.red[800],
-            fontWeight: FontWeight.bold,
-          ),
-        ],
+    return Skeletonizer(
+      enabled: _isLoading,
+      child: InfoCardWidget(
+        title: 'Bien loué',
+        child: Column(
+          children: [
+            InfoRowWidget(
+              icon: Icons.home_outlined,
+              text: 'Type : ${_tenant?.bien?.type ?? ''}',
+            ),
+            SizedBox(height: 16.sp),
+            InfoRowWidget(
+              icon: Icons.location_on_outlined,
+              text: 'Localisation : ${_tenant?.bien?.commune ?? ''}',
+            ),
+            SizedBox(height: 16.sp),
+            InfoRowWidget(
+              icon: Icons.money_outlined,
+              text: 'loyer : ${(_tenant?.bien?.prix ?? '').formatCurrency()}',
+            ),
+            SizedBox(height: 16.sp),
+            InfoRowWidget(
+              icon: Icons.calendar_today_outlined,
+              text:
+                  'Période : ${_tenant?.prochainMoisAPayer?.moisCouvert?.monthYear() ?? ''}',
+            ),
+            SizedBox(height: 16.sp),
+            InfoRowWidget(
+              icon: Icons.money_outlined,
+              text:
+                  'Montant dû : ${_tenant?.prochainMoisAPayer?.montant?.formatCurrency() ?? ''}',
+              textColor:
+                  (_tenant?.prochainMoisAPayer?.dejaPaye ?? false)
+                      ? AppColors.success
+                      : Colors.red[800],
+              fontWeight: FontWeight.bold,
+            ),
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildCollectRentButton() {
-    return CustomButton(
-      text: 'Encaisser le loyer',
-      onPressed: () {
-        showModalBottomSheet(
-          showDragHandle: true,
-          backgroundColor: Colors.white,
-          isScrollControlled: true,
-          context: context,
+    return (_tenant?.prochainMoisAPayer?.dejaPaye ?? false)
+        ? SizedBox.shrink()
+        : CustomButton(
+          text: 'Encaisser le loyer',
+          onPressed: () {
+            showModalBottomSheet(
+              showDragHandle: true,
+              backgroundColor: Colors.white,
+              isScrollControlled: true,
+              context: context,
 
-          builder:
-              (context) =>
-                  ModalCollectingTheRent(onValidated: () {}, onCancel: () {}),
+              builder:
+                  (context) => ModalCollectingTheRent(
+                    onValidated: () {},
+                    onCancel: () {},
+                  ),
+            );
+          },
+          showArrow: true,
+          buttonVariant: ButtonVariant.red,
+          textStyle:
+              TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ).sourceSansProBold,
         );
-      },
-      showArrow: true,
-      buttonVariant: ButtonVariant.red,
-      textStyle:
-          TextStyle(
-            fontSize: 16.sp,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ).sourceSansProBold,
-    );
   }
 }

@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:maelys_imo/core/constants/app_colors.dart';
-import 'package:maelys_imo/core/manager/state/auth/auth_bloc.dart';
 import 'package:maelys_imo/presentation/tenant/pages/profile_tenant_page.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
 
-import '../../../core/manager/state/dashboard/dashboard_bloc.dart';
-import '../../../core/utils/index.dart';
 
 class DashboardTenantPage extends StatefulWidget {
   static const routeName = 'dashboardTenant';
   static const routePath = '/dashboard-tenant';
 
   final StatefulNavigationShell navigationShell;
+
 
   const DashboardTenantPage({super.key, required this.navigationShell});
 
@@ -27,7 +24,7 @@ class _DashboardTenantPageState extends State<DashboardTenantPage> {
 
   @override
   Widget build(BuildContext context) {
-    final userModel = context.select((AuthBloc bloc) => bloc.state.userModel);
+    // final userModel = context.select((AuthBloc bloc) => bloc.state.userModel);
 
 
     return AnnotatedRegion(
@@ -38,9 +35,9 @@ class _DashboardTenantPageState extends State<DashboardTenantPage> {
       child: Scaffold(
         key: _scaffoldKey,
         drawer: CustomDrawer(
-          name: userModel?.fullName ?? '',
-          email: userModel?.email ?? '',
-          profileImage: CoreHelper.fullLink(userModel?.profileImage ?? ""),
+          // name: userModel?.fullName ?? '',
+          // email: userModel?.email ?? '',
+          // profileImage: CoreHelper.fullLink(userModel?.profileImage ?? ""),
           profileType: "tenant",
           // onDocumentsTap: () {},
           onHomeTap: () {

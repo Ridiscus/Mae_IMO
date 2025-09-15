@@ -23,6 +23,7 @@ class DashboardBloc extends HydratedBloc<DashboardEvent, DashboardState> {
       super(DashboardInitial()) {
     on<FetchTenantDashboardEvent>(_onFetchTenantDashboardEvent);
     on<ContactAgencyEvent>(_onContactAgencyEvent);
+    on<FetchAgentDashboardEvent>(_onFetchAgentDashboardEvent);
   }
 
   @override
@@ -85,7 +86,7 @@ class DashboardBloc extends HydratedBloc<DashboardEvent, DashboardState> {
         emit(
           state.copyWith(
             isLoading: false,
-              mailSent: false,
+            mailSent: false,
             failure: Failure(message: result.message!),
           ),
         );
@@ -94,6 +95,38 @@ class DashboardBloc extends HydratedBloc<DashboardEvent, DashboardState> {
       console.log("ERROR:: ${e.toString()}", name: "_onContactAgencyEvent");
       showToast(msg: "Echèc Message non envoyé");
       emit(state.copyWith(isLoading: false, mailSent: false));
+      if (kDebugMode) {
+        rethrow;
+      }
+    }
+  }
+
+  FutureOr<void> _onFetchAgentDashboardEvent(
+    FetchAgentDashboardEvent event,
+    Emitter<DashboardState> emit,
+  ) async {
+    emit(state.copyWith(isLoading: true));
+    try {
+      final result = await _service.agentDashboard();
+      if (result.success) {
+        emit(
+          state.copyWith(isLoading: false, agentDashboardModel: result.data),
+        );
+      } else {
+        showToast(msg: result.message ?? "Données non disponible !");
+        emit(
+          state.copyWith(
+            isLoading: false,
+            failure: Failure(message: result.message!),
+          ),
+        );
+      }
+    } catch (e) {
+      console.log(
+        "ERROR:: ${e.toString()}",
+        name: "_onFetchAgentDashboardEvent",
+      );
+      emit(state.copyWith(isLoading: false));
       if (kDebugMode) {
         rethrow;
       }

@@ -2,6 +2,7 @@ import 'dart:developer' as console;
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart' show GoRoute;
+import 'package:maelys_imo/presentation/agent/pages/home_agent_page.dart';
 
 import '../core/manager/state/auth/auth_bloc.dart';
 import '../core/manager/state/dashboard/dashboard_bloc.dart';
@@ -34,6 +35,10 @@ class AuthRoutes {
             );
             context.read<DashboardBloc>().add(FetchTenantDashboardEvent());
             return DashboardTenantPage.routePath;
+          }
+          if (userModel.isCollectionAgent) {
+            context.read<DashboardBloc>().add(FetchAgentDashboardEvent());
+            return HomeAgentPage.routePath;
           }
         } else {
           return null;

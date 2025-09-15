@@ -11,6 +11,8 @@ abstract interface class DashboardService {
   Future<ApiResponse<String>> contactAgency({
     required ContactAgencyRequest dto,
   });
+
+  Future<ApiResponse<AgentDashboardModel>> agentDashboard();
 }
 
 class DashboardServiceImpl implements DashboardService {
@@ -43,5 +45,16 @@ class DashboardServiceImpl implements DashboardService {
       return ApiResponse.success(message: response.message);
     }
     return ApiResponse.error(message: response.message);
+  }
+
+  @override
+  Future<ApiResponse<AgentDashboardModel>> agentDashboard() async {
+    final response = await apiClient.get(
+      Endpoints.agentDashboard,
+      fromJson: (res) {
+        return AgentDashboardModel.fromMap(res);
+      },
+    );
+    return response;
   }
 }

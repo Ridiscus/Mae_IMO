@@ -2,10 +2,12 @@ import 'package:get_it/get_it.dart' show GetIt;
 import 'package:maelys_imo/core/manager/state/dashboard/dashboard_bloc.dart';
 import 'package:maelys_imo/core/manager/state/payment/payment_bloc.dart';
 import 'package:maelys_imo/core/manager/state/reset-password/reset_password_bloc.dart';
+import 'package:maelys_imo/core/manager/state/tenant/tenant_bloc.dart';
 import 'package:maelys_imo/core/services/dashboard_service.dart';
 import 'package:maelys_imo/core/services/estate_service.dart';
 import 'package:maelys_imo/core/services/payment_service.dart';
 import 'package:maelys_imo/core/services/reset_password_service.dart';
+import 'package:maelys_imo/core/services/tenant_service.dart';
 import 'package:maelys_imo/presentation/auth/pages/login_page.dart';
 
 import 'core/api_manager/api_client.dart' show ApiClient, LogoutRedirectConfig;
@@ -62,6 +64,10 @@ Future<void> _initBlocs() async {
   getIt.registerLazySingleton<ResetPasswordBloc>(
     () => ResetPasswordBloc(service: getIt<ResetPasswordService>()),
   );
+
+  getIt.registerLazySingleton<TenantBloc>(
+    () => TenantBloc(service: getIt<TenantService>()),
+  );
 }
 
 /// Initialise les services de l'application
@@ -96,6 +102,12 @@ Future<void> _initServices() async {
 
   getIt.registerLazySingleton<ResetPasswordService>(
     () => ResetPasswordServiceImpl(
+      apiClient: getIt<ApiClient>(),
+    ),
+  );
+
+  getIt.registerLazySingleton<TenantService>(
+    () => TenantServiceImpl(
       apiClient: getIt<ApiClient>(),
     ),
   );

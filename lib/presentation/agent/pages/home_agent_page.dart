@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:maelys_imo/core/constants/app_colors.dart';
@@ -9,6 +10,10 @@ import 'package:maelys_imo/presentation/agent/pages/profile_agent_page.dart';
 import 'package:maelys_imo/presentation/agent/pages/property_inspection_list_page.dart';
 import 'package:maelys_imo/presentation/agent/pages/tenant_list_page.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+
+import '../../../core/domain/models/index.dart';
+import '../../../core/manager/state/dashboard/dashboard_bloc.dart';
 
 class HomeAgentPage extends StatefulWidget {
   static const routeName = 'homeAgent';
@@ -23,8 +28,16 @@ class HomeAgentPage extends StatefulWidget {
 class _HomeAgentPageState extends State<HomeAgentPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  late DashboardState _dashboardState;
+  AgentDashboardModel? _agentDashboardModel;
+  bool _isLoading = false;
+
   @override
   Widget build(BuildContext context) {
+    _dashboardState = context.select((DashboardBloc bloc) => bloc.state);
+    _agentDashboardModel = _dashboardState.agentDashboardModel;
+    _isLoading = _dashboardState.isLoading ?? false;
+
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(
         statusBarColor: AppColors.primary,
@@ -33,8 +46,8 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
       child: Scaffold(
         key: _scaffoldKey,
         drawer: CustomDrawer(
-          name: 'Nom de l\'utilisateur',
-          email: 'utilsateur@gmail.com',
+          // name: 'Nom de l\'utilisateur',
+          // email: 'utilsateur@gmail.com',
           onHomeTap: () {
             _scaffoldKey.currentState?.closeDrawer();
             // Already on home page
@@ -131,31 +144,34 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
   }
 
   Widget _buildContent() {
-    return Container(
-      width: double.infinity,
-      height: double.infinity,
-      padding: EdgeInsets.only(top: (150 / 1.8).h),
-      decoration: BoxDecoration(
-        color: AppColors.scaffold,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20.r),
-          topRight: Radius.circular(20.r),
+    return Skeletonizer(
+      enabled: _isLoading,
+      child: Container(
+        width: double.infinity,
+        height: double.infinity,
+        padding: EdgeInsets.only(top: (150 / 1.8).h),
+        decoration: BoxDecoration(
+          color: AppColors.scaffold,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20.r),
+            topRight: Radius.circular(20.r),
+          ),
         ),
-      ),
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(16.sp),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildTenantsUpToDateCard(),
-              CustomSpacer(),
-              _buildTenantsInArrearsCard(),
-              CustomSpacer(),
-              _buildPendingPaymentsCard(),
-              CustomSpacer(),
-              _buildPropertyInspectionCard(),
-            ],
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.all(16.sp),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildTenantsUpToDateCard(),
+                CustomSpacer(),
+                _buildTenantsInArrearsCard(),
+                CustomSpacer(),
+                _buildPendingPaymentsCard(),
+                CustomSpacer(),
+                _buildPropertyInspectionCard(),
+              ],
+            ),
           ),
         ),
       ),
@@ -163,55 +179,59 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
   }
 
   Widget _buildTotalRentCard() {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.all(24.sp),
-      decoration: BoxDecoration(
-        color: AppColors.primary,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(
-          color: AppColors.scaffold.withValues(alpha: .12),
-          width: 1.sp,
-          style: BorderStyle.solid,
+    return Skeletonizer(
+      enabled: _isLoading,
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.all(24.sp),
+        decoration: BoxDecoration(
+          color: AppColors.primary,
+          borderRadius: BorderRadius.circular(16.r),
+          border: Border.all(
+            color: AppColors.scaffold.withValues(alpha: .12),
+            width: 1.sp,
+            style: BorderStyle.solid,
+          ),
         ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Text(
-            'Montant total des loyers réçu',
-            style:
-                TextStyle(
-                  fontSize: 18.sp,
-                  color: Colors.white,
-                ).sourceSansProRegular,
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: TextBaseline.alphabetic,
-            children: [
-              Text(
-                '500 000',
-                style:
-                    TextStyle(
-                      fontSize: 40.sp,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ).sourceSansProBold,
-              ),
-              SizedBox(width: 8.sp),
-              Text(
-                'FCFA',
-                style:
-                    TextStyle(
-                      fontSize: 20.sp,
-                      color: Colors.white,
-                    ).sourceSansProRegular,
-              ),
-            ],
-          ),
-        ],
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text(
+              'Montant total des loyers réçu',
+              style:
+                  TextStyle(
+                    fontSize: 18.sp,
+                    color: Colors.white,
+                  ).sourceSansProRegular,
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
+              children: [
+                Text(
+                  '${_agentDashboardModel?.totalLoyersPercus ?? 0}'
+                      .formatCurrency(symbol: ""),
+                  style:
+                      TextStyle(
+                        fontSize: 40.sp,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ).sourceSansProBold,
+                ),
+                SizedBox(width: 8.sp),
+                Text(
+                  'FCFA',
+                  style:
+                      TextStyle(
+                        fontSize: 20.sp,
+                        color: Colors.white,
+                      ).sourceSansProRegular,
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -219,7 +239,7 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
   Widget _buildTenantsUpToDateCard() {
     return StatsCardWidget(
       title: 'Nombre de locataire à jours',
-      value: '20',
+      value: '${_agentDashboardModel?.locatairesAJour ?? 0}',
       iconData: Icons.calendar_today,
       iconBackgroundColor: AppColors.primary,
       arrowColor: AppColors.success,
@@ -237,7 +257,7 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
   Widget _buildTenantsInArrearsCard() {
     return StatsCardWidget(
       title: 'Nombre de locataire en retard',
-      value: '20',
+      value: '${_agentDashboardModel?.locatairesEnRetard ?? 0}',
       iconData: Icons.warning_amber_rounded,
       iconBackgroundColor: AppColors.primary,
       arrowColor: AppColors.redColor,
@@ -255,7 +275,7 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
   Widget _buildPendingPaymentsCard() {
     return StatsCardWidget(
       title: 'Nombre de paiement en attente',
-      value: '20',
+      value: '${_agentDashboardModel?.paiementsEnAttente ?? 0}',
       iconData: Icons.watch_later_outlined,
       iconBackgroundColor: AppColors.primary,
       arrowColor: AppColors.orange,
@@ -274,7 +294,7 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
   Widget _buildPropertyInspectionCard() {
     return StatsCardWidget(
       title: 'États des lieux à effectuer',
-      value: '3',
+      value: '${_agentDashboardModel?.etatsLieuEffectues ?? 0}',
       iconData: Icons.home_work_outlined,
       iconBackgroundColor: AppColors.primary,
       arrowColor: AppColors.primary,

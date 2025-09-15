@@ -1,5 +1,4 @@
 
-import 'dart:developer' as console;
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:maelys_imo/core/utils/index.dart';
@@ -18,4 +17,5 @@ part 'navigator_ext.dart';
 part 'estate_type_ext.dart';
 part 'estate_ext.dart';
 part 'tenant_dashboard_ext.dart';
+part 'tenant_item_ext.dart';
 

@@ -39,10 +39,10 @@ class ProfileContactInfo {
 /// profile information, and edit options.
 class ProfilePageLayout extends StatelessWidget {
   /// The user's display name
-  final String userName;
+  // final String userName;
 
   /// The user's ID to display
-  final String userId;
+  // final String userId;
 
   /// Optional callback for back button. If null, the back button will use context.pop()
   final VoidCallback? onBackPressed;
@@ -51,7 +51,7 @@ class ProfilePageLayout extends StatelessWidget {
   final VoidCallback onLogoutPressed;
 
   /// List of contact information to display (email, phone, etc.)
-  final List<ProfileContactInfo> contactInfo;
+  // final List<ProfileContactInfo> contactInfo;
 
   /// List of edit options to display in the bottom section
   final List<ProfileEditOption> editOptions;
@@ -62,10 +62,10 @@ class ProfilePageLayout extends StatelessWidget {
   /// Creates a profile page layout
   const ProfilePageLayout({
     super.key,
-    required this.userName,
-    required this.userId,
+    // required this.userName,
+    // required this.userId,
+    // required this.contactInfo,
     required this.onLogoutPressed,
-    required this.contactInfo,
     required this.editOptions,
     this.onBackPressed,
     this.profileBackgroundColor,
@@ -110,8 +110,23 @@ class ProfilePageLayout extends StatelessWidget {
   }
 
   Widget _buildProfileInfo(BuildContext context) {
-    final profileImage =
-        context.select((AuthBloc bloc) => bloc.state).userModel?.profileImage;
+    // final profileImage = context.select((AuthBloc bloc) => bloc.state).userModel?.profileImage;
+    final _userModel = context.select((AuthBloc bloc) => bloc.state).userModel;
+    final userName = _userModel?.fullName ?? "";
+    final userId = _userModel?.codeId ?? "";
+
+    // Define contact info
+    final List<ProfileContactInfo> contactInfo = [
+      ProfileContactInfo(
+        icon: Icons.email_outlined,
+        text: _userModel?.email ?? '',
+      ),
+      ProfileContactInfo(
+        icon: Icons.phone_outlined,
+        text: _userModel?.contact ?? '',
+      ),
+    ];
+
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: 16.r),
@@ -125,7 +140,10 @@ class ProfilePageLayout extends StatelessWidget {
             size: 120,
             iconColor: AppColors.black,
             iconSize: 60,
-            profileImage: CoreHelper.fullLink(profileImage),
+            profileImage:
+                (_userModel?.profileImage ?? "").isEmpty
+                    ? null
+                    : CoreHelper.fullLink(_userModel?.profileImage ?? ""),
             uploadedImage: true,
             onUploadImage: () async {
               final File? selectedFile = await UIHelper.pickImage(context);

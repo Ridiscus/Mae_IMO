@@ -2,9 +2,10 @@ part of 'index.dart';
 
 class CustomDrawer extends StatelessWidget {
   final String? profileType;
-  final String name;
-  final String email;
-  final String? profileImage;
+
+  // final String name;
+  // final String email;
+  // final String? profileImage;
   final Function()? onHomeTap;
   final Function()? onPaymentsTap;
   final Function()? onWalletTap;
@@ -19,9 +20,9 @@ class CustomDrawer extends StatelessWidget {
   const CustomDrawer({
     super.key,
     this.profileType,
-    required this.name,
-    required this.email,
-    this.profileImage,
+    // required this.name,
+    // required this.email,
+    // this.profileImage,
     this.onHomeTap,
     this.onPaymentsTap,
     this.onWalletTap,
@@ -66,6 +67,8 @@ class CustomDrawer extends StatelessWidget {
   }
 
   Widget _buildProfileSection(BuildContext context) {
+    final userModel = context.select((AuthBloc bloc) => bloc.state.userModel);
+
     return Padding(
       padding: EdgeInsets.only(top: 24.sp, left: 24.sp, right: 24.sp),
       child: Column(
@@ -74,7 +77,10 @@ class CustomDrawer extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               CustomCircleAvatarUser(
-                profileImage: profileImage,
+                profileImage:
+                    (userModel?.profileImage ?? "").isEmpty
+                        ? null
+                        : CoreHelper.fullLink(userModel?.profileImage ?? ""),
                 size: 72,
                 backgroundColor: AppColors.primary,
               ),
@@ -84,25 +90,25 @@ class CustomDrawer extends StatelessWidget {
           Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              name,
+              userModel?.fullName ?? '',
               style:
-              TextStyle(
-                fontSize: 24.sp,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ).sourceSansProSemiBold,
+                  TextStyle(
+                    fontSize: 24.sp,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ).sourceSansProSemiBold,
             ),
           ),
           SizedBox(height: 2.sp),
           Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              email,
+              userModel?.email ?? '',
               style:
-              TextStyle(
-                fontSize: 14.sp,
-                color: Colors.grey[600],
-              ).sourceSansProRegular,
+                  TextStyle(
+                    fontSize: 14.sp,
+                    color: Colors.grey[600],
+                  ).sourceSansProRegular,
             ),
           ),
         ],
@@ -168,11 +174,11 @@ class _MenuItem extends StatelessWidget {
       title: Text(
         title,
         style:
-        TextStyle(
-          fontSize: 16.sp,
-          fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-          color: isSelected ? Colors.black : Colors.black87,
-        ).sourceSansProRegular,
+            TextStyle(
+              fontSize: 16.sp,
+              fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+              color: isSelected ? Colors.black : Colors.black87,
+            ).sourceSansProRegular,
       ),
       onTap: onTap,
       contentPadding: EdgeInsets.symmetric(horizontal: 24.sp),

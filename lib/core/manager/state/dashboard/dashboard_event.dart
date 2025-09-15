@@ -9,6 +9,11 @@ class FetchTenantDashboardEvent extends DashboardEvent {
   List<Object?> get props => [];
 }
 
+class FetchAgentDashboardEvent extends DashboardEvent {
+  @override
+  List<Object?> get props => [];
+}
+
 class ContactAgencyEvent extends DashboardEvent {
   final ContactAgencyRequest dto;
 

@@ -158,7 +158,7 @@ abstract class UserModel {
     'email': json["email"],
     'passwordResetToken': json["password_reset_token"],
     'passwordResetExpires': json["password_reset_expires"],
-    'contact': json["contact"],
+    'contact': json["contact"] ??  json["telephone"],
     'profileImage': json["profile_image"],
     'agenceId': json["agence_id"],
     'proprietaireId': json["proprietaire_id"],
