@@ -148,7 +148,6 @@ class _TenantDetailPageState extends State<TenantDetailPage> {
               backgroundColor: Colors.white,
               isScrollControlled: true,
               context: context,
-
               builder:
                   (context) => ModalCollectingTheRent(
                     onValidated: () {},
