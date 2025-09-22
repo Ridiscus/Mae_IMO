@@ -6,8 +6,22 @@ class TenantItemModel {
   final String? prenom;
   final String? email;
   final String? contact;
+  final String? typeBien;
+  final String? communeBien;
+  final String? dateEtatLieu;
+  final String? statusEtatEntre;
 
-  TenantItemModel({this.name, this.prenom, this.email, this.contact, this.id});
+  TenantItemModel({
+    this.name,
+    this.prenom,
+    this.email,
+    this.contact,
+    this.id,
+    this.typeBien,
+    this.communeBien,
+    this.dateEtatLieu,
+    this.statusEtatEntre,
+  });
 
   TenantItemModel copyWith({
     dynamic id,
@@ -15,12 +29,20 @@ class TenantItemModel {
     String? prenom,
     String? email,
     String? contact,
+    String? typeBien,
+    String? communeBien,
+    String? dateEtatLieu,
+    String? statusEtatEntre,
   }) => TenantItemModel(
     id: id ?? this.id,
     name: name ?? this.name,
     prenom: prenom ?? this.prenom,
     email: email ?? this.email,
     contact: contact ?? this.contact,
+    typeBien: typeBien ?? this.typeBien,
+    communeBien: communeBien ?? this.communeBien,
+    dateEtatLieu: dateEtatLieu ?? this.dateEtatLieu,
+    statusEtatEntre: statusEtatEntre ?? this.statusEtatEntre,
   );
 
   factory TenantItemModel.fromJson(String str) =>
@@ -34,6 +56,10 @@ class TenantItemModel {
     prenom: json["prenom"],
     email: json["email"],
     contact: json["contact"],
+    typeBien: json['type_bien'],
+    communeBien: json['commune_bien'],
+    dateEtatLieu: json['date_etat_lieu'],
+    statusEtatEntre: json['status_etat_entre'],
   );
 
   Map<String, dynamic> toMap() => {
@@ -42,5 +68,9 @@ class TenantItemModel {
     "prenom": prenom,
     "email": email,
     "contact": contact,
+    "type_bien": typeBien,
+    "commune_bien": communeBien,
+    "date_etat_lieu": dateEtatLieu,
+    "status_etat_entre": statusEtatEntre,
   };
 }

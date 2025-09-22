@@ -1,11 +1,11 @@
 import 'package:go_router/go_router.dart' show GoRoute;
-import 'package:maelys_imo/presentation/tenant/pages/update_email_page.dart';
+import 'package:maelys_imo/shared/widgets/pages/update_email_page.dart';
 
 import '../presentation/tenant/pages/contact_agency_page.dart';
 import '../presentation/tenant/pages/dashboard_tenant_page.dart';
 import '../presentation/tenant/pages/payment_page.dart';
 import '../presentation/tenant/pages/profile_tenant_page.dart';
-import '../presentation/tenant/pages/update_password_page.dart';
+import '../shared/widgets/pages/update_password_page.dart';
 
 class TenantRoutes {
   static List<GoRoute> routes = [
@@ -32,16 +32,6 @@ class TenantRoutes {
       name: ContactAgencyPage.routeName,
       path: ContactAgencyPage.routePath,
       builder: (context, state) => const ContactAgencyPage(),
-    ),
-    GoRoute(
-      name: UpdateEmailPage.routeName,
-      path: UpdateEmailPage.routePath,
-      builder: (context, state) => const UpdateEmailPage(),
-    ),
-    GoRoute(
-      name: UpdatePasswordPage.routeName,
-      path: UpdatePasswordPage.routePath,
-      builder: (context, state) => const UpdatePasswordPage(),
     ),
   ];
 }

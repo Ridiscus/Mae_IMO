@@ -16,6 +16,7 @@ class Endpoints {
   static const String resetPassword = "/password/reset";
 
   static String agentDashboard = "/agent/dashboard";
+  static String inventories = "/agent/etats-lieu/warning";
   static String tenantByStatus(String status) => "/agent/locataires/$status";
 
   static String paymentsHistory(int tenantId) => "/tenant/$tenantId/paiements";

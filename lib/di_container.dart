@@ -3,6 +3,7 @@ import 'package:maelys_imo/core/manager/state/dashboard/dashboard_bloc.dart';
 import 'package:maelys_imo/core/manager/state/payment/payment_bloc.dart';
 import 'package:maelys_imo/core/manager/state/reset-password/reset_password_bloc.dart';
 import 'package:maelys_imo/core/manager/state/tenant/tenant_bloc.dart';
+import 'package:maelys_imo/core/services/Inventorie_service.dart';
 import 'package:maelys_imo/core/services/dashboard_service.dart';
 import 'package:maelys_imo/core/services/estate_service.dart';
 import 'package:maelys_imo/core/services/payment_service.dart';
@@ -14,6 +15,7 @@ import 'core/api_manager/api_client.dart' show ApiClient, LogoutRedirectConfig;
 import 'core/api_manager/endpoints.dart' show Endpoints;
 import 'core/manager/state/auth/auth_bloc.dart';
 import 'core/manager/state/estate/estate_bloc.dart';
+import 'core/manager/state/inventories/inventories_bloc.dart';
 import 'core/manager/token_manager.dart';
 import 'core/services/auth_service.dart';
 import 'main.dart' show navigatorKey;
@@ -68,6 +70,10 @@ Future<void> _initBlocs() async {
   getIt.registerLazySingleton<TenantBloc>(
     () => TenantBloc(service: getIt<TenantService>()),
   );
+
+  getIt.registerLazySingleton<InventoriesBloc>(
+    () => InventoriesBloc(service: getIt<InventorieService>()),
+  );
 }
 
 /// Initialise les services de l'application
@@ -87,28 +93,22 @@ Future<void> _initServices() async {
   );
 
   getIt.registerLazySingleton<DashboardService>(
-    () => DashboardServiceImpl(
-      apiClient: getIt<ApiClient>(),
-      endpoints: getIt<Endpoints>(),
-    ),
+    () => DashboardServiceImpl(apiClient: getIt<ApiClient>()),
   );
 
   getIt.registerLazySingleton<PaymentService>(
-    () => PaymentServiceImpl(
-      apiClient: getIt<ApiClient>(),
-      endpoints: getIt<Endpoints>(),
-    ),
+    () => PaymentServiceImpl(apiClient: getIt<ApiClient>()),
   );
 
   getIt.registerLazySingleton<ResetPasswordService>(
-    () => ResetPasswordServiceImpl(
-      apiClient: getIt<ApiClient>(),
-    ),
+    () => ResetPasswordServiceImpl(apiClient: getIt<ApiClient>()),
   );
 
   getIt.registerLazySingleton<TenantService>(
-    () => TenantServiceImpl(
-      apiClient: getIt<ApiClient>(),
-    ),
+    () => TenantServiceImpl(apiClient: getIt<ApiClient>()),
+  );
+
+  getIt.registerLazySingleton<InventorieService>(
+    () => InventorieServiceImpl(apiClient: getIt<ApiClient>()),
   );
 }

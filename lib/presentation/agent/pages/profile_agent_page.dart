@@ -6,6 +6,9 @@ import 'package:maelys_imo/presentation/portal/pages/portal_page.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
 
 import '../../../core/domain/models/index.dart';
+import '../../../core/manager/state/auth/auth_bloc.dart';
+import '../../../shared/widgets/pages/update_email_page.dart';
+import '../../../shared/widgets/pages/update_password_page.dart';
 
 class ProfileAgentPage extends StatefulWidget {
   static const routeName = 'profileAgent';
@@ -39,25 +42,25 @@ class _ProfileAgentPageState extends State<ProfileAgentPage> {
 
     // Define edit options for agent
     final List<ProfileEditOption> editOptions = [
-      ProfileEditOption(
-        icon: Icons.adaptive.flip_camera_rounded,
-        title: 'Modifier ma photo',
-        onTap: () {
-          // Handle photo edit
-        },
-      ),
+      // ProfileEditOption(
+      //   icon: Icons.adaptive.flip_camera_rounded,
+      //   title: 'Modifier ma photo',
+      //   onTap: () {
+      //     // Handle photo edit
+      //   },
+      // ),
       ProfileEditOption(
         icon: Icons.alternate_email,
         title: 'Modifier mon email',
         onTap: () {
-          // Handle email edit
+          context.pushNamed(UpdateEmailPage.routeName);
         },
       ),
       ProfileEditOption(
         icon: Icons.lock_outline,
         title: 'Modifier mon mot de passe',
         onTap: () {
-          // Handle password edit
+          context.pushNamed(UpdatePasswordPage.routeName);
         },
       ),
 
@@ -65,6 +68,7 @@ class _ProfileAgentPageState extends State<ProfileAgentPage> {
         icon: Icons.logout_outlined,
         title: 'Déconnexion',
         onTap: () {
+          context.read<AuthBloc>().add(LogoutEvent());
           context.goNamed(PortalPage.routeName);
         },
       ),

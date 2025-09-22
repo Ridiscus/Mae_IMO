@@ -5,8 +5,8 @@ import 'package:maelys_imo/core/constants/app_colors.dart';
 import 'package:maelys_imo/core/manager/state/auth/auth_bloc.dart';
 import 'package:maelys_imo/presentation/portal/pages/portal_detail_page.dart';
 import 'package:maelys_imo/presentation/portal/pages/portal_page.dart';
-import 'package:maelys_imo/presentation/tenant/pages/update_email_page.dart';
-import 'package:maelys_imo/presentation/tenant/pages/update_password_page.dart';
+import 'package:maelys_imo/shared/widgets/pages/update_email_page.dart';
+import 'package:maelys_imo/shared/widgets/pages/update_password_page.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
 
 import '../../../core/domain/models/index.dart';

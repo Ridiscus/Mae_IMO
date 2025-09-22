@@ -17,9 +17,8 @@ abstract interface class PaymentService {
 
 class PaymentServiceImpl implements PaymentService {
   final ApiClient apiClient;
-  final Endpoints endpoints;
 
-  PaymentServiceImpl({required this.apiClient, required this.endpoints});
+  PaymentServiceImpl({required this.apiClient});
 
   @override
   Future<ApiResponse<List<PaymentHistoryModel>>> paymentHistory({

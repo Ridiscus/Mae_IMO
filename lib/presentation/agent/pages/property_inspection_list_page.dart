@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:maelys_imo/core/constants/app_colors.dart';
+import 'package:maelys_imo/core/domain/models/index.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
 import 'package:maelys_imo/presentation/agent/pages/property_inspection_detail_page.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+
+import '../../../core/domain/models/responses/Inventorie_model_response.dart';
+import '../../../core/manager/state/inventories/inventories_bloc.dart';
 
 class PropertyInspectionListPage extends StatefulWidget {
   static const routeName = 'propertyInspectionList';
@@ -48,8 +54,19 @@ class _PropertyInspectionListPageState
     },
   ];
 
+  List<TenantItemModel> _inventories = [];
+  bool _isLoading = false;
+  int _total = 0;
+
   @override
   Widget build(BuildContext context) {
+    final _inventoriesState = context.select(
+      (InventoriesBloc bloc) => bloc.state,
+    );
+    _isLoading = _inventoriesState.isLoading ?? false;
+    _inventories = _inventoriesState.inventories?.locataires ?? [];
+    _total = _inventoriesState.inventories?.total ?? 0;
+
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(
         statusBarColor: AppColors.primary,
@@ -65,13 +82,15 @@ class _PropertyInspectionListPageState
   }
 
   Widget _buildContent() {
-    return _inspections.isEmpty
+    return _inventories.isEmpty
         ? _buildEmptyState()
         : Column(
           children: [
-            ..._inspections
+            ..._inventories
                 .map((inspection) {
-                  return _buildInspectionCard(inspection);
+                  return Skeletonizer(
+                      enabled: _isLoading,
+                      child: _buildInspectionCard(inspection));
                 })
                 .expand((element) => [element, CustomSpacer()]),
           ],
@@ -112,13 +131,13 @@ class _PropertyInspectionListPageState
     );
   }
 
-  Widget _buildInspectionCard(Map<String, dynamic> inspection) {
+  Widget _buildInspectionCard(TenantItemModel inspection) {
     return GestureDetector(
       onTap: () {
         // Navigate to inspection detail page
         context.pushNamed(
           PropertyInspectionDetailPage.routeName,
-          pathParameters: {'id': inspection['id']},
+          pathParameters: {'id': inspection.id.toString()},
         );
       },
       child: Container(
@@ -144,7 +163,7 @@ class _PropertyInspectionListPageState
                 children: [
                   Expanded(
                     child: Text(
-                      inspection['propertyName'],
+                      inspection.title,
                       style:
                           TextStyle(
                             fontSize: 18.sp,
@@ -163,7 +182,7 @@ class _PropertyInspectionListPageState
                       borderRadius: BorderRadius.circular(20.r),
                     ),
                     child: Text(
-                      inspection['status'],
+                      inspection.statusEtatEntre ?? "",
                       style:
                           TextStyle(
                             fontSize: 12.sp,
@@ -177,14 +196,14 @@ class _PropertyInspectionListPageState
               SizedBox(height: 12.sp),
               _buildInfoRow(
                 Icons.person_outline,
-                'Locataire: ${inspection['tenantName']}',
+                'Locataire: ${inspection.fullName}',
               ),
               SizedBox(height: 8.sp),
-              _buildInfoRow(Icons.location_on_outlined, inspection['address']),
+              _buildInfoRow(Icons.location_on_outlined, inspection.communeBien ?? ''),
               SizedBox(height: 8.sp),
               _buildInfoRow(
                 Icons.calendar_today_outlined,
-                'Prévu le: ${inspection['date']}',
+                'Prévu le: ${inspection.dateEtatLieu}',
               ),
             ],
           ),

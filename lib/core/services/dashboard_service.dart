@@ -17,9 +17,8 @@ abstract interface class DashboardService {
 
 class DashboardServiceImpl implements DashboardService {
   final ApiClient apiClient;
-  final Endpoints endpoints;
 
-  DashboardServiceImpl({required this.apiClient, required this.endpoints});
+  DashboardServiceImpl({required this.apiClient});
 
   @override
   Future<ApiResponse<TenantDashboardModel>> tenantDashboard() async {

@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:maelys_imo/routes/agent_routes.dart';
+import 'package:maelys_imo/routes/profile_routes.dart';
 import 'package:maelys_imo/routes/starter_routes.dart';
 import 'package:maelys_imo/routes/tenant_routes.dart';
 import 'package:maelys_imo/routes/tenant_shell_routes.dart';
@@ -73,6 +74,7 @@ class AppRoute {
       ...TenantShellRoutes.routes, // Utilisation des routes shell pour le tenant
       ...TenantRoutes.routes,      // Garder les routes tenant pour les pages hors shell
       ...AgentRoutes.routes,
+      ...ProfileRoutes.routes,
     ],
   );
 }

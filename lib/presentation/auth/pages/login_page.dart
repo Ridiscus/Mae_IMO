@@ -28,10 +28,10 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController(
-    text: kDebugMode ? "":  "MA935006",
+    text:"MA935006-AGT962609",
   );
   final TextEditingController _passwordController = TextEditingController(
-    text: kDebugMode ? "": "12345678",
+    text:"123456789",
   );
   bool _obscureText = true;
 
@@ -180,6 +180,7 @@ class _LoginPageState extends State<LoginPage> {
               current.failure == null,
       listener: (context, state) {
         if (state.userModel!.isCollectionAgent) {
+          context.read<DashboardBloc>().add(FetchAgentDashboardEvent());
           context.goNamed(HomeAgentPage.routeName);
           return;
         }

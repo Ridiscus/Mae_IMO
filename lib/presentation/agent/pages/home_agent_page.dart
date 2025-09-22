@@ -300,7 +300,9 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
       arrowColor: AppColors.primary,
       valueColor: AppColors.primary,
       onTap: () {
-        // Navigate to property inspection list
+
+
+
         context.pushNamed(PropertyInspectionListPage.routeName);
       },
     );
