@@ -68,14 +68,25 @@ class PaymentBloc extends HydratedBloc<PaymentEvent, PaymentState> {
         request: event.dto,
       );
       if (result.success) {
-        showToast(
-          msg: result.message ?? 'Paiement effectué avec succès',
-          type: ToastificationType.success,
-        );
-        emit(state.copyWith(isLoading: false, paymentSuccess: true));
+        if (result.data?.cinetpayData != null) {
+          emit(
+            state.copyWith(
+              isLoading: false,
+              paymentSuccess: true,
+              cinetpayData: result.data?.cinetpayData,
+            ),
+          );
+        }
 
-        // Déclencher automatiquement la récupération de l'historique des paiements
-        add(FetchHistoryPaymentEvent(tenantId: event.tenantId));
+        if (result.data?.paiement != null) {
+          showToast(
+            msg: result.message ?? 'Paiement effectué avec succès',
+            type: ToastificationType.success,
+          );
+          emit(state.copyWith(isLoading: false, paymentSuccess: true));
+          add(FetchHistoryPaymentEvent(tenantId: event.tenantId));
+        }
+
       } else {
         showToast(msg: result.message!);
         emit(
@@ -96,7 +107,6 @@ class PaymentBloc extends HydratedBloc<PaymentEvent, PaymentState> {
       }
     }
   }
-
 
   @override
   PaymentState? fromJson(Map<String, dynamic> json) {

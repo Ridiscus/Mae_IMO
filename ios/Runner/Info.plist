@@ -87,5 +87,7 @@
     <array>
         <string>applinks:maelysimo.com</string>
     </array>
+    <key>NSAllowsArbitraryLoads</key>
+    <true/>
 </dict>
 </plist>

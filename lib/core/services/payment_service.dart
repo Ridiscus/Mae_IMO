@@ -9,7 +9,7 @@ abstract interface class PaymentService {
     required int tenantId,
   });
 
-  Future<ApiResponse<Map<String, dynamic>>> makePayment({
+  Future<ApiResponse<InitPaymentModel>> makePayment({
     required int tenantId,
     required MakePaymentRequest request,
   });
@@ -44,7 +44,7 @@ class PaymentServiceImpl implements PaymentService {
   }
 
   @override
-  Future<ApiResponse<Map<String, dynamic>>> makePayment({
+  Future<ApiResponse<InitPaymentModel>> makePayment({
     required int tenantId,
     required MakePaymentRequest request,
   }) async {
@@ -56,6 +56,7 @@ class PaymentServiceImpl implements PaymentService {
     if (response.success) {
       return ApiResponse.success(
         message: response.data['message'] ?? "Paiement enregistré avec succès",
+        data: InitPaymentModel.fromMap(response.data),
       );
     }
     return ApiResponse.error(

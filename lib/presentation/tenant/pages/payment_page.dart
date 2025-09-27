@@ -1,5 +1,7 @@
+import 'dart:developer' as console;
 import 'dart:io';
 
+import 'package:cinetpay/cinetpay.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +17,9 @@ import 'package:maelys_imo/core/manager/state/payment/payment_bloc.dart';
 import 'package:maelys_imo/core/utils/toast/notification_toast.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
 
+import '../../../core/domain/models/index.dart';
 import '../../../core/domain/requests/index.dart';
+import 'checkout_cinetpay_page.dart';
 
 class PaymentPage extends StatefulWidget {
   static const routeName = 'payment';
@@ -38,6 +42,12 @@ class _PaymentPageState extends State<PaymentPage> {
   String? selectedFileName;
   FocusNode _focusNode = FocusNode();
 
+  bool isLoading = false;
+
+  TenantDashboardModel? dashboardModel;
+
+  UserModel? userModel;
+
   @override
   void dispose() {
     _transactionIdController.dispose();
@@ -46,9 +56,30 @@ class _PaymentPageState extends State<PaymentPage> {
 
   @override
   Widget build(BuildContext context) {
-    return PageWithHeaderLayout(
-      headerContent: _buildHeaderContent(),
-      bodyContent: Form(key: _formKey, child: _buildPaymentForm()),
+      dashboardModel = context.select(
+          (DashboardBloc bloc) => bloc.state.tenantDashboardModel,
+    );
+       userModel = context.select((AuthBloc bloc) => bloc.state.userModel);
+
+    return BlocConsumer<PaymentBloc, PaymentState>(
+      listener: (context, state) {
+        setState(() {
+          isLoading = state.isLoading;
+        });
+
+        if (state.paymentSuccess == true && state.cinetpayData == null) {
+          _resetForm();
+        }
+        if(state.cinetpayData != null){
+          context.pushNamed(CheckoutCinetpayPage.routeName);
+        }
+      },
+      builder: (context, state) {
+        return PageWithHeaderLayout(
+          headerContent: _buildHeaderContent(),
+          bodyContent: Form(key: _formKey, child: _buildPaymentForm()),
+        );
+      },
     );
   }
 
@@ -91,9 +122,7 @@ class _PaymentPageState extends State<PaymentPage> {
   }
 
   Widget _buildSummarySection() {
-    final dashboardModel = context.select(
-      (DashboardBloc bloc) => bloc.state.tenantDashboardModel,
-    );
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -252,36 +281,25 @@ class _PaymentPageState extends State<PaymentPage> {
   }
 
   Widget _buildPaymentButton() {
-    final userModel = context.select((AuthBloc bloc) => bloc.state.userModel);
 
-    return BlocConsumer<PaymentBloc, PaymentState>(
-      listener: (context, state) {
-        if (state.paymentSuccess == true) {
-          _resetForm();
-        }
-      },
-      builder: (context, state) {
-        final isLoading = state.isLoading ?? false;
-        return Container(
-          margin: EdgeInsets.symmetric(horizontal: 16.sp),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              CustomButton(
-                isLoading: isLoading,
-                text: 'Payer mon loyer',
-                onPressed: () {
-                  if (_canSubmitPayment()) {
-                    _submitPayment(userModel?.id);
-                  }
-                },
-                showArrow: !isLoading,
-                assetPath: Assets.monney,
-              ),
-            ],
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 16.sp),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          CustomButton(
+            isLoading: isLoading,
+            text: 'Payer mon loyer',
+            onPressed: () {
+              if (_canSubmitPayment()) {
+                _submitPayment(userModel?.id);
+              }
+            },
+            showArrow: !isLoading,
+            assetPath: Assets.monney,
           ),
-        );
-      },
+        ],
+      ),
     );
   }
 

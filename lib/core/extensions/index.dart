@@ -19,3 +19,5 @@ part 'estate_ext.dart';
 part 'tenant_dashboard_ext.dart';
 part 'tenant_item_ext.dart';
 
+part 'cinetpay_ext.dart';
+

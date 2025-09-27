@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart' show GoRoute;
 import 'package:maelys_imo/shared/widgets/pages/update_email_page.dart';
 
+import '../presentation/tenant/pages/checkout_cinetpay_page.dart';
 import '../presentation/tenant/pages/contact_agency_page.dart';
 import '../presentation/tenant/pages/dashboard_tenant_page.dart';
 import '../presentation/tenant/pages/payment_page.dart';
@@ -27,6 +28,11 @@ class TenantRoutes {
       name: PaymentPage.routeName,
       path: PaymentPage.routePath,
       builder: (context, state) => const PaymentPage(),
+    ),
+    GoRoute(
+      name: CheckoutCinetpayPage.routeName,
+      path: CheckoutCinetpayPage.routePath,
+      builder: (context, state) => const CheckoutCinetpayPage(),
     ),
     GoRoute(
       name: ContactAgencyPage.routeName,
