@@ -188,63 +188,56 @@ class Metadata {
 
 class Paiement {
   final int? id;
-  final int? montant;
-  final DateTime? datePaiement;
+  final dynamic montant;
+  // final DateTime? datePaiement;
   final String? moisCouvert;
   final String? methodePaiement;
   final String? statut;
   final String? reference;
-  final String? transactionId;
-  final String? proofPath;
-  final int? locataireId;
-  final int? bienId;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
+  // final String? transactionId;
+  // final String? proofPath;
+  // final int? locataireId;
+  // final int? bienId;
+  // final DateTime? createdAt;
+  // final DateTime? updatedAt;
 
   Paiement({
     this.id,
     this.montant,
-    this.datePaiement,
+    // this.datePaiement,
     this.moisCouvert,
     this.methodePaiement,
     this.statut,
     this.reference,
-    this.transactionId,
-    this.proofPath,
-    this.locataireId,
-    this.bienId,
-    this.createdAt,
-    this.updatedAt,
+    // this.transactionId,
+    // this.proofPath,
+    // this.locataireId,
+    // this.bienId,
+    // this.createdAt,
+    // this.updatedAt,
   });
 
   Paiement copyWith({
     int? id,
     int? montant,
-    DateTime? datePaiement,
     String? moisCouvert,
     String? methodePaiement,
     String? statut,
     String? reference,
-    String? transactionId,
-    String? proofPath,
-    int? locataireId,
-    int? bienId,
-    DateTime? createdAt,
-    DateTime? updatedAt,
   }) => Paiement(
     id: id ?? this.id,
     montant: montant ?? this.montant,
-    datePaiement: datePaiement ?? this.datePaiement,
+    // datePaiement: datePaiement ?? this.datePaiement,
     moisCouvert: moisCouvert ?? this.moisCouvert,
     methodePaiement: methodePaiement ?? this.methodePaiement,
     statut: statut ?? this.statut,
     reference: reference ?? this.reference,
-    transactionId: transactionId ?? this.transactionId,
-    proofPath: proofPath ?? this.proofPath,
-    locataireId: locataireId ?? this.locataireId,
-    bienId: bienId ?? this.bienId,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
+    // transactionId: transactionId ?? this.transactionId,
+    // proofPath: proofPath ?? this.proofPath,
+    // locataireId: locataireId ?? this.locataireId,
+    // bienId: bienId ?? this.bienId,
+    // createdAt: createdAt ?? this.createdAt,
+    // updatedAt: updatedAt ?? this.updatedAt,
   );
 
   factory Paiement.fromJson(String str) => Paiement.fromMap(json.decode(str));
@@ -254,37 +247,30 @@ class Paiement {
   factory Paiement.fromMap(Map<String, dynamic> json) => Paiement(
     id: json["id"],
     montant: json["montant"],
-    datePaiement:
-        json["date_paiement"] == null
-            ? null
-            : DateTime.parse(json["date_paiement"]),
+    // datePaiement:
+    //     json["date_paiement"] == null
+    //         ? null
+    //         : DateTime.parse(json["date_paiement"]),
     moisCouvert: json["mois_couvert"],
     methodePaiement: json["methode_paiement"],
     statut: json["statut"],
     reference: json["reference"],
-    transactionId: json["transaction_id"],
-    proofPath: json["proof_path"],
-    locataireId: json["locataire_id"],
-    bienId: json["bien_id"],
-    createdAt:
-        json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
-    updatedAt:
-        json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
+    // transactionId: json["transaction_id"],
+    // proofPath: json["proof_path"],
+    // locataireId: json["locataire_id"],
+    // bienId: json["bien_id"],
+    // createdAt:
+    //     json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
+    // updatedAt:
+    //     json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
   );
 
   Map<String, dynamic> toMap() => {
     "id": id,
     "montant": montant,
-    "date_paiement": datePaiement?.toIso8601String(),
     "mois_couvert": moisCouvert,
     "methode_paiement": methodePaiement,
     "statut": statut,
     "reference": reference,
-    "transaction_id": transactionId,
-    "proof_path": proofPath,
-    "locataire_id": locataireId,
-    "bien_id": bienId,
-    "created_at": createdAt?.toIso8601String(),
-    "updated_at": updatedAt?.toIso8601String(),
   };
 }

@@ -1,13 +1,14 @@
-import 'dart:developer' as console;
-
 import 'package:cinetpay/cinetpay.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:maelys_imo/core/constants/app_colors.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
 import 'package:maelys_imo/core/manager/state/payment/payment_bloc.dart';
 import 'package:maelys_imo/core/utils/toast/notification_toast.dart';
 import 'package:toastification/toastification.dart';
+
+import 'home_tenant_page.dart';
 
 class CheckoutCinetpayPage extends StatefulWidget {
   static const routeName = 'CheckoutCinetpay';
@@ -40,32 +41,30 @@ class _CheckoutCinetpayPageState extends State<CheckoutCinetpayPage> {
             configData: state.cinetpayData!.configData,
             paymentData: state.cinetpayData!.paymentData,
             waitResponse: (Map<String, dynamic> response) {
-              console.log(
-                "response :: ${response.toString()}",
-                name: "CinetPayCheckout",
-              );
+              print("CinetPayCheckout response :: ${response.toString()}");
               if (response.containsKey("status")) {
                 if (response["status"].toString() == "ACCEPTED") {
                   showToast(
                     msg: "Votre paiement a été effectué avec succès",
                     type: ToastificationType.success,
                   );
+                  context.goNamed(HomeTenantPage.routeName);
                 } else {
                   showToast(msg: "Votre paiement a echoué");
+                  context.pop();
                 }
               } else {
                 showToast(
                   msg: "Paiement en attente",
                   type: ToastificationType.warning,
                 );
+                context.goNamed(HomeTenantPage.routeName);
               }
             },
             onError: (error) {
-              console.log(
-                "error :: ${error.toString()}",
-                name: "CinetPayCheckout",
-              );
+              print("CinetPayCheckout error :: ${error.toString()}");
               showToast(msg: "Une erreur est survenue");
+              context.pop();
             },
           ),
         );
