@@ -10,7 +10,6 @@ import 'package:maelys_imo/presentation/agent/pages/property_inspection_detail_p
 import 'package:maelys_imo/shared/widgets/index.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-import '../../../core/domain/models/responses/Inventorie_model_response.dart';
 import '../../../core/manager/state/inventories/inventories_bloc.dart';
 
 class PropertyInspectionListPage extends StatefulWidget {
@@ -27,36 +26,17 @@ class PropertyInspectionListPage extends StatefulWidget {
 class _PropertyInspectionListPageState
     extends State<PropertyInspectionListPage> {
   // Sample data - to be replaced with actual data from API
-  final List<Map<String, dynamic>> _inspections = [
-    {
-      'id': '1',
-      'propertyName': 'Villa Marcory',
-      'tenantName': 'John Doe',
-      'address': 'Marcory, Abidjan',
-      'date': '15/08/2025',
-      'status': 'En attente',
-    },
-    {
-      'id': '2',
-      'propertyName': 'Appartement Cocody',
-      'tenantName': 'Jane Smith',
-      'address': 'Cocody, Abidjan',
-      'date': '18/08/2025',
-      'status': 'En attente',
-    },
-    {
-      'id': '3',
-      'propertyName': 'Studio Yopougon',
-      'tenantName': 'Robert Johnson',
-      'address': 'Yopougon, Abidjan',
-      'date': '20/08/2025',
-      'status': 'En attente',
-    },
-  ];
 
   List<TenantItemModel> _inventories = [];
   bool _isLoading = false;
-  int _total = 0;
+
+  // int _total = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<InventoriesBloc>().add(FetchInventoriesEvent());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +45,7 @@ class _PropertyInspectionListPageState
     );
     _isLoading = _inventoriesState.isLoading ?? false;
     _inventories = _inventoriesState.inventories?.locataires ?? [];
-    _total = _inventoriesState.inventories?.total ?? 0;
+    // _total = _inventoriesState.inventories?.total ?? 0;
 
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(
@@ -89,8 +69,9 @@ class _PropertyInspectionListPageState
             ..._inventories
                 .map((inspection) {
                   return Skeletonizer(
-                      enabled: _isLoading,
-                      child: _buildInspectionCard(inspection));
+                    enabled: _isLoading,
+                    child: _buildInspectionCard(inspection),
+                  );
                 })
                 .expand((element) => [element, CustomSpacer()]),
           ],
@@ -199,7 +180,10 @@ class _PropertyInspectionListPageState
                 'Locataire: ${inspection.fullName}',
               ),
               SizedBox(height: 8.sp),
-              _buildInfoRow(Icons.location_on_outlined, inspection.communeBien ?? ''),
+              _buildInfoRow(
+                Icons.location_on_outlined,
+                "Lieu: ${inspection.communeBien ?? ''}",
+              ),
               SizedBox(height: 8.sp),
               _buildInfoRow(
                 Icons.calendar_today_outlined,

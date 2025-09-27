@@ -58,19 +58,6 @@
                 <data android:scheme="maelysimo" />
             </intent-filter>
 
-
-            <!-- Deep link intent filter for password reset -->
-<!--            <intent-filter android:autoVerify="true">-->
-<!--                <action android:name="android.intent.action.VIEW" />-->
-
-<!--                <category android:name="android.intent.category.DEFAULT" />-->
-<!--                <category android:name="android.intent.category.BROWSABLE" />-->
-
-<!--                <data-->
-<!--                    android:host="maelysimo.com"-->
-<!--                    android:pathPrefix="/api/password/reset"-->
-<!--                    android:scheme="https" />-->
-<!--            </intent-filter>-->
         </activity>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->

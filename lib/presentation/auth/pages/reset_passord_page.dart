@@ -6,10 +6,11 @@ import 'package:maelys_imo/core/domain/requests/index.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
 import 'package:maelys_imo/core/manager/state/reset-password/reset_password_bloc.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
+import 'package:pinput/pinput.dart';
 import 'package:toastification/toastification.dart';
 
+import '../../../core/constants/app_colors.dart';
 import '../../../core/utils/toast/notification_toast.dart';
-import '../../../di_container.dart';
 import 'login_page.dart';
 
 class ResetPasswordPage extends StatefulWidget {
@@ -24,18 +25,18 @@ class ResetPasswordPage extends StatefulWidget {
 
 class _ResetPasswordPageState extends State<ResetPasswordPage> {
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
+  final _pinController = TextEditingController();
+
+  final TextEditingController _codeIdController = TextEditingController();
 
   bool showPassword = false;
-  
-  // Paramètres du deeplink
-  String? token;
-  String? codeId;
-  String? type;
 
   @override
   void initState() {
     super.initState();
+    _extractDeepLinkParams();
   }
 
   @override
@@ -48,6 +49,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   void dispose() {
     _passwordController.dispose();
     _confirmPasswordController.dispose();
+    _pinController.dispose();
     super.dispose();
   }
 
@@ -55,88 +57,41 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     // Extraire les paramètres du deeplink depuis GoRouter
     try {
       final state = GoRouterState.of(context);
-      token = state.uri.queryParameters['token'];
-      codeId = state.uri.queryParameters['code_id'];
-      type = state.uri.queryParameters['type'];
-      
-      // Log pour debug
-      print('Reset Password Params from GoRouter:');
-      print('- Token: $token');
-      print('- CodeId: $codeId');
-      print('- Type: $type');
-      print('- Full URI: ${state.uri}');
-      
-      // Fallback vers des valeurs par défaut pour les tests si aucun paramètre n'est fourni
-      if (token == null || codeId == null || type == null) {
-        print('Aucun paramètre de deeplink trouvé, utilisation des valeurs de test');
-        token = "sample_token";
-        codeId = "sample_code_id"; 
-        type = "tenant";
+      var codeId = state.uri.queryParameters['code_id'];
+      if ((codeId ?? "").isNotEmpty) {
+        setState(() {
+          _codeIdController.text = codeId!;
+        });
       }
+      // Log pour debug
     } catch (e) {
       // En cas d'erreur, utiliser des valeurs par défaut pour les tests
       print('Erreur lors de l\'extraction des paramètres: $e');
-      token = "sample_token";
-      codeId = "sample_code_id"; 
-      type = "tenant";
     }
-    
-    // Log final pour debug
-    print('Final Reset Password Params - Token: $token, CodeId: $codeId, Type: $type');
   }
 
   String? _validatePassword(String password) {
-    if (password.length < 8) {
+    if (password.trim().length < 4) {
       return 'Le mot de passe doit contenir au moins 8 caractères';
     }
-    
-    if (!password.contains(RegExp(r'[A-Z]'))) {
-      return 'Le mot de passe doit contenir au moins une lettre majuscule';
-    }
-    
-    if (!password.contains(RegExp(r'[a-z]'))) {
-      return 'Le mot de passe doit contenir au moins une lettre minuscule';
-    }
-    
-    if (!password.contains(RegExp(r'[0-9]'))) {
-      return 'Le mot de passe doit contenir au moins un chiffre';
-    }
-    
-    if (!password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
-      return 'Le mot de passe doit contenir au moins un caractère spécial';
-    }
-    
-    return null; // Password is valid
-  }
 
-  Widget _buildPasswordRequirements() {
-    return Container(
-      padding: EdgeInsets.all(12.r),
-      decoration: BoxDecoration(
-        color: Colors.grey[50],
-        borderRadius: BorderRadius.circular(8.r),
-        border: Border.all(color: Colors.grey[300]!),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Exigences du mot de passe :',
-            style: TextStyle(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w600,
-              color: Colors.grey[700],
-            ).sourceSansProSemiBold,
-          ),
-          SizedBox(height: 8.h),
-          _buildRequirementItem('Au moins 8 caractères'),
-          _buildRequirementItem('Au moins une lettre majuscule (A-Z)'),
-          _buildRequirementItem('Au moins une lettre minuscule (a-z)'),
-          _buildRequirementItem('Au moins un chiffre (0-9)'),
-          _buildRequirementItem('Au moins un caractère spécial (!@#\$%^&*...)'),
-        ],
-      ),
-    );
+    // if (!password.contains(RegExp(r'[A-Z]'))) {
+    //   return 'Le mot de passe doit contenir au moins une lettre majuscule';
+    // }
+
+    // // if (!password.contains(RegExp(r'[a-z]'))) {
+    // //   return 'Le mot de passe doit contenir au moins une lettre minuscule';
+    // // }
+    // //
+    // // if (!password.contains(RegExp(r'[0-9]'))) {
+    // //   return 'Le mot de passe doit contenir au moins un chiffre';
+    // // }
+    //
+    // if (!password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
+    //   return 'Le mot de passe doit contenir au moins un caractère spécial';
+    // }
+
+    return null; // Password is valid
   }
 
   Widget _buildRequirementItem(String requirement) {
@@ -144,19 +99,16 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
       padding: EdgeInsets.symmetric(vertical: 2.h),
       child: Row(
         children: [
-          Icon(
-            Icons.check_circle_outline,
-            size: 16.r,
-            color: Colors.grey[600],
-          ),
+          Icon(Icons.check_circle_outline, size: 16.r, color: Colors.grey[600]),
           SizedBox(width: 8.w),
           Expanded(
             child: Text(
               requirement,
-              style: TextStyle(
-                fontSize: 12.sp,
-                color: Colors.grey[600],
-              ).sourceSansProRegular,
+              style:
+                  TextStyle(
+                    fontSize: 12.sp,
+                    color: Colors.grey[600],
+                  ).sourceSansProRegular,
             ),
           ),
         ],
@@ -166,12 +118,9 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => getIt<ResetPasswordBloc>(),
-      child: FormWithHeaderLayout(
-        headerTitle: 'Réinitialiser le mot de passe',
-        content: _buildResetForm(),
-      ),
+    return FormWithHeaderLayout(
+      headerTitle: 'Réinitialiser le mot de passe',
+      content: _buildResetForm(),
     );
   }
 
@@ -198,6 +147,10 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
               ).sourceSansProRegular,
         ),
         SizedBox(height: 32.r),
+        _buildInputIdField(),
+        CustomSpacer(),
+        _buildPinInput(),
+        CustomSpacer(),
         _buildNewPasswordField(),
         // SizedBox(height: 16.r),
         // _buildPasswordRequirements(),
@@ -206,6 +159,29 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
         Spacer(),
         _buildResetButton(),
         SizedBox(height: 24.r),
+      ],
+    );
+  }
+
+  Widget _buildInputIdField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Identifiant",
+          style:
+              TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ).sourceSansProBold,
+        ),
+        SizedBox(height: 8.h),
+        CustomInputTextFactory.createTextInput(
+          controller: _codeIdController,
+          hintText: 'Entrez votre identifiant de connexion',
+          readOnly: true,
+        ),
       ],
     );
   }
@@ -266,10 +242,69 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     );
   }
 
+  Widget _buildPinInput() {
+    final defaultPinTheme = PinTheme(
+      width: 60.w,
+      height: 60.w,
+      textStyle:
+          TextStyle(
+            fontSize: 16.sp,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ).sourceSansProBold,
+      decoration: BoxDecoration(
+        color: Colors.grey.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
+      ),
+    );
+
+    final focusedPinTheme = defaultPinTheme.copyWith(
+      decoration: defaultPinTheme.decoration!.copyWith(
+        border: Border.all(color: AppColors.primary),
+      ),
+    );
+
+    final errorPinTheme = defaultPinTheme.copyWith(
+      decoration: defaultPinTheme.decoration!.copyWith(
+        border: Border.all(color: Colors.red),
+      ),
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Saisissez le code de validation',
+          style:
+              TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ).sourceSansProBold,
+        ),
+        CustomSpacer(),
+        Pinput(
+          controller: _pinController,
+          length: 6,
+          defaultPinTheme: defaultPinTheme,
+          focusedPinTheme: focusedPinTheme,
+          errorPinTheme: errorPinTheme,
+          obscureText: false,
+          onTapOutside: (event) {
+            FocusScope.of(context).unfocus();
+          },
+          pinputAutovalidateMode: PinputAutovalidateMode.disabled,
+        ),
+      ],
+    );
+  }
+
   Widget _buildResetButton() {
     return BlocConsumer<ResetPasswordBloc, ResetPasswordState>(
-      listenWhen: (previous, current) => 
-          current.passwordReset != null || current.failure != null,
+      listenWhen:
+          (previous, current) =>
+              current.passwordReset != null || current.failure != null,
       listener: (context, state) {
         if (state.passwordReset == true) {
           // Rediriger vers la page de connexion après succès
@@ -286,10 +321,11 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
           );
         }
       },
-      buildWhen: (previous, current) => 
-          current.passwordReset != null || 
-          current.isLoading != previous.isLoading ||
-          current.failure != previous.failure,
+      buildWhen:
+          (previous, current) =>
+              current.passwordReset != null ||
+              current.isLoading != previous.isLoading ||
+              current.failure != previous.failure,
       builder: (context, state) {
         return CustomButton(
           text: 'Réinitialiser le mot de passe',
@@ -305,6 +341,10 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
               showToast(msg: 'Veuillez confirmer votre mot de passe');
               return;
             }
+            if (_pinController.text.isEmpty) {
+              showToast(msg: 'Veuillez saisir le code de confirmation');
+              return;
+            }
 
             if (_passwordController.text != _confirmPasswordController.text) {
               showToast(msg: 'Les mots de passe ne correspondent pas');
@@ -312,15 +352,11 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
             }
 
             // Validation avancée du mot de passe
-            final passwordValidation = _validatePassword(_passwordController.text);
+            final passwordValidation = _validatePassword(
+              _passwordController.text,
+            );
             if (passwordValidation != null) {
               showToast(msg: passwordValidation);
-              return;
-            }
-
-            // Vérifier que les paramètres du deeplink sont disponibles
-            if (token == null || codeId == null || type == null) {
-              showToast(msg: 'Paramètres de réinitialisation manquants');
               return;
             }
 
@@ -328,11 +364,9 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
             context.read<ResetPasswordBloc>().add(
               ResetPasswordWithTokenEvent(
                 dto: ResetPasswordRequest(
-                  token: token!,
-                  codeId: codeId!,
-                  type: type!,
+                  codeId: _codeIdController.text,
                   password: _passwordController.text,
-                  passwordConfirmation: _confirmPasswordController.text,
+                  otp: _pinController.text,
                 ),
               ),
             );
@@ -346,6 +380,37 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
               ).sourceSansProBold,
         );
       },
+    );
+  }
+
+  Widget _buildPasswordRequirements() {
+    return Container(
+      padding: EdgeInsets.all(12.r),
+      decoration: BoxDecoration(
+        color: Colors.grey[50],
+        borderRadius: BorderRadius.circular(8.r),
+        border: Border.all(color: Colors.grey[300]!),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Exigences du mot de passe :',
+            style:
+                TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.grey[700],
+                ).sourceSansProSemiBold,
+          ),
+          SizedBox(height: 8.h),
+          _buildRequirementItem('Au moins 8 caractères'),
+          _buildRequirementItem('Au moins une lettre majuscule (A-Z)'),
+          _buildRequirementItem('Au moins une lettre minuscule (a-z)'),
+          _buildRequirementItem('Au moins un chiffre (0-9)'),
+          _buildRequirementItem('Au moins un caractère spécial (!@#\$%^&*...)'),
+        ],
+      ),
     );
   }
 }

@@ -33,8 +33,10 @@ class _PaymentPageState extends State<PaymentPage> {
   String? selectedPaymentMethod;
   final TextEditingController _transactionIdController =
       TextEditingController();
+  final TextEditingController _numberMonthControler = TextEditingController();
   File? selectedFile;
   String? selectedFileName;
+  FocusNode _focusNode = FocusNode();
 
   @override
   void dispose() {
@@ -75,7 +77,7 @@ class _PaymentPageState extends State<PaymentPage> {
       children: [
         _buildSummarySection(),
         CustomSpacer(space: 2),
-        _buildDatePicker(),
+        _buildNumberMonthField(),
         CustomSpacer(),
         _buildPaymentMethodPicker(),
         if (selectedPaymentMethod != null) ...[
@@ -142,12 +144,12 @@ class _PaymentPageState extends State<PaymentPage> {
     );
   }
 
-  Widget _buildDatePicker() {
+  Widget _buildNumberMonthField() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Sélectionnez le mois à payer',
+          'Sélectionnez le nombre de mois à payer',
           style:
               TextStyle(
                 fontSize: 18.r,
@@ -156,7 +158,26 @@ class _PaymentPageState extends State<PaymentPage> {
               ).sourceSansProSemiBold,
         ),
         SizedBox(height: 12.r),
-        InkWell(
+
+        CustomInputTextFactory.createTextNumberInput(
+          isRequired: true,
+          controller: _numberMonthControler,
+          focusNode: _focusNode,
+          hintText: "Entrez le noombre de mpois à payé",
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return "Le nombre de mois est obligatoire";
+            }
+            if (int.tryParse(value) == null) {
+              return "Le nombre de mois doit être un nombre";
+            }
+            if (int.tryParse(value) == 0) {
+              return "Le nombre de mois doit être supérieur à 0";
+            }
+            return null;
+          },
+        ),
+        /*InkWell(
           onTap: () => _selectDate(context),
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 16.r, vertical: 12.r),
@@ -179,7 +200,7 @@ class _PaymentPageState extends State<PaymentPage> {
               ],
             ),
           ),
-        ),
+        ),*/
       ],
     );
   }
@@ -265,11 +286,12 @@ class _PaymentPageState extends State<PaymentPage> {
   }
 
   Widget _buildConditionalFields() {
-    if (selectedPaymentMethod == 'mobile_money') {
-      return _buildTransactionIdField();
-    } else if (selectedPaymentMethod == 'virement') {
+    if (selectedPaymentMethod == 'virement') {
       return _buildFilePickerField();
     }
+    // else if (selectedPaymentMethod == 'mobile_money') {
+    //   return _buildTransactionIdField();
+    // }
     return const SizedBox.shrink();
   }
 
@@ -429,16 +451,15 @@ class _PaymentPageState extends State<PaymentPage> {
   }
 
   bool _canSubmitPayment() {
+    if (_numberMonthControler.text.isEmpty) return false;
+
     if (selectedPaymentMethod == null) return false;
 
-    if (selectedPaymentMethod == 'mobile_money') {
-      return _transactionIdController.text.isNotEmpty &&
-          _transactionIdController.text.length >= 5;
-    } else if (selectedPaymentMethod == 'virement') {
+    if (selectedPaymentMethod == 'virement') {
       return selectedFile != null;
     }
 
-    return false;
+    return true;
   }
 
   Future<void> _submitPayment(int? userId) async {
@@ -457,17 +478,10 @@ class _PaymentPageState extends State<PaymentPage> {
     }
 
     // Validation spécifique pour mobile money
-    if (selectedPaymentMethod == 'mobile_money') {
-      if (_transactionIdController.text.trim().isEmpty) {
-        showToast(msg: 'Veuillez saisir l\'ID de transaction');
-        return;
-      }
-      if (_transactionIdController.text.trim().length < 3) {
-        showToast(
-          msg: 'L\'ID de transaction doit contenir au moins 3 caractères',
-        );
-        return;
-      }
+
+    if (_numberMonthControler.text.trim().isEmpty) {
+      showToast(msg: 'Veuillez saisir le nombre de mois à payé');
+      return;
     }
 
     // Validation spécifique pour virement
@@ -496,10 +510,6 @@ class _PaymentPageState extends State<PaymentPage> {
       final dto = MakePaymentRequest(
         moisCouvert: moisCouvert,
         methodePaiement: selectedPaymentMethod!,
-        transactionId:
-            selectedPaymentMethod == 'mobile_money'
-                ? _transactionIdController.text.trim()
-                : null,
         proofFile: proofFile,
       );
 
@@ -520,6 +530,7 @@ class _PaymentPageState extends State<PaymentPage> {
       selectedFileName = null;
     });
     _formKey.currentState?.reset();
+    _focusNode.unfocus();
     context.pop();
   }
 }

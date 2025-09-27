@@ -24,7 +24,12 @@ class DashboardContentPage extends StatelessWidget {
     return Column(
       children: [
         AppHeaderLayout(content: _buildHeader(context)),
-        ScrollableBodyWidget(bodyContent: _buildContent(context)),
+        ScrollableBodyWidget(
+          bodyContent: _buildContent(context),
+          onRefresh: () async {
+            context.read<DashboardBloc>().add(FetchTenantDashboardEvent());
+          },
+        ),
       ],
     );
   }

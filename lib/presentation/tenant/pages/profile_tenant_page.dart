@@ -26,7 +26,7 @@ class _ProfileTenantPageState extends State<ProfileTenantPage> {
 
   @override
   Widget build(BuildContext context) {
-    // _userModel = context.select((AuthBloc bloc) => bloc.state).userModel;
+     _userModel = context.select((AuthBloc bloc) => bloc.state).userModel;
 
     // Define contact info
     // final List<ProfileContactInfo> contactInfo = [

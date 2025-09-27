@@ -153,7 +153,7 @@ abstract class UserModel {
   static Map<String, dynamic> parseBaseFields(Map<String, dynamic> json) => {
     'id': json["id"],
     'codeId': json["code_id"],
-    'name': json["name"],
+    'name': json["name"] ?? json["nom"],
     'prenom': json["prenom"],
     'email': json["email"],
     'passwordResetToken': json["password_reset_token"],

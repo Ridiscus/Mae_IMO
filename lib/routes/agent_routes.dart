@@ -60,7 +60,6 @@ class AgentRoutes {
       name: PropertyInspectionListPage.routeName,
       path: PropertyInspectionListPage.routePath,
       builder: (context, state) {
-        context.read<InventoriesBloc>().add(FetchInventoriesEvent());
         return const PropertyInspectionListPage();
       },
     ),

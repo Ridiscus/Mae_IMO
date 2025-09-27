@@ -15,7 +15,6 @@ import 'package:maelys_imo/core/manager/state/estate/estate_bloc.dart';
 import 'package:maelys_imo/core/manager/state/inventories/inventories_bloc.dart';
 import 'package:maelys_imo/core/manager/state/payment/payment_bloc.dart';
 import 'package:maelys_imo/core/manager/state/tenant/tenant_bloc.dart';
-import 'package:maelys_imo/core/services/Inventorie_service.dart';
 import 'package:maelys_imo/routes/app_route.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:talker_bloc_logger/talker_bloc_logger.dart';

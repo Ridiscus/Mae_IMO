@@ -1,28 +1,24 @@
 part of 'index.dart';
 
 class ResetPasswordRequest extends Dto {
-  final String token;
   final String codeId;
-  final String type;
   final String password;
-  final String passwordConfirmation;
+  final String otp;
 
   ResetPasswordRequest({
-    required this.token,
     required this.codeId,
-    required this.type,
     required this.password,
-    required this.passwordConfirmation,
+    required this.otp,
   });
 
   @override
   Map<String, dynamic> toJson() {
     return {
-      "token": token,
       "code_id": codeId,
-      "type": type,
+      "otp": otp,
       "password": password,
-      "password_confirmation": passwordConfirmation,
+      "password_confirmation": password,
+      "type": "locataire"
     };
   }
 }

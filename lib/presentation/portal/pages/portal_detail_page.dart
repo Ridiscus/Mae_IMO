@@ -79,8 +79,8 @@ class _PortalDetailPageState extends State<PortalDetailPage> {
                             children: [
                               _buildTitleAndPrice(),
                               CustomSpacer(),
-                              _buildPropertyInfo(),
-                              CustomSpacer(),
+                              // _buildPropertyInfo(),
+                              // CustomSpacer(),
                               AmenityChip(
                                 amenities: _property?.amenities ?? [],
                               ),
@@ -208,11 +208,7 @@ class _PortalDetailPageState extends State<PortalDetailPage> {
   Widget _buildPropertyInfo() {
     return Wrap(
       direction: Axis.horizontal,
-      children: [
-        _buildInfoItem('Type : ${_property?.type}', Icons.home_outlined),
-        _buildInfoItem('Garage : Oui', Icons.garage_outlined),
-        _buildInfoItem('Superficie : 100m²', Icons.square_foot_outlined),
-      ],
+      children: [],
     );
   }
 

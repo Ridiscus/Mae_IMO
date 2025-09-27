@@ -28,10 +28,10 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController(
-    text:"MA935006-AGT962609",
+    text: kDebugMode? "MA935006-AGT962609" : "",
   );
   final TextEditingController _passwordController = TextEditingController(
-    text:"123456789",
+    text:"12345678",
   );
   bool _obscureText = true;
 

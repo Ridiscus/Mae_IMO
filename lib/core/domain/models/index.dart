@@ -20,3 +20,4 @@ part 'payment_status_model.dart';
 part 'agent_dashboard_model.dart';
 part 'tenant_item_model.dart';
 part 'tenant_detail_model.dart';
+part 'inventory_detail_model.dart';

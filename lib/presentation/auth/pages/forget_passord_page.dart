@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:maelys_imo/core/domain/requests/index.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
 import 'package:maelys_imo/core/manager/state/reset-password/reset_password_bloc.dart';
+import 'package:maelys_imo/presentation/auth/pages/reset_passord_page.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
 
 import '../../../core/utils/toast/notification_toast.dart';
@@ -22,22 +23,17 @@ class ForgetPasswordPage extends StatefulWidget {
 }
 
 class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
-  final TextEditingController _codeIdController = TextEditingController(text: kDebugMode ? "": "MA935006");
+  final TextEditingController _codeIdController = TextEditingController(
+    text: kDebugMode ? "MA935006-AGT962609" : "",
+  );
 
-  @override
-  void dispose() {
-    _codeIdController.dispose();
-    super.dispose();
-  }
+
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => getIt<ResetPasswordBloc>(),
-      child: FormWithHeaderLayout(
-        headerTitle: 'Réinitialiser le mot de passe',
-        content: _buildResetForm(),
-      ),
+    return FormWithHeaderLayout(
+      headerTitle: 'Réinitialiser le mot de passe',
+      content: _buildResetForm(),
     );
   }
 
@@ -107,12 +103,16 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
       listenWhen: (previous, current) => current.emailSent != null,
       listener: (context, state) {
         if (state.emailSent == true) {
-          // Retourner à la page précédente après succès
-          context.pop();
+          context.pushNamed(
+            ResetPasswordPage.routeName,
+            queryParameters: {'code_id': _codeIdController.text},
+          );
         }
       },
-      buildWhen: (previous, current) => 
-          current.emailSent != null || current.isLoading != previous.isLoading,
+      buildWhen:
+          (previous, current) =>
+              current.emailSent != null ||
+              current.isLoading != previous.isLoading,
       builder: (context, state) {
         return CustomButton(
           text: 'Envoyer le lien',

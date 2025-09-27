@@ -17,6 +17,9 @@ class Endpoints {
 
   static String agentDashboard = "/agent/dashboard";
   static String inventories = "/agent/etats-lieu/warning";
+
+  static String inventoriesShow(String id) => "/agent/etats-lieu/$id/details";
+
   static String tenantByStatus(String status) => "/agent/locataires/$status";
 
   static String paymentsHistory(int tenantId) => "/tenant/$tenantId/paiements";

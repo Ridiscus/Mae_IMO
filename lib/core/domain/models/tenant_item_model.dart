@@ -3,6 +3,7 @@ part of 'index.dart';
 class TenantItemModel {
   final dynamic id;
   final String? name;
+  final String? nom;
   final String? prenom;
   final String? email;
   final String? contact;
@@ -13,6 +14,7 @@ class TenantItemModel {
 
   TenantItemModel({
     this.name,
+    this.nom,
     this.prenom,
     this.email,
     this.contact,
@@ -27,6 +29,7 @@ class TenantItemModel {
     dynamic id,
     String? name,
     String? prenom,
+    String? nom,
     String? email,
     String? contact,
     String? typeBien,
@@ -36,6 +39,7 @@ class TenantItemModel {
   }) => TenantItemModel(
     id: id ?? this.id,
     name: name ?? this.name,
+    nom: nom ?? this.nom,
     prenom: prenom ?? this.prenom,
     email: email ?? this.email,
     contact: contact ?? this.contact,
@@ -53,6 +57,7 @@ class TenantItemModel {
   factory TenantItemModel.fromMap(Map<String, dynamic> json) => TenantItemModel(
     id: json["id"],
     name: json["name"],
+    nom: json["nom"],
     prenom: json["prenom"],
     email: json["email"],
     contact: json["contact"],
@@ -65,6 +70,7 @@ class TenantItemModel {
   Map<String, dynamic> toMap() => {
     "id": id,
     "name": name,
+    "nom": nom,
     "prenom": prenom,
     "email": email,
     "contact": contact,

@@ -215,31 +215,28 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
             icon: Icons.search_off,
           ),
         )
-        : SizedBox(
-          height: context.getSize.height,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Historique des paiements',
-                style:
-                    TextStyle(
-                      fontSize: 20.sp,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ).sourceSansProSemiBold,
-              ),
-              CustomSpacer(),
-              ...paymentHistory
-                  .map((payment) {
-                    return Skeletonizer(
-                      enabled: _paymentState.isLoading,
-                      child: _buildPaymentHistoryItem(payment: payment),
-                    );
-                  })
-                  .expand((element) => [element, CustomSpacer(space: .5)]),
-            ],
-          ),
+        : Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Historique des paiements',
+              style:
+                  TextStyle(
+                    fontSize: 20.sp,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ).sourceSansProSemiBold,
+            ),
+            CustomSpacer(),
+            ...paymentHistory
+                .map((payment) {
+                  return Skeletonizer(
+                    enabled: _paymentState.isLoading,
+                    child: _buildPaymentHistoryItem(payment: payment),
+                  );
+                })
+                .expand((element) => [element, CustomSpacer(space: .5)]),
+          ],
         );
   }
 

@@ -4,8 +4,13 @@ import 'package:maelys_imo/core/api_manager/endpoints.dart';
 import 'package:maelys_imo/core/domain/requests/index.dart';
 
 abstract interface class ResetPasswordService {
-  Future<ApiResponse<String>> forgotPassword({required ForgotPasswordRequest dto});
-  Future<ApiResponse<String>> resetPassword({required ResetPasswordRequest dto});
+  Future<ApiResponse<String>> forgotPassword({
+    required ForgotPasswordRequest dto,
+  });
+
+  Future<ApiResponse<String>> resetPassword({
+    required ResetPasswordRequest dto,
+  });
 }
 
 class ResetPasswordServiceImpl implements ResetPasswordService {
@@ -24,12 +29,16 @@ class ResetPasswordServiceImpl implements ResetPasswordService {
 
     if (response.success) {
       return ApiResponse.success(
-        message: response.data['message'] ?? "Un lien de réinitialisation a été envoyé à votre email",
+        message:
+            response.data['message'] ??
+            "Un lien de réinitialisation a été envoyé à votre email",
         data: response.data['message'],
       );
     }
     return ApiResponse.error(
-      message: response.message ?? "Erreur lors de l'envoi du lien de réinitialisation",
+      message:
+          response.message ??
+          "Erreur lors de l'envoi du lien de réinitialisation",
     );
   }
 
@@ -44,12 +53,14 @@ class ResetPasswordServiceImpl implements ResetPasswordService {
 
     if (response.success) {
       return ApiResponse.success(
-        message: response.data['message'] ?? "Mot de passe réinitialisé avec succès",
-        data: response.data['message'],
+        message:
+            response.data['message'] ?? "Mot de passe réinitialisé avec succès",
       );
     }
     return ApiResponse.error(
-      message: response.message ?? "Erreur lors de la réinitialisation du mot de passe",
+      message:
+          response.message ??
+          "Erreur lors de la réinitialisation du mot de passe",
     );
   }
 }

@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:maelys_imo/core/constants/app_colors.dart';
+import 'package:maelys_imo/core/domain/models/index.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
 import 'package:maelys_imo/core/utils/toast/notification_toast.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
 import 'package:maelys_imo/shared/widgets/modals/index.dart';
 import 'package:toastification/toastification.dart';
+
+import '../../../core/manager/state/inventories/inventories_bloc.dart';
 
 class PropertyInspectionFormPage extends StatefulWidget {
   static const routeName = 'propertyInspectionForm';
@@ -23,7 +27,7 @@ class PropertyInspectionFormPage extends StatefulWidget {
 class _PropertyInspectionFormPageState
     extends State<PropertyInspectionFormPage> {
   // Sample property rooms - to be replaced with actual data
-  final List<Map<String, dynamic>> _rooms = [
+    List<Map<String, dynamic>> _rooms = [
     {
       'name': 'Séjour',
       'status': null, // null = not set, true = good, false = bad
@@ -36,6 +40,10 @@ class _PropertyInspectionFormPageState
 
   // Additional comments
   final TextEditingController _commentsController = TextEditingController();
+  late InventoriesState _inventoriesState;
+  TenantModel? _tenant;
+  EstateModel? _propertyData;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -45,6 +53,11 @@ class _PropertyInspectionFormPageState
 
   @override
   Widget build(BuildContext context) {
+    _inventoriesState = context.select((InventoriesBloc bloc) => bloc.state);
+    _propertyData = _inventoriesState.inventoryDetail?.bien;
+    _tenant = _inventoriesState.inventoryDetail?.locataire;
+    _isLoading = _inventoriesState.isLoading ?? false;
+
     return PageWithHeaderLayout(
       headerContent: _buildHeaderContent(),
       bodyContent: _buildInspectionForm(),
@@ -91,7 +104,7 @@ class _PropertyInspectionFormPageState
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Villa Marcory',
+          _propertyData?.title ?? "",
           style:
               TextStyle(
                 fontSize: 20.sp,
@@ -100,16 +113,19 @@ class _PropertyInspectionFormPageState
               ).sourceSansProBold,
         ),
         SizedBox(height: 8.sp),
-        _buildSummaryItem(icon: Icons.home_outlined, label: 'Type: Villa'),
+        _buildSummaryItem(
+          icon: Icons.home_outlined,
+          label: 'Type: ${_propertyData?.type ?? ''}',
+        ),
         SizedBox(height: 8.sp),
         _buildSummaryItem(
           icon: Icons.location_on_outlined,
-          label: 'Adresse: Marcory, Abidjan',
+          label: 'Adresse: ${_propertyData?.commune ?? ''}',
         ),
         SizedBox(height: 8.sp),
         _buildSummaryItem(
           icon: Icons.person_outline,
-          label: 'Locataire: John Doe',
+          label: 'Locataire: ${_tenant?.fullName ?? ''}',
         ),
       ],
     );
@@ -146,7 +162,7 @@ class _PropertyInspectionFormPageState
               ).sourceSansProSemiBold,
         ),
         SizedBox(height: 16.sp),
-        ..._rooms.map((room) => _buildRoomItem(room)).toList(),
+        ...(_propertyData?.rooms ?? []).map((room) => _buildRoomItem(room)).toList(),
       ],
     );
   }
@@ -312,7 +328,6 @@ class _PropertyInspectionFormPageState
             onValidated: () {
               // Handle validation
               // Navigator.pop(context);
-
             },
             onCancel: () {
               Navigator.pop(context);

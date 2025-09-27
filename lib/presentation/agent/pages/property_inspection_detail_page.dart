@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:maelys_imo/core/constants/app_colors.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
 import 'package:maelys_imo/presentation/agent/pages/property_inspection_form_page.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+
+import '../../../core/domain/models/index.dart';
+import '../../../core/manager/state/inventories/inventories_bloc.dart';
 
 class PropertyInspectionDetailPage extends StatefulWidget {
   static const routeName = 'propertyInspectionDetail';
@@ -15,27 +20,52 @@ class PropertyInspectionDetailPage extends StatefulWidget {
   const PropertyInspectionDetailPage({super.key, required this.propertyId});
 
   @override
-  State<PropertyInspectionDetailPage> createState() => _PropertyInspectionDetailPageState();
+  State<PropertyInspectionDetailPage> createState() =>
+      _PropertyInspectionDetailPageState();
 }
 
-class _PropertyInspectionDetailPageState extends State<PropertyInspectionDetailPage> {
+class _PropertyInspectionDetailPageState
+    extends State<PropertyInspectionDetailPage> {
   // Sample property data - to be replaced with API data
-  final Map<String, dynamic> _propertyData = {
-    'propertyName': 'Villa Marcory',
-    'tenantName': 'John Doe',
-    'address': 'Marcory, Abidjan',
-    'propertyType': 'Villa',
-    'rooms': 4,
-    'bathrooms': 2,
-    'status': 'En attente',
-  };
+  EstateModel? _propertyData;
+  TenantModel? _tenant;
+
+  bool _isLoading = false;
+  late InventoriesState _inventoriesState;
+  InventoryDetailModel? _inventoryDetail;
+
+  @override
+  void initState() {
+    context.read<InventoriesBloc>().add(
+      FetchOneInventoriesEvent(id: widget.propertyId),
+    );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return FormWithHeaderLayout(
-      headerTitle: 'Détails de l\'état des lieux',
-      contentColor: AppColors.scaffold,
-      content: _buildDetailContent(),
+    _inventoriesState = context.select((InventoriesBloc bloc) => bloc.state);
+    _inventoryDetail = _inventoriesState.inventoryDetail;
+    _propertyData = _inventoriesState.inventoryDetail?.bien;
+    _tenant = _inventoriesState.inventoryDetail?.locataire;
+    _isLoading = _inventoriesState.isLoading ?? false;
+
+    return BlocListener<InventoriesBloc, InventoriesState>(
+      listener: (context, state) {
+        if (state.isLoading == false &&
+            state.inventoryDetail == null &&
+            state.failure == null) {
+          context.pop();
+        }
+      },
+      child: FormWithHeaderLayout(
+        headerTitle: 'Détails de l\'état des lieux',
+        contentColor: AppColors.scaffold,
+        content: Skeletonizer(
+          enabled: _isLoading,
+          child: _buildDetailContent(),
+        ),
+      ),
     );
   }
 
@@ -48,7 +78,7 @@ class _PropertyInspectionDetailPageState extends State<PropertyInspectionDetailP
         _buildTenantInfoCard(),
         Spacer(),
         _buildStartInspectionButton(),
-        SpacerPlatform()
+        SpacerPlatform(),
       ],
     );
   }
@@ -58,15 +88,12 @@ class _PropertyInspectionDetailPageState extends State<PropertyInspectionDetailP
       title: 'Données du bien',
       child: Column(
         children: [
-          _buildInfoRow(Icons.home_outlined, 'Nom: ${_propertyData['propertyName']}'),
+          _buildInfoRow(
+            Icons.location_on_outlined,
+            'Adresse: ${_propertyData?.title}',
+          ),
           SizedBox(height: 16.sp),
-          _buildInfoRow(Icons.location_on_outlined, 'Adresse: ${_propertyData['address']}'),
-          SizedBox(height: 16.sp),
-          _buildInfoRow(Icons.house_outlined, 'Type: ${_propertyData['propertyType']}'),
-          SizedBox(height: 16.sp),
-          _buildInfoRow(Icons.meeting_room_outlined, 'Chambres: ${_propertyData['rooms']}'),
-          SizedBox(height: 16.sp),
-          _buildInfoRow(Icons.bathroom_outlined, 'Salles de bain: ${_propertyData['bathrooms']}'),
+          _buildInfoRow(Icons.house_outlined, 'Type: ${_propertyData?.type}'),
         ],
       ),
     );
@@ -77,11 +104,14 @@ class _PropertyInspectionDetailPageState extends State<PropertyInspectionDetailP
       title: 'Données du locataire',
       child: Column(
         children: [
-          _buildInfoRow(Icons.person_outline, 'Nom: ${_propertyData['tenantName']}'),
+          _buildInfoRow(
+            Icons.person_outline,
+            'Nom: ${_tenant?.fullName ?? ''}',
+          ),
           SizedBox(height: 16.sp),
           _buildInfoRow(
-            Icons.pending_actions_outlined, 
-            'Statut: ${_propertyData['status']}',
+            Icons.pending_actions_outlined,
+            'Statut: ${_tenant?.status ?? ''}',
             textColor: AppColors.primary,
             fontWeight: FontWeight.bold,
           ),
@@ -98,11 +128,12 @@ class _PropertyInspectionDetailPageState extends State<PropertyInspectionDetailP
         children: [
           Text(
             title,
-            style: TextStyle(
-              fontSize: 18.sp,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ).sourceSansProBold,
+            style:
+                TextStyle(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ).sourceSansProBold,
           ),
           CustomSpacer(space: .5),
           Container(
@@ -138,11 +169,12 @@ class _PropertyInspectionDetailPageState extends State<PropertyInspectionDetailP
         Expanded(
           child: Text(
             text,
-            style: TextStyle(
-              fontSize: 16.sp,
-              color: textColor ?? Colors.black87,
-              fontWeight: fontWeight ?? FontWeight.normal,
-            ).sourceSansProRegular,
+            style:
+                TextStyle(
+                  fontSize: 16.sp,
+                  color: textColor ?? Colors.black87,
+                  fontWeight: fontWeight ?? FontWeight.normal,
+                ).sourceSansProRegular,
           ),
         ),
       ],
@@ -156,7 +188,7 @@ class _PropertyInspectionDetailPageState extends State<PropertyInspectionDetailP
         // Navigate to the inspection form page
         context.pushNamed(
           PropertyInspectionFormPage.routeName,
-          pathParameters: {'id': widget.propertyId},
+          pathParameters: {'id': this._propertyData!.id.toString()},
         );
       },
       showArrow: true,

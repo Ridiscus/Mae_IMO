@@ -14,6 +14,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../core/domain/models/index.dart';
 import '../../../core/manager/state/dashboard/dashboard_bloc.dart';
+import '../../../core/manager/state/inventories/inventories_bloc.dart';
 
 class HomeAgentPage extends StatefulWidget {
   static const routeName = 'homeAgent';
@@ -69,7 +70,6 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
 
             Positioned.fill(
               top: MediaQuery.of(context).size.height * .22,
-
               child: _buildContent(),
             ),
 
@@ -151,27 +151,32 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
         height: double.infinity,
         padding: EdgeInsets.only(top: (150 / 1.8).h),
         decoration: BoxDecoration(
-          color: AppColors.scaffold,
+          color:  AppColors.scaffold,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(20.r),
             topRight: Radius.circular(20.r),
           ),
         ),
-        child: SingleChildScrollView(
-          child: Padding(
+        child: RefreshIndicator.adaptive(
+          onRefresh: () async {
+            context.read<DashboardBloc>().add(FetchAgentDashboardEvent());
+          },
+          child: ListView(
             padding: EdgeInsets.all(16.sp),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildTenantsUpToDateCard(),
-                CustomSpacer(),
-                _buildTenantsInArrearsCard(),
-                CustomSpacer(),
-                _buildPendingPaymentsCard(),
-                CustomSpacer(),
-                _buildPropertyInspectionCard(),
-              ],
-            ),
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildTenantsUpToDateCard(),
+                  CustomSpacer(),
+                  _buildTenantsInArrearsCard(),
+                  CustomSpacer(),
+                  _buildPendingPaymentsCard(),
+                  CustomSpacer(),
+                  _buildPropertyInspectionCard(),
+                ],
+              ),
+            ],
           ),
         ),
       ),
@@ -300,9 +305,6 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
       arrowColor: AppColors.primary,
       valueColor: AppColors.primary,
       onTap: () {
-
-
-
         context.pushNamed(PropertyInspectionListPage.routeName);
       },
     );

@@ -82,7 +82,7 @@ class CollectionAgentModel extends UserModel {
       // Champs de base hérités
       id: baseFields['id'],
       codeId: baseFields['codeId'],
-      name: baseFields['name'],
+      name: baseFields['name'] ?? baseFields['nom'],
       prenom: baseFields['prenom'],
       email: baseFields['email'],
       passwordResetToken: baseFields['passwordResetToken'],

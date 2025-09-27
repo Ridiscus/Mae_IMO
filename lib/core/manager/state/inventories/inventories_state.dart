@@ -4,17 +4,20 @@ class InventoriesState extends Equatable {
   final bool? isLoading;
   final Failure? failure;
   final InventorieModelResponse? inventories;
+  final InventoryDetailModel? inventoryDetail;
 
-  const InventoriesState({this.isLoading, this.inventories, this.failure});
+  const InventoriesState({this.inventoryDetail, this.isLoading, this.inventories, this.failure});
 
   InventoriesState copyWith({
     bool? isLoading,
     InventorieModelResponse? inventories,
+    InventoryDetailModel? inventoryDetail,
     Failure? failure,
   }) {
     return InventoriesState(
       isLoading: isLoading ?? this.isLoading,
       inventories: inventories ?? this.inventories,
+      inventoryDetail: inventoryDetail,
       failure: failure,
     );
   }
@@ -35,7 +38,7 @@ class InventoriesState extends Equatable {
   };
 
   @override
-  List<Object?> get props => [isLoading, inventories];
+  List<Object?> get props => [isLoading, inventoryDetail, inventories];
 }
 
 final class InventoriesInitial extends InventoriesState {
