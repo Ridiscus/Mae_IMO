@@ -11,7 +11,7 @@ plugins {
 
 android {
     namespace = "com.christdev.maelys_imo"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 36 // flutter.compileSdkVersion
     ndkVersion = "27.0.12077973"
 
     compileOptions {

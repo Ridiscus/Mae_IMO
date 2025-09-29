@@ -32,6 +32,11 @@ class _CheckoutCinetpayPageState extends State<CheckoutCinetpayPage> {
         });
       },
       builder: (context, state) {
+        // Guard: show loader while config is not yet available
+        if (state.cinetpayData == null) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
         return SizedBox(
           width: context.getSize.width,
           height: context.getSize.height,
@@ -40,30 +45,45 @@ class _CheckoutCinetpayPageState extends State<CheckoutCinetpayPage> {
             title: 'Guichet de paiement Maelys',
             configData: state.cinetpayData!.configData,
             paymentData: state.cinetpayData!.paymentData,
-            waitResponse: (Map<String, dynamic> response) {
+            waitResponse: (Map<String, dynamic>? response) {
+              // Log the raw response for diagnostics
               print("CinetPayCheckout response :: ${response.toString()}");
-              if (response.containsKey("status")) {
-                if (response["status"].toString() == "ACCEPTED") {
+
+              try {
+                final status = response != null ? response["status"]?.toString() : null;
+
+                if (status == "ACCEPTED") {
                   showToast(
                     msg: "Votre paiement a été effectué avec succès",
                     type: ToastificationType.success,
                   );
+                  if (!mounted) return;
+                  context.goNamed(HomeTenantPage.routeName);
+                } else if (status == null) {
+                  // Pending or no status returned yet
+                  showToast(
+                    msg: "Paiement en attente",
+                    type: ToastificationType.warning,
+                  );
+                  if (!mounted) return;
                   context.goNamed(HomeTenantPage.routeName);
                 } else {
-                  showToast(msg: "Votre paiement a echoué");
+                  // DECLINED or any non-accepted state
+                  showToast(msg: "Votre paiement a échoué");
+                  if (!mounted) return;
                   context.pop();
                 }
-              } else {
-                showToast(
-                  msg: "Paiement en attente",
-                  type: ToastificationType.warning,
-                );
-                context.goNamed(HomeTenantPage.routeName);
+              } catch (e) {
+                print("CinetPay waitResponse handling error :: ${e.toString()}");
+                showToast(msg: "Une erreur est survenue pendant le traitement");
+                if (!mounted) return;
+                context.pop();
               }
             },
             onError: (error) {
               print("CinetPayCheckout error :: ${error.toString()}");
               showToast(msg: "Une erreur est survenue");
+              if (!mounted) return;
               context.pop();
             },
           ),
