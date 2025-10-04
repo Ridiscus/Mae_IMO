@@ -68,12 +68,13 @@ class PaymentBloc extends HydratedBloc<PaymentEvent, PaymentState> {
         request: event.dto,
       );
       if (result.success) {
-        if (result.data?.cinetpayData != null) {
+        if (result.data != null) {
           emit(
             state.copyWith(
               isLoading: false,
               paymentSuccess: true,
               cinetpayData: result.data?.cinetpayData,
+              initPaymentModel: result.data,
             ),
           );
         }
@@ -86,7 +87,6 @@ class PaymentBloc extends HydratedBloc<PaymentEvent, PaymentState> {
           emit(state.copyWith(isLoading: false, paymentSuccess: true));
           add(FetchHistoryPaymentEvent(tenantId: event.tenantId));
         }
-
       } else {
         showToast(msg: result.message!);
         emit(

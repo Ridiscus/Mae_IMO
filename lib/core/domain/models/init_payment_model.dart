@@ -5,19 +5,40 @@ class InitPaymentModel {
   final String? type;
   final CinetpayData? cinetpayData;
   final Paiement? paiement;
+  final String? paymentUrl;
+  final String? paymentToken;
+  final String? transactionId;
+  final String? mode;
 
-  InitPaymentModel({this.success, this.type, this.cinetpayData, this.paiement});
+  InitPaymentModel({
+    this.success,
+    this.type,
+    this.cinetpayData,
+    this.paiement,
+    this.paymentUrl,
+    this.paymentToken,
+    this.transactionId,
+    this.mode,
+  });
 
   InitPaymentModel copyWith({
     bool? success,
     String? type,
     CinetpayData? cinetpayData,
     Paiement? paiement,
+    String? paymentUrl,
+    String? paymentToken,
+    String? transactionId,
+    String? mode,
   }) => InitPaymentModel(
     success: success ?? this.success,
     type: type ?? this.type,
     cinetpayData: cinetpayData ?? this.cinetpayData,
     paiement: paiement ?? this.paiement,
+    paymentUrl: paymentUrl ?? this.paymentUrl,
+    paymentToken: paymentToken ?? this.paymentToken,
+    transactionId: transactionId ?? this.transactionId,
+    mode: mode ?? this.mode,
   );
 
   factory InitPaymentModel.fromJson(String str) =>
@@ -29,6 +50,10 @@ class InitPaymentModel {
       InitPaymentModel(
         success: json["success"],
         type: json["type"],
+        paymentUrl: json['payment_url'],
+        paymentToken: json['payment_token'],
+        transactionId: json['transaction_id'],
+        mode: json['mode'],
         cinetpayData:
             json["cinetpay_data"] == null
                 ? null
@@ -42,6 +67,10 @@ class InitPaymentModel {
   Map<String, dynamic> toMap() => {
     "success": success,
     "type": type,
+    "payment_url": paymentUrl,
+    "payment_token": paymentToken,
+    "transaction_id": transactionId,
+    "mode": mode,
     "cinetpay_data": cinetpayData?.toMap(),
     "paiement": paiement?.toMap(),
   };
@@ -189,11 +218,13 @@ class Metadata {
 class Paiement {
   final int? id;
   final dynamic montant;
+
   // final DateTime? datePaiement;
   final String? moisCouvert;
   final String? methodePaiement;
   final String? statut;
   final String? reference;
+
   // final String? transactionId;
   // final String? proofPath;
   // final int? locataireId;

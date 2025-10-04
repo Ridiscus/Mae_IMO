@@ -32,11 +32,6 @@ class _CheckoutCinetpayPageState extends State<CheckoutCinetpayPage> {
         });
       },
       builder: (context, state) {
-        // Guard: show loader while config is not yet available
-        if (state.cinetpayData == null) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
         return SizedBox(
           width: context.getSize.width,
           height: context.getSize.height,
@@ -50,7 +45,8 @@ class _CheckoutCinetpayPageState extends State<CheckoutCinetpayPage> {
               print("CinetPayCheckout response :: ${response.toString()}");
 
               try {
-                final status = response != null ? response["status"]?.toString() : null;
+                final status =
+                    response != null ? response["status"]?.toString() : null;
 
                 if (status == "ACCEPTED") {
                   showToast(
@@ -74,7 +70,9 @@ class _CheckoutCinetpayPageState extends State<CheckoutCinetpayPage> {
                   context.pop();
                 }
               } catch (e) {
-                print("CinetPay waitResponse handling error :: ${e.toString()}");
+                print(
+                  "CinetPay waitResponse handling error :: ${e.toString()}",
+                );
                 showToast(msg: "Une erreur est survenue pendant le traitement");
                 if (!mounted) return;
                 context.pop();

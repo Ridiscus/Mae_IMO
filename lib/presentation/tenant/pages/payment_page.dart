@@ -1,7 +1,5 @@
-import 'dart:developer' as console;
 import 'dart:io';
 
-import 'package:cinetpay/cinetpay.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -14,12 +12,13 @@ import 'package:maelys_imo/core/extensions/index.dart';
 import 'package:maelys_imo/core/manager/state/auth/auth_bloc.dart';
 import 'package:maelys_imo/core/manager/state/dashboard/dashboard_bloc.dart';
 import 'package:maelys_imo/core/manager/state/payment/payment_bloc.dart';
+import 'package:maelys_imo/core/utils/index.dart';
 import 'package:maelys_imo/core/utils/toast/notification_toast.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/domain/models/index.dart';
 import '../../../core/domain/requests/index.dart';
-import 'checkout_cinetpay_page.dart';
 
 class PaymentPage extends StatefulWidget {
   static const routeName = 'payment';
@@ -56,10 +55,10 @@ class _PaymentPageState extends State<PaymentPage> {
 
   @override
   Widget build(BuildContext context) {
-      dashboardModel = context.select(
-          (DashboardBloc bloc) => bloc.state.tenantDashboardModel,
+    dashboardModel = context.select(
+      (DashboardBloc bloc) => bloc.state.tenantDashboardModel,
     );
-       userModel = context.select((AuthBloc bloc) => bloc.state.userModel);
+    userModel = context.select((AuthBloc bloc) => bloc.state.userModel);
 
     return BlocConsumer<PaymentBloc, PaymentState>(
       listener: (context, state) {
@@ -70,8 +69,13 @@ class _PaymentPageState extends State<PaymentPage> {
         if (state.paymentSuccess == true && state.cinetpayData == null) {
           _resetForm();
         }
-        if(state.cinetpayData != null){
-          context.pushNamed(CheckoutCinetpayPage.routeName);
+        // if(state.cinetpayData != null){
+        //   context.pushNamed(CheckoutCinetpayPage.routeName);
+        // }
+
+        if (state.cinetpayData != null || state.initPaymentModel != null) {
+          CoreHelper.launchLink(state.initPaymentModel?.paymentUrl ?? '', launchMode: LaunchMode.externalApplication);
+          // context.pushNamed(CheckoutCinetpayPage.routeName);
         }
       },
       builder: (context, state) {
@@ -122,7 +126,6 @@ class _PaymentPageState extends State<PaymentPage> {
   }
 
   Widget _buildSummarySection() {
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -281,7 +284,6 @@ class _PaymentPageState extends State<PaymentPage> {
   }
 
   Widget _buildPaymentButton() {
-
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 16.sp),
       child: Column(
