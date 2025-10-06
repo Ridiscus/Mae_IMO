@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -5,11 +6,13 @@ import 'package:go_router/go_router.dart';
 import 'package:maelys_imo/core/constants/app_colors.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
 import 'package:maelys_imo/core/manager/state/tenant/tenant_bloc.dart';
+import 'package:maelys_imo/core/manager/state/payment/payment_bloc.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
 import 'package:maelys_imo/shared/widgets/modals/index.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../core/domain/models/index.dart';
+import 'home_agent_page.dart';
 
 class TenantDetailPage extends StatefulWidget {
   static const routeName = 'tenantDetail';
@@ -39,7 +42,10 @@ class _TenantDetailPageState extends State<TenantDetailPage> {
         if (state.isLoading == false &&
             state.tenant == null &&
             state.failure == null) {
-          context.pop();
+          if (kDebugMode) {
+          } else {
+            context.pop();
+          }
         }
       },
       child: FormWithHeaderLayout(
@@ -148,21 +154,29 @@ class _TenantDetailPageState extends State<TenantDetailPage> {
               backgroundColor: Colors.white,
               isScrollControlled: true,
               context: context,
-              builder:
-                  (context) => ModalCollectingTheRent(
-                    onValidated: () {},
-                    onCancel: () {},
-                  ),
+              builder: (context) => ModalCollectingTheRent(
+                tenantId: int.tryParse(widget.tenantId) ?? 0,
+                amount: _tenant?.bien?.prix?.toString() ?? '0',
+                onValidated: () {
+                  // Callback appelé après validation réussie
+                  if (kDebugMode) {
+                    print('Paiement validé avec succès');
+                  }
+                },
+                onCancel: () {
+                  // Callback appelé en cas d'annulation
+                  Navigator.pop(context);
+                },
+              ),
             );
           },
           showArrow: true,
           buttonVariant: ButtonVariant.red,
-          textStyle:
-              TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ).sourceSansProBold,
+          textStyle: TextStyle(
+            fontSize: 16.sp,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ).sourceSansProBold,
         );
   }
 }

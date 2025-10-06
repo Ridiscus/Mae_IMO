@@ -7,6 +7,10 @@ class PaymentState extends Equatable {
   final bool isLoading;
   final bool? paymentSuccess;
   final Failure? failure;
+  final String? generatedCode;
+  final bool? codeGenerated;
+  final bool? codeValidated;
+  final DateTime? lastCodeGenerationTime;
 
   const PaymentState({
     this.paymentHistoryModel,
@@ -15,6 +19,10 @@ class PaymentState extends Equatable {
     this.paymentSuccess,
     this.initPaymentModel,
     this.failure,
+    this.generatedCode,
+    this.codeGenerated,
+    this.codeValidated,
+    this.lastCodeGenerationTime,
   });
 
   PaymentState copyWith({
@@ -24,6 +32,10 @@ class PaymentState extends Equatable {
     bool? paymentSuccess,
     InitPaymentModel? initPaymentModel,
     Failure? failure,
+    String? generatedCode,
+    bool? codeGenerated,
+    bool? codeValidated,
+    DateTime? lastCodeGenerationTime,
   }) => PaymentState(
     isLoading: isLoading ?? this.isLoading,
     paymentSuccess: paymentSuccess,
@@ -31,6 +43,10 @@ class PaymentState extends Equatable {
     cinetpayData: cinetpayData,
     failure: failure,
     paymentHistoryModel: paymentHistoryModel ?? this.paymentHistoryModel,
+    generatedCode: generatedCode,
+    codeGenerated: codeGenerated,
+    codeValidated: codeValidated,
+    lastCodeGenerationTime: lastCodeGenerationTime,
   );
 
   factory PaymentState.fromJson(Map<String, dynamic> json) {
@@ -52,7 +68,18 @@ class PaymentState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [isLoading, paymentSuccess, failure, paymentHistoryModel, cinetpayData, initPaymentModel];
+  List<Object?> get props => [
+    isLoading, 
+    paymentSuccess, 
+    failure, 
+    paymentHistoryModel, 
+    cinetpayData, 
+    initPaymentModel,
+    generatedCode,
+    codeGenerated,
+    codeValidated,
+    lastCodeGenerationTime,
+  ];
 }
 
 final class PaymentInitial extends PaymentState {

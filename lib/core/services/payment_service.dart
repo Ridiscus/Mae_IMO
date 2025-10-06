@@ -13,6 +13,14 @@ abstract interface class PaymentService {
     required int tenantId,
     required MakePaymentRequest request,
   });
+
+  Future<ApiResponse<String>> generateCashCode({
+    required EncashedRequest request,
+  });
+
+  Future<ApiResponse<String>> validateCashCode({
+    required ValidateEncashedRequest request,
+  });
 }
 
 class PaymentServiceImpl implements PaymentService {
@@ -61,6 +69,47 @@ class PaymentServiceImpl implements PaymentService {
     }
     return ApiResponse.error(
       message: response.message ?? "Erreur lors du paiement",
+    );
+  }
+
+  @override
+  Future<ApiResponse<String>> generateCashCode({
+    required EncashedRequest request,
+  }) async {
+    final response = await apiClient.post(
+      Endpoints.generateCashCode,
+      data: request.toJson(),
+    );
+
+    if (response.success) {
+      final code = response.data['data']?['code'] as String?;
+      return ApiResponse.success(
+        message: response.data['message'] ?? "Code de paiement généré avec succès",
+        data: code ?? '',
+      );
+    }
+    return ApiResponse.error(
+      message: response.message ?? "Erreur lors de la génération du code",
+    );
+  }
+
+  @override
+  Future<ApiResponse<String>> validateCashCode({
+    required ValidateEncashedRequest request,
+  }) async {
+    final response = await apiClient.post(
+      Endpoints.validateCashCode,
+      data: request.toJson(),
+    );
+
+    if (response.success) {
+      return ApiResponse.success(
+        message: response.data['message'] ?? "Paiement enregistré avec succès",
+        data: response.data['message'] ?? '',
+      );
+    }
+    return ApiResponse.error(
+      message: response.message ?? "Erreur lors de la validation du code",
     );
   }
 }

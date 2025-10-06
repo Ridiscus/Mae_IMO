@@ -7,6 +7,9 @@ class ModalCollectingTheRent extends StatefulWidget {
   /// Function to execute when payment is canceled
   final VoidCallback onCancel;
 
+  /// Tenant ID for the payment
+  final int tenantId;
+
   /// Optional: Amount to display in the modal
   final String? amount;
 
@@ -17,6 +20,7 @@ class ModalCollectingTheRent extends StatefulWidget {
     super.key,
     required this.onValidated,
     required this.onCancel,
+    required this.tenantId,
     this.amount,
     this.description,
   });
@@ -26,72 +30,104 @@ class ModalCollectingTheRent extends StatefulWidget {
 }
 
 class _ModalCollectingTheRentState extends State<ModalCollectingTheRent> {
-  final _pinController = TextEditingController();
-  String? _errorMessage;
-  bool _isLoading = false;
+  final _codeController = TextEditingController();
+  final _monthsController = TextEditingController(text: '1');
+  int _selectedMonths = 1;
+  bool _isCodeGenerated = false;
 
-  // Expected PIN for demo purposes - in a real app this would be handled by a backend
-  final _expectedPin = '1234';
+  late PaymentState _paymentState;
+  bool _isLoading = false;
 
   @override
   void dispose() {
-    _pinController.dispose();
+    _codeController.dispose();
+    _monthsController.dispose();
     super.dispose();
   }
 
-  void _validatePin() {
-    setState(() {
-      _isLoading = true;
-      _errorMessage = null;
-    });
+  void _generateCode() {
+    final request = EncashedRequest(
+      locataireId: widget.tenantId,
+      nombreMois: _selectedMonths,
+    );
 
-    // Simulate network delay
-    Future.delayed(const Duration(seconds: 1), () {
-      if (_pinController.text == _expectedPin) {
-        widget.onValidated();
-        Navigator.pop(context);
-      } else {
-        setState(() {
-          _errorMessage = 'Code incorrect. Veuillez réessayer.';
-          _isLoading = false;
-        });
-      }
-    });
+    context.read<PaymentBloc>().add(GenerateCashCodeEvent(dto: request));
+  }
+
+  void _validateCode() {
+    if (_codeController.text.isEmpty) return;
+
+    final request = ValidateEncashedRequest(
+      locataireId: widget.tenantId,
+      code: _codeController.text,
+      nombreMois: _selectedMonths,
+    );
+
+    context.read<PaymentBloc>().add(ValidateCashCodeEvent(dto: request));
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom,
-      ),
-      decoration: const BoxDecoration(color: Colors.transparent),
-      child: Container(
-        padding: EdgeInsets.all(24.sp),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30.r),
-            topRight: Radius.circular(30.r),
-          ),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _buildModalHeader(),
-            CustomSpacer(),
-            _buildAmountSection(),
-            CustomSpacer(),
-            _buildPinInput(),
-            if (_errorMessage != null) ...[
-              CustomSpacer(),
-              _buildErrorMessage(),
-            ],
-            CustomSpacer(space: 2),
-            _buildButtons(),
-            CustomSpacer(),
-          ],
-        ),
+    return BlocListener<PaymentBloc, PaymentState>(
+      listener: (context, state) {
+        if (state.codeGenerated == true) {
+          setState(() {
+            _isCodeGenerated = true;
+          });
+        }
+
+        if (state.codeValidated == true) {
+          widget.onValidated();
+          Navigator.pop(context);
+          // Navigation vers HomeAgentPage
+          context.goNamed(HomeAgentPage.routeName);
+        }
+      },
+      child: BlocBuilder<PaymentBloc, PaymentState>(
+        builder: (context, state) {
+          _paymentState = state;
+          _isLoading = state.isLoading;
+
+          return Container(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
+            decoration: const BoxDecoration(color: Colors.transparent),
+            child: Container(
+              padding: EdgeInsets.all(24.sp),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30.r),
+                  topRight: Radius.circular(30.r),
+                ),
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _buildModalHeader(),
+                    CustomSpacer(),
+                    if (!_isCodeGenerated) ...[
+                      _buildMonthsSelection(),
+                      CustomSpacer(),
+                      _buildAmountSection(),
+                      CustomSpacer(),
+                      _buildGenerateCodeButton(),
+                    ] else ...[
+                      _buildCodeGeneratedInfo(),
+                      CustomSpacer(),
+                      _buildCodeInput(),
+                      CustomSpacer(),
+                      _buildValidateButton(),
+                    ],
+                    CustomSpacer(),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -100,7 +136,9 @@ class _ModalCollectingTheRentState extends State<ModalCollectingTheRent> {
     return Column(
       children: [
         Text(
-          'Validation du paiement',
+          _isCodeGenerated
+              ? 'Saisir le code de validation'
+              : 'Encaissement du loyer',
           style:
               TextStyle(
                 fontSize: 24.sp,
@@ -108,29 +146,61 @@ class _ModalCollectingTheRentState extends State<ModalCollectingTheRent> {
                 color: AppColors.black,
               ).sourceSansProBold,
         ),
-        if (widget.description != null) ...[
-          CustomSpacer(space: 0.5),
-          Text(
-            widget.description!,
-            textAlign: TextAlign.center,
-            style:
-                TextStyle(
-                  fontSize: 16.sp,
-                  color: Colors.grey[600],
-                ).sourceSansProRegular,
-          ),
-        ],
+        CustomSpacer(space: 0.5),
+        Text(
+          _isCodeGenerated
+              ? 'Demandez au locataire de saisir le code reçu'
+              : 'Saisissez le nombre de mois à encaisser',
+          textAlign: TextAlign.center,
+          style:
+              TextStyle(
+                fontSize: 16.sp,
+                color: Colors.grey[600],
+              ).sourceSansProRegular,
+        ),
       ],
     );
   }
 
+  Widget _buildMonthsSelection() {
+    return CustomInputTextFactory.createTextNumberInput(
+      controller: _monthsController,
+      labelText: 'Nombre de mois',
+      hintText: 'Saisissez le nombre de mois (1-12)',
+      onChanged: (value) {
+        final months = int.tryParse(value) ?? 1;
+        if (months >= 1 && months <= 12) {
+          setState(() {
+            _selectedMonths = months;
+          });
+        }
+      },
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Veuillez saisir le nombre de mois';
+        }
+        final months = int.tryParse(value);
+        if (months == null || months < 1 || months > 12) {
+          return 'Le nombre de mois doit être entre 1 et 12';
+        }
+        return null;
+      },
+    );
+  }
+
   Widget _buildAmountSection() {
-    if (widget.amount == null) return const SizedBox.shrink();
+    if (widget.amount == null && !_isCodeGenerated)
+      return const SizedBox.shrink();
+
+    final displayAmount = widget.amount ?? '0';
+    final totalAmount =
+        int.tryParse(displayAmount.replaceAll(RegExp(r'[^0-9]'), '')) ?? 0;
+    final monthlyAmount = totalAmount * _selectedMonths;
 
     return Column(
       children: [
         Text(
-          'Montant',
+          'Montant total',
           style:
               TextStyle(
                 fontSize: 16.sp,
@@ -139,7 +209,7 @@ class _ModalCollectingTheRentState extends State<ModalCollectingTheRent> {
         ),
         CustomSpacer(space: 0.5),
         Text(
-          '${widget.amount} FCFA',
+          '${monthlyAmount.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]} ')} FCFA',
           style:
               TextStyle(
                 fontSize: 32.sp,
@@ -147,74 +217,115 @@ class _ModalCollectingTheRentState extends State<ModalCollectingTheRent> {
                 color: AppColors.primary,
               ).sourceSansProBold,
         ),
+        if (_selectedMonths > 1) ...[
+          CustomSpacer(space: 0.3),
+          Text(
+            '$displayAmount FCFA × $_selectedMonths mois',
+            style:
+                TextStyle(
+                  fontSize: 14.sp,
+                  color: Colors.grey[500],
+                ).sourceSansProRegular,
+          ),
+        ],
       ],
     );
   }
 
-  Widget _buildPinInput() {
-    final defaultPinTheme = PinTheme(
-      width: 60.w,
-      height: 60.w,
+  Widget _buildGenerateCodeButton() {
+    return CustomButton(
+      text: 'Générer le code de paiement',
+      onPressed: _isLoading ? null : _generateCode,
+      isLoading: _isLoading,
+      buttonVariant: ButtonVariant.primary,
       textStyle:
           TextStyle(
-            fontSize: 24.sp,
+            fontSize: 16.sp,
             fontWeight: FontWeight.bold,
-          ).sourceSansProSemiBold,
+            color: Colors.white,
+          ).sourceSansProBold,
+    );
+  }
+
+  Widget _buildCodeGeneratedInfo() {
+    return Container(
+      padding: EdgeInsets.all(16.sp),
       decoration: BoxDecoration(
-        color: Colors.grey.withValues(alpha: 0.1),
+        color: AppColors.primary.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
+        border: Border.all(color: AppColors.primary.withValues(alpha: 0.3)),
+      ),
+      child: Column(
+        children: [
+          Icon(Icons.check_circle, color: AppColors.primary, size: 48.sp),
+          CustomSpacer(space: 0.5),
+          Text(
+            'Code généré avec succès',
+            style:
+                TextStyle(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.primary,
+                ).sourceSansProBold,
+          ),
+          CustomSpacer(space: 0.5),
+          Text(
+            'Le locataire a reçu un code de validation. Demandez-lui de vous le communiquer pour valider le paiement.',
+            textAlign: TextAlign.center,
+            style:
+                TextStyle(
+                  fontSize: 14.sp,
+                  color: Colors.grey[600],
+                ).sourceSansProRegular,
+          ),
+        ],
       ),
     );
+  }
 
-    final focusedPinTheme = defaultPinTheme.copyWith(
-      decoration: defaultPinTheme.decoration!.copyWith(
-        border: Border.all(color: AppColors.primary),
-      ),
-    );
-
-    final errorPinTheme = defaultPinTheme.copyWith(
-      decoration: defaultPinTheme.decoration!.copyWith(
-        border: Border.all(color: Colors.red),
-      ),
-    );
-
+  Widget _buildCodeInput() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Saisissez le code de validation',
+          'Code de validation',
           style:
               TextStyle(
                 fontSize: 16.sp,
-                color: Colors.grey[600],
-              ).sourceSansProRegular,
+                fontWeight: FontWeight.w600,
+                color: AppColors.black,
+              ).sourceSansProSemiBold,
         ),
-        CustomSpacer(),
-        Pinput(
-          controller: _pinController,
-          length: 4,
-          defaultPinTheme: defaultPinTheme,
-          focusedPinTheme: focusedPinTheme,
-          errorPinTheme: errorPinTheme,
-          pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
-          onCompleted: (_) => _validatePin(),
+        CustomSpacer(space: 0.5),
+        TextFormField(
+          controller: _codeController,
+          decoration: InputDecoration(
+            hintText: 'Saisissez le code reçu par le locataire',
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.r),
+              borderSide: BorderSide(color: Colors.grey.withValues(alpha: 0.3)),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.r),
+              borderSide: BorderSide(color: AppColors.primary),
+            ),
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: 16.sp,
+              vertical: 16.sp,
+            ),
+          ),
+          style: TextStyle(fontSize: 16.sp).sourceSansProRegular,
+          textCapitalization: TextCapitalization.characters,
         ),
       ],
     );
   }
 
-  Widget _buildErrorMessage() {
-    return Text(
-      _errorMessage!,
-      textAlign: TextAlign.center,
-      style: TextStyle(fontSize: 16.sp, color: Colors.red).sourceSansProRegular,
-    );
-  }
-
-  Widget _buildButtons() {
+  Widget _buildValidateButton() {
     return CustomButton(
       text: 'Valider le paiement',
-      onPressed: _isLoading ? null : _validatePin,
+      onPressed:
+          _isLoading || _codeController.text.isEmpty ? null : _validateCode,
       isLoading: _isLoading,
       buttonVariant: ButtonVariant.primary,
       textStyle:

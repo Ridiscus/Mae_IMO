@@ -91,6 +91,7 @@ class _TenantListPageState extends State<TenantListPage> {
     );
   }
 
+
   Widget _buildTenantCard({required TenantItemModel tenant}) {
     return GestureDetector(
       onTap: () {

@@ -23,6 +23,8 @@ class PaymentBloc extends HydratedBloc<PaymentEvent, PaymentState> {
       super(PaymentInitial()) {
     on<FetchHistoryPaymentEvent>(_onFetchHistoryPaymentEvent);
     on<MakePaymentEvent>(_onMakePaymentEvent);
+    on<GenerateCashCodeEvent>(_onGenerateCashCodeEvent);
+    on<ValidateCashCodeEvent>(_onValidateCashCodeEvent);
   }
 
   FutureOr<void> _onFetchHistoryPaymentEvent(
@@ -101,6 +103,100 @@ class PaymentBloc extends HydratedBloc<PaymentEvent, PaymentState> {
       console.log("ERROR:: ${e.toString()}", name: "catch _onMakePaymentEvent");
       showToast(msg: 'Erreur lors du paiement');
       emit(state.copyWith(isLoading: false, paymentSuccess: false));
+
+      if (kDebugMode) {
+        rethrow;
+      }
+    }
+  }
+
+  Future<void> _onGenerateCashCodeEvent(
+    GenerateCashCodeEvent event,
+    Emitter<PaymentState> emit,
+  ) async {
+    // Vérifier si on peut générer un nouveau code (délai de 1 minute)
+    if (state.lastCodeGenerationTime != null) {
+      final timeDifference = DateTime.now().difference(state.lastCodeGenerationTime!);
+      if (timeDifference.inMinutes < 1) {
+        final remainingSeconds = 60 - timeDifference.inSeconds;
+        showToast(
+          msg: 'Veuillez attendre ${remainingSeconds}s avant de demander un nouveau code',
+          type: ToastificationType.warning,
+        );
+        return;
+      }
+    }
+
+    emit(state.copyWith(isLoading: true));
+    try {
+      final result = await _service.generateCashCode(request: event.dto);
+      if (result.success) {
+        showToast(
+          msg: result.message ?? 'Code généré avec succès',
+          type: ToastificationType.success,
+        );
+        emit(
+          state.copyWith(
+            isLoading: false,
+            codeGenerated: true,
+            generatedCode: result.data,
+            lastCodeGenerationTime: DateTime.now(),
+          ),
+        );
+      } else {
+        showToast(msg: result.message!);
+        emit(
+          state.copyWith(
+            isLoading: false,
+            codeGenerated: false,
+            failure: Failure(message: result.message!),
+          ),
+        );
+      }
+    } catch (e) {
+      console.log("ERROR:: ${e.toString()}", name: "catch _onGenerateCashCodeEvent");
+      showToast(msg: 'Erreur lors de la génération du code');
+      emit(state.copyWith(isLoading: false, codeGenerated: false));
+
+      if (kDebugMode) {
+        rethrow;
+      }
+    }
+  }
+
+  Future<void> _onValidateCashCodeEvent(
+    ValidateCashCodeEvent event,
+    Emitter<PaymentState> emit,
+  ) async {
+    emit(state.copyWith(isLoading: true));
+    try {
+      final result = await _service.validateCashCode(request: event.dto);
+      if (result.success) {
+        showToast(
+          msg: result.message ?? 'Paiement validé avec succès',
+          type: ToastificationType.success,
+        );
+        emit(
+          state.copyWith(
+            isLoading: false,
+            codeValidated: true,
+            paymentSuccess: true,
+          ),
+        );
+      } else {
+        showToast(msg: result.message!);
+        emit(
+          state.copyWith(
+            isLoading: false,
+            codeValidated: false,
+            failure: Failure(message: result.message!),
+          ),
+        );
+      }
+    } catch (e) {
+      console.log("ERROR:: ${e.toString()}", name: "catch _onValidateCashCodeEvent");
+      showToast(msg: 'Erreur lors de la validation du code');
+      emit(state.copyWith(isLoading: false, codeValidated: false));
 
       if (kDebugMode) {
         rethrow;

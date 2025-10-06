@@ -14,7 +14,6 @@ import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../core/domain/models/index.dart';
 import '../../../core/manager/state/dashboard/dashboard_bloc.dart';
-import '../../../core/manager/state/inventories/inventories_bloc.dart';
 
 class HomeAgentPage extends StatefulWidget {
   static const routeName = 'homeAgent';
@@ -151,7 +150,7 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
         height: double.infinity,
         padding: EdgeInsets.only(top: (150 / 1.8).h),
         decoration: BoxDecoration(
-          color:  AppColors.scaffold,
+          color: AppColors.scaffold,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(20.r),
             topRight: Radius.circular(20.r),

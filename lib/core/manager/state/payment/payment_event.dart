@@ -25,3 +25,21 @@ final class MakePaymentEvent extends PaymentEvent {
   @override
   List<Object> get props => [tenantId, dto];
 }
+
+final class GenerateCashCodeEvent extends PaymentEvent {
+  final EncashedRequest dto;
+
+  const GenerateCashCodeEvent({required this.dto});
+
+  @override
+  List<Object> get props => [dto];
+}
+
+final class ValidateCashCodeEvent extends PaymentEvent {
+  final ValidateEncashedRequest dto;
+
+  const ValidateCashCodeEvent({required this.dto});
+
+  @override
+  List<Object> get props => [dto];
+}

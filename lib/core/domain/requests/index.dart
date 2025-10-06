@@ -12,3 +12,5 @@ part 'update_profile_image_request.dart';
 part 'forgot_password_request.dart';
 part 'reset_password_request.dart';
 part 'make_payment_request.dart';
+part 'encashed_request.dart';
+part 'validate_encashed_request.dart';

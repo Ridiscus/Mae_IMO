@@ -27,4 +27,7 @@ class Endpoints {
   static String makePayment(int tenantId) => "/tenant/$tenantId/paiements";
 
   static String showDetailTenant(dynamic id) => "/agent/locataire/$id/details";
+
+  static const String generateCashCode = "/agent/paiement/generer-code-especes";
+  static const String validateCashCode = "/paiement/verifier-code-especes";
 }
