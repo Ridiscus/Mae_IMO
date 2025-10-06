@@ -35,6 +35,8 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
 
   late TenantDashboardModel _tenantDashboardModel;
 
+  bool thisMountIncluded = false;
+
   /// Affiche le modal avec les détails du paiement
   void _showPaymentDetails({
     required String month,
@@ -75,6 +77,13 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
 
     _userModel = _authState.userModel!;
     _loadingAll = _authState.isLoading || _paymentState.isLoading;
+
+    thisMountIncluded =
+        (_paymentState.paymentHistoryModel ?? [])
+            .where(
+              (element) => (element.moisCouvert ?? "").beforeTo(DateTime.now()),
+            )
+            .isNotEmpty;
 
     return PageWithHeaderLayout(
       headerContent: _buildHeaderContent(),
@@ -177,7 +186,10 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
             ),
             CustomSpacer(space: .5, isVertical: false),
 
-            CustomTag(label: 'impayé', color: AppColors.redColor),
+            CustomTag(
+              label: thisMountIncluded ? 'Payé' : 'impayé',
+              color: thisMountIncluded ? AppColors.success : AppColors.redColor,
+            ),
           ],
         ),
         Text(

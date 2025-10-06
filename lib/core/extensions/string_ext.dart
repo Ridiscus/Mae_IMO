@@ -60,6 +60,26 @@ extension CurrencyFormater on String {
     }
   }
 
+  bool beforeTo(DateTime date) {
+    try {
+      if (toLowerCase() == "null") return false;
+      var date = DateTime.parse(this);
+      return date.isBefore(date);
+    } catch (error) {
+      if (error is FormatException) {
+        var datePart = split("-");
+        var y = datePart.firstWhere((element) => element.length >= 3);
+        var m = datePart[1];
+
+        return DateTime.now()
+            .copyWith(year: int.parse(y), month: int.parse(m))
+
+            .isBefore(date);
+      }
+      return false;
+    }
+  }
+
   String firstLetter() {
     return this[0].toUpperCase() + substring(1);
   }
