@@ -80,9 +80,7 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
 
     thisMountIncluded =
         (_paymentState.paymentHistoryModel ?? [])
-            .where(
-              (element) => (element.moisCouvert ?? "").beforeTo(DateTime.now()),
-            )
+            .where((element) => (element.moisCouvert ?? "").thisMountIncluded())
             .isNotEmpty;
 
     return PageWithHeaderLayout(

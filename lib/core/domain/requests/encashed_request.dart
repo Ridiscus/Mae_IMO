@@ -4,7 +4,7 @@ class EncashedRequest extends Dto {
   final int locataireId;
   final int nombreMois;
 
-  EncashedRequest({required this.locataireId, required this.nombreMois});
+  EncashedRequest({required this.locataireId, this.nombreMois = 1});
 
   @override
   Map<String, dynamic> toJson() {

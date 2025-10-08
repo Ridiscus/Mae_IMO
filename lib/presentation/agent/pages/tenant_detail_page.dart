@@ -6,13 +6,11 @@ import 'package:go_router/go_router.dart';
 import 'package:maelys_imo/core/constants/app_colors.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
 import 'package:maelys_imo/core/manager/state/tenant/tenant_bloc.dart';
-import 'package:maelys_imo/core/manager/state/payment/payment_bloc.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
 import 'package:maelys_imo/shared/widgets/modals/index.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../core/domain/models/index.dart';
-import 'home_agent_page.dart';
 
 class TenantDetailPage extends StatefulWidget {
   static const routeName = 'tenantDetail';
@@ -30,6 +28,10 @@ class _TenantDetailPageState extends State<TenantDetailPage> {
   late TenantState _tenantState;
   TenantDetailModel? _tenant;
   bool _isLoading = false;
+
+  bool get allReadyPay =>
+      (_tenant?.prochainMoisAPayer?.dejaPaye ?? false) ||
+      (_tenant?.prochainMoisAPayer?.moisCouvert?.thisMountIncluded() ?? false);
 
   @override
   Widget build(BuildContext context) {
@@ -130,11 +132,8 @@ class _TenantDetailPageState extends State<TenantDetailPage> {
             InfoRowWidget(
               icon: Icons.money_outlined,
               text:
-                  'Montant dû : ${_tenant?.prochainMoisAPayer?.montant?.formatCurrency() ?? ''}',
-              textColor:
-                  (_tenant?.prochainMoisAPayer?.dejaPaye ?? false)
-                      ? AppColors.success
-                      : Colors.red[800],
+                  '${allReadyPay ? 'Montant payé' : 'Montant dû'}: ${_tenant?.prochainMoisAPayer?.montant?.formatCurrency() ?? ''}',
+              textColor: allReadyPay ? AppColors.success : Colors.red[800],
               fontWeight: FontWeight.bold,
             ),
           ],
@@ -144,7 +143,7 @@ class _TenantDetailPageState extends State<TenantDetailPage> {
   }
 
   Widget _buildCollectRentButton() {
-    return (_tenant?.prochainMoisAPayer?.dejaPaye ?? false)
+    return allReadyPay
         ? SizedBox.shrink()
         : CustomButton(
           text: 'Encaisser le loyer',
@@ -154,29 +153,31 @@ class _TenantDetailPageState extends State<TenantDetailPage> {
               backgroundColor: Colors.white,
               isScrollControlled: true,
               context: context,
-              builder: (context) => ModalCollectingTheRent(
-                tenantId: int.tryParse(widget.tenantId) ?? 0,
-                amount: _tenant?.bien?.prix?.toString() ?? '0',
-                onValidated: () {
-                  // Callback appelé après validation réussie
-                  if (kDebugMode) {
-                    print('Paiement validé avec succès');
-                  }
-                },
-                onCancel: () {
-                  // Callback appelé en cas d'annulation
-                  Navigator.pop(context);
-                },
-              ),
+              builder:
+                  (context) => ModalCollectingTheRent(
+                    tenantId: int.tryParse(widget.tenantId) ?? 0,
+                    amount: _tenant?.bien?.prix?.toString() ?? '0',
+                    onValidated: () {
+                      // Callback appelé après validation réussie
+                      if (kDebugMode) {
+                        print('Paiement validé avec succès');
+                      }
+                    },
+                    onCancel: () {
+                      // Callback appelé en cas d'annulation
+                      Navigator.pop(context);
+                    },
+                  ),
             );
           },
           showArrow: true,
           buttonVariant: ButtonVariant.red,
-          textStyle: TextStyle(
-            fontSize: 16.sp,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ).sourceSansProBold,
+          textStyle:
+              TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ).sourceSansProBold,
         );
   }
 }

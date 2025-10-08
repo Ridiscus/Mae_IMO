@@ -165,7 +165,9 @@ class _ModalCollectingTheRentState extends State<ModalCollectingTheRent> {
   Widget _buildMonthsSelection() {
     return CustomInputTextFactory.createTextNumberInput(
       controller: _monthsController,
+      readOnly: true,
       labelText: 'Nombre de mois',
+
       hintText: 'Saisissez le nombre de mois (1-12)',
       onChanged: (value) {
         final months = int.tryParse(value) ?? 1;
@@ -297,26 +299,25 @@ class _ModalCollectingTheRentState extends State<ModalCollectingTheRent> {
               ).sourceSansProSemiBold,
         ),
         CustomSpacer(space: 0.5),
-        TextFormField(
+
+        CustomInputTextFactory.createTextInput(
           controller: _codeController,
-          decoration: InputDecoration(
-            hintText: 'Saisissez le code reçu par le locataire',
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.r),
-              borderSide: BorderSide(color: Colors.grey.withValues(alpha: 0.3)),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.r),
-              borderSide: BorderSide(color: AppColors.primary),
-            ),
-            contentPadding: EdgeInsets.symmetric(
-              horizontal: 16.sp,
-              vertical: 16.sp,
-            ),
-          ),
-          style: TextStyle(fontSize: 16.sp).sourceSansProRegular,
-          textCapitalization: TextCapitalization.characters,
+          hintText: 'Saisissez le code reçu par le locataire',
+          textInputAction: TextInputAction.done,
+          onChanged: (value) {
+            _codeController.text = value;
+            setState(() {
+
+            });
+          },
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Veuillez saisir le code de validation';
+            }
+            return null;
+          },
         ),
+
       ],
     );
   }
@@ -324,8 +325,7 @@ class _ModalCollectingTheRentState extends State<ModalCollectingTheRent> {
   Widget _buildValidateButton() {
     return CustomButton(
       text: 'Valider le paiement',
-      onPressed:
-          _isLoading || _codeController.text.isEmpty ? null : _validateCode,
+      onPressed: (_isLoading || _codeController.text.isEmpty) ? null : _validateCode,
       isLoading: _isLoading,
       buttonVariant: ButtonVariant.primary,
       textStyle:

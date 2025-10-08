@@ -60,11 +60,11 @@ extension CurrencyFormater on String {
     }
   }
 
-  bool beforeTo(DateTime date) {
+  bool beforeTo(DateTime futureDate) {
     try {
       if (toLowerCase() == "null") return false;
-      var date = DateTime.parse(this);
-      return date.isBefore(date);
+      var thisDate = DateTime.parse(this);
+      return thisDate.isBefore(futureDate);
     } catch (error) {
       if (error is FormatException) {
         var datePart = split("-");
@@ -73,11 +73,33 @@ extension CurrencyFormater on String {
 
         return DateTime.now()
             .copyWith(year: int.parse(y), month: int.parse(m))
-
-            .isBefore(date);
+            .isBefore(futureDate);
       }
       return false;
     }
+  }
+
+  bool afterTo(DateTime nowDate) {
+    try {
+      if (toLowerCase() == "null") return false;
+      var thisDate = DateTime.parse(this);
+      return thisDate.isAfter(nowDate);
+    } catch (error) {
+      if (error is FormatException) {
+        var datePart = split("-");
+        var y = datePart.firstWhere((element) => element.length >= 3);
+        var m = datePart[1];
+
+        return DateTime.now()
+            .copyWith(year: int.parse(y), month: int.parse(m))
+            .isAfter(nowDate);
+      }
+      return false;
+    }
+  }
+
+  bool thisMountIncluded() {
+    return !afterTo(DateTime.now());
   }
 
   String firstLetter() {
