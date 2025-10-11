@@ -170,6 +170,7 @@ class _ModalCollectingTheRentState extends State<ModalCollectingTheRent> {
 
       hintText: 'Saisissez le nombre de mois (1-12)',
       onChanged: (value) {
+
         final months = int.tryParse(value) ?? 1;
         if (months >= 1 && months <= 12) {
           setState(() {

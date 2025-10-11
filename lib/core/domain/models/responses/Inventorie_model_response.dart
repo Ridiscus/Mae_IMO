@@ -5,15 +5,18 @@ import '../index.dart';
 class InventorieModelResponse {
   final List<TenantItemModel>? locataires;
   final int? total;
+  final EstateLocationResponseModel? etats_lieu;
 
-  InventorieModelResponse({this.locataires, this.total});
+  InventorieModelResponse({this.locataires, this.total, this.etats_lieu});
 
   InventorieModelResponse copyWith({
     List<TenantItemModel>? locataires,
     int? total,
+    EstateLocationResponseModel? etats_lieu,
   }) => InventorieModelResponse(
     locataires: locataires ?? this.locataires,
     total: total ?? this.total,
+    etats_lieu: etats_lieu ?? this.etats_lieu,
   );
 
   factory InventorieModelResponse.fromJson(String str) =>
@@ -30,6 +33,10 @@ class InventorieModelResponse {
                   json["locataires"]!.map((x) => TenantItemModel.fromMap(x)),
                 ),
         total: json["total"],
+        etats_lieu:
+            json["etats_lieu"] == null
+                ? null
+                : EstateLocationResponseModel.fromMap(json["etats_lieu"]),
       );
 
   Map<String, dynamic> toMap() => {
@@ -38,5 +45,6 @@ class InventorieModelResponse {
             ? []
             : List<dynamic>.from(locataires!.map((x) => x.toMap())),
     "total": total,
+    "etats_lieu": etats_lieu?.toMap(),
   };
 }

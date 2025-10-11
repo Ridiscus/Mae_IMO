@@ -14,3 +14,4 @@ part 'reset_password_request.dart';
 part 'make_payment_request.dart';
 part 'encashed_request.dart';
 part 'validate_encashed_request.dart';
+part 'save_estate_location_request.dart';

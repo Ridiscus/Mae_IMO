@@ -22,3 +22,7 @@ part 'tenant_item_model.dart';
 part 'tenant_detail_model.dart';
 part 'inventory_detail_model.dart';
 part 'init_payment_model.dart';
+part 'estate_location_model.dart';
+part 'chambre_model.dart';
+part 'parties_communes_model.dart';
+part 'estate_location_response_model.dart';
