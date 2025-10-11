@@ -439,6 +439,7 @@ class _PropertyInspectionFormPageState
             CustomInputTextFactory.createTextAreaInput(
               controller: _chambresComments[chambreKey]![elementKey]!,
               hintText: 'Commentaire sur l\'état...',
+              textInputAction: TextInputAction.done
             ),
           ],
         ],
