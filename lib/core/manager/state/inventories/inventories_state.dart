@@ -5,20 +5,37 @@ class InventoriesState extends Equatable {
   final Failure? failure;
   final InventorieModelResponse? inventories;
   final InventoryDetailModel? inventoryDetail;
+  final bool? codeGenerated;
+  final bool? codeVerified;
+  final bool? estateLocationSaved;
 
-  const InventoriesState({this.inventoryDetail, this.isLoading, this.inventories, this.failure});
+  const InventoriesState({
+    this.inventoryDetail,
+    this.isLoading,
+    this.inventories,
+    this.failure,
+    this.codeGenerated,
+    this.codeVerified,
+    this.estateLocationSaved,
+  });
 
   InventoriesState copyWith({
     bool? isLoading,
     InventorieModelResponse? inventories,
     InventoryDetailModel? inventoryDetail,
     Failure? failure,
+    bool? codeGenerated,
+    bool? codeVerified,
+    bool? estateLocationSaved,
   }) {
     return InventoriesState(
       isLoading: isLoading ?? this.isLoading,
       inventories: inventories ?? this.inventories,
-      inventoryDetail: inventoryDetail,
+      inventoryDetail: inventoryDetail ?? this.inventoryDetail,
       failure: failure,
+      codeGenerated: codeGenerated,
+      codeVerified: codeVerified,
+      estateLocationSaved: estateLocationSaved,
     );
   }
 
@@ -38,7 +55,14 @@ class InventoriesState extends Equatable {
   };
 
   @override
-  List<Object?> get props => [isLoading, inventoryDetail, inventories];
+  List<Object?> get props => [
+    isLoading,
+    inventoryDetail,
+    inventories,
+    codeGenerated,
+    codeVerified,
+    estateLocationSaved,
+  ];
 }
 
 final class InventoriesInitial extends InventoriesState {

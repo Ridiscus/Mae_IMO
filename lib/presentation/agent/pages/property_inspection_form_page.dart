@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:maelys_imo/core/constants/app_colors.dart';
 import 'package:maelys_imo/core/domain/models/index.dart';
+import 'package:maelys_imo/core/domain/requests/index.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
 import 'package:maelys_imo/core/utils/toast/notification_toast.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
-import 'package:maelys_imo/shared/widgets/modals/index.dart';
 import 'package:toastification/toastification.dart';
 
 import '../../../core/manager/state/inventories/inventories_bloc.dart';
@@ -26,41 +27,66 @@ class PropertyInspectionFormPage extends StatefulWidget {
 
 class _PropertyInspectionFormPageState
     extends State<PropertyInspectionFormPage> {
-  // Sample property rooms - to be replaced with actual data
-    List<Map<String, dynamic>> _rooms = [
-    {
-      'name': 'Séjour',
-      'status': null, // null = not set, true = good, false = bad
-    },
-    {'name': 'Cuisine', 'status': null},
-    {'name': 'Chambre principale', 'status': null},
-    {'name': 'Chambre secondaire', 'status': null},
-    {'name': 'Salle de bain', 'status': null},
-  ];
+  // Controllers for parties communes
+  final Map<String, bool?> _partiesCommunesStatus = {};
+  final Map<String, TextEditingController> _partiesCommunesComments = {};
 
-  // Additional comments
-  final TextEditingController _commentsController = TextEditingController();
-  late InventoriesState _inventoriesState;
+  // Controllers for chambres
+  final Map<String, Map<String, bool?>> _chambresStatus = {};
+  final Map<String, Map<String, TextEditingController>> _chambresComments = {};
+
   TenantModel? _tenant;
   EstateModel? _propertyData;
-  bool _isLoading = false;
+  EstateLocationModel? _estateLocation;
 
   @override
   void dispose() {
-    _commentsController.dispose();
+    // // Dispose all controllers
+    // for (var controller in _partiesCommunesComments.values) {
+    //   controller.dispose();
+    // }
+    // for (var map in _chambresComments.values) {
+    //   for (var controller in map.values) {
+    //     controller.dispose();
+    //   }
+    // }
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    _inventoriesState = context.select((InventoriesBloc bloc) => bloc.state);
-    _propertyData = _inventoriesState.inventoryDetail?.bien;
-    _tenant = _inventoriesState.inventoryDetail?.locataire;
-    _isLoading = _inventoriesState.isLoading ?? false;
+    return BlocConsumer<InventoriesBloc, InventoriesState>(
+      listener: (context, state) {
+        // Handle code generated successfully
+        if (state.codeGenerated == true) {
+          _showVerificationCodeModal(context);
+        }
 
-    return PageWithHeaderLayout(
-      headerContent: _buildHeaderContent(),
-      bodyContent: _buildInspectionForm(),
+        // Handle code verified successfully
+        if (state.codeVerified == true) {
+          // Close the modal
+          Navigator.of(context).pop();
+          // Save estate location
+          _saveEstateLocation();
+        }
+
+        // Handle estate location saved successfully (only navigate on success)
+        if (state.estateLocationSaved == true) {
+          context.pop();
+        }
+
+        // Don't auto-navigate on errors - let user manually go back to preserve data
+      },
+      builder: (context, state) {
+        _propertyData = state.inventoryDetail?.bien;
+        _tenant = state.inventoryDetail?.locataire;
+        _estateLocation = state.inventoryDetail?.etatsLieu?.etatEntree;
+
+        return PageWithHeaderLayout(
+          headerContent: _buildHeaderContent(),
+          bodyContent: _buildInspectionForm(),
+        );
+      },
     );
   }
 
@@ -90,8 +116,6 @@ class _PropertyInspectionFormPageState
         _buildPropertySummary(),
         CustomSpacer(space: 2),
         _buildRoomsList(),
-        CustomSpacer(),
-        _buildCommentsSection(),
         CustomSpacer(),
         _buildSaveButton(),
       ],
@@ -148,26 +172,95 @@ class _PropertyInspectionFormPageState
     );
   }
 
+  // Extrait dynamiquement les champs des parties communes depuis le modèle
+  List<Map<String, String>> get _partiesCommunesFields {
+    final partiesCommunes = _estateLocation?.partiesCommunesModel;
+    if (partiesCommunes == null) return [];
+
+    final fields = <Map<String, String>>[];
+    final modelMap = partiesCommunes.toMap();
+
+    // Parcourir les clés du modèle et exclure les observations
+    modelMap.forEach((key, value) {
+      if (!key.startsWith('observation_')) {
+        // Convertir la clé snake_case en label lisible
+        final label = _formatLabel(key);
+        fields.add({'key': key, 'label': label});
+      }
+    });
+
+    return fields;
+  }
+
+  // Convertit une clé snake_case en label lisible
+  String _formatLabel(String key) {
+    final labels = {
+      'sol': 'Sol',
+      'murs': 'Murs',
+      'plafond': 'Plafond',
+      'douche': 'Douche',
+      'lavabo': 'Lavabo',
+      'robinet': 'Robinet',
+      'porte_entre': 'Porte d\'entrée',
+      'interrupteur': 'Interrupteur',
+    };
+
+    return labels[key] ??
+        key
+            .replaceAll('_', ' ')
+            .split(' ')
+            .map(
+              (word) =>
+                  word.isEmpty ? '' : word[0].toUpperCase() + word.substring(1),
+            )
+            .join(' ');
+  }
+
   Widget _buildRoomsList() {
+    final partiesCommunes = _estateLocation?.partiesCommunesModel;
+    final chambres = _estateLocation?.chambreModels ?? [];
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'État des pièces',
-          style:
-              TextStyle(
-                fontSize: 18.sp,
-                fontWeight: FontWeight.w600,
-                color: Colors.black,
-              ).sourceSansProSemiBold,
-        ),
-        SizedBox(height: 16.sp),
-        ...(_propertyData?.rooms ?? []).map((room) => _buildRoomItem(room)).toList(),
+        // Parties Communes Section
+        if (partiesCommunes != null) ...[
+          Text(
+            'Parties Communes',
+            style:
+                TextStyle(
+                  fontSize: 20.sp,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ).sourceSansProBold,
+          ),
+          SizedBox(height: 16.sp),
+          ..._partiesCommunesFields.map(
+            (field) =>
+                _buildPartiesCommunesItem(field['label']!, field['key']!),
+          ),
+          SizedBox(height: 24.sp),
+        ],
+
+        // Chambres Section
+        if (chambres.isNotEmpty) ...[
+          Text(
+            'Chambres',
+            style:
+                TextStyle(
+                  fontSize: 20.sp,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ).sourceSansProBold,
+          ),
+          SizedBox(height: 16.sp),
+          ...chambres.map((chambre) => _buildChambreSection(chambre)),
+        ],
       ],
     );
   }
 
-  Widget _buildRoomItem(Map<String, dynamic> room) {
+  Widget _buildPartiesCommunesItem(String label, String key) {
     return Container(
       margin: EdgeInsets.only(bottom: 16.sp),
       padding: EdgeInsets.all(16.sp),
@@ -186,7 +279,7 @@ class _PropertyInspectionFormPageState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            room['name'],
+            label,
             style:
                 TextStyle(
                   fontSize: 16.sp,
@@ -200,11 +293,11 @@ class _PropertyInspectionFormPageState
               Expanded(
                 child: _buildStatusButton(
                   label: 'Bon état',
-                  isSelected: room['status'] == true,
+                  isSelected: _partiesCommunesStatus[key] == true,
                   color: AppColors.success,
                   onTap: () {
                     setState(() {
-                      room['status'] = true;
+                      _partiesCommunesStatus[key] = true;
                     });
                   },
                 ),
@@ -213,17 +306,141 @@ class _PropertyInspectionFormPageState
               Expanded(
                 child: _buildStatusButton(
                   label: 'Mauvais état',
-                  isSelected: room['status'] == false,
+                  isSelected: _partiesCommunesStatus[key] == false,
                   color: AppColors.redColor,
                   onTap: () {
                     setState(() {
-                      room['status'] = false;
+                      _partiesCommunesStatus[key] = false;
+                      // Initialize comment controller if not exists
+                      if (!_partiesCommunesComments.containsKey(key)) {
+                        _partiesCommunesComments[key] = TextEditingController();
+                      }
                     });
                   },
                 ),
               ),
             ],
           ),
+          // Show comment field if status is bad
+          if (_partiesCommunesStatus[key] == false) ...[
+            SizedBox(height: 12.sp),
+            CustomInputTextFactory.createTextAreaInput(
+              controller: _partiesCommunesComments[key]!,
+              hintText: 'Commentaire sur l\'état...',
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildChambreSection(ChambreModel chambre) {
+    final chambreKey = chambre.nom ?? 'Chambre';
+
+    // Initialize status map for this chambre if not exists
+    if (!_chambresStatus.containsKey(chambreKey)) {
+      _chambresStatus[chambreKey] = {};
+      _chambresComments[chambreKey] = {};
+    }
+
+    return Container(
+      margin: EdgeInsets.only(bottom: 24.sp),
+      padding: EdgeInsets.all(16.sp),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade50,
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            chambreKey,
+            style:
+                TextStyle(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.primary,
+                ).sourceSansProBold,
+          ),
+          SizedBox(height: 16.sp),
+          _buildChambreElementItem(chambreKey, 'Sol', 'sol'),
+          _buildChambreElementItem(chambreKey, 'Murs', 'murs'),
+          _buildChambreElementItem(chambreKey, 'Plafond', 'plafond'),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildChambreElementItem(
+    String chambreKey,
+    String label,
+    String elementKey,
+  ) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 12.sp),
+      padding: EdgeInsets.all(12.sp),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8.r),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style:
+                TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black,
+                ).sourceSansProSemiBold,
+          ),
+          SizedBox(height: 8.sp),
+          Row(
+            children: [
+              Expanded(
+                child: _buildStatusButton(
+                  label: 'Bon état',
+                  isSelected: _chambresStatus[chambreKey]?[elementKey] == true,
+                  color: AppColors.success,
+                  onTap: () {
+                    setState(() {
+                      _chambresStatus[chambreKey]![elementKey] = true;
+                    });
+                  },
+                ),
+              ),
+              SizedBox(width: 12.sp),
+              Expanded(
+                child: _buildStatusButton(
+                  label: 'Mauvais état',
+                  isSelected: _chambresStatus[chambreKey]?[elementKey] == false,
+                  color: AppColors.redColor,
+                  onTap: () {
+                    setState(() {
+                      _chambresStatus[chambreKey]![elementKey] = false;
+                      // Initialize comment controller if not exists
+                      if (!_chambresComments[chambreKey]!.containsKey(
+                        elementKey,
+                      )) {
+                        _chambresComments[chambreKey]![elementKey] =
+                            TextEditingController();
+                      }
+                    });
+                  },
+                ),
+              ),
+            ],
+          ),
+          // Show comment field if status is bad
+          if (_chambresStatus[chambreKey]?[elementKey] == false) ...[
+            SizedBox(height: 8.sp),
+            CustomInputTextFactory.createTextAreaInput(
+              controller: _chambresComments[chambreKey]![elementKey]!,
+              hintText: 'Commentaire sur l\'état...',
+            ),
+          ],
         ],
       ),
     );
@@ -265,29 +482,6 @@ class _PropertyInspectionFormPageState
     );
   }
 
-  Widget _buildCommentsSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Commentaires additionnels',
-          style:
-              TextStyle(
-                fontSize: 18.sp,
-                fontWeight: FontWeight.w600,
-                color: Colors.black,
-              ).sourceSansProSemiBold,
-        ),
-        SizedBox(height: 12.sp),
-        CustomInputTextFactory.createTextAreaInput(
-          controller: _commentsController,
-          hintText: 'Ajoutez des commentaires sur l\'état général du bien...',
-          // maxLines: 4,
-        ),
-      ],
-    );
-  }
-
   Widget _buildSaveButton() {
     return CustomButton(
       text: 'Enregistrer cet état',
@@ -298,41 +492,227 @@ class _PropertyInspectionFormPageState
   }
 
   bool _isFormValid() {
-    // Check if all rooms have a status selected
-    for (var room in _rooms) {
-      if (room['status'] == null) {
+    // Check if all parties communes have a status selected (dynamically)
+    for (var field in _partiesCommunesFields) {
+      final key = field['key']!;
+      if (_partiesCommunesStatus[key] == null) {
         return false;
       }
+      // Check if comment is required for bad status
+      if (_partiesCommunesStatus[key] == false) {
+        if (!_partiesCommunesComments.containsKey(key) ||
+            _partiesCommunesComments[key]!.text.trim().isEmpty) {
+          return false;
+        }
+      }
     }
+
+    // Check if all chambres elements have a status selected
+    final chambres = _estateLocation?.chambreModels ?? [];
+    for (var chambre in chambres) {
+      final chambreKey = chambre.nom ?? 'Chambre';
+      final elementKeys = ['sol', 'murs', 'plafond'];
+
+      for (var elementKey in elementKeys) {
+        if (_chambresStatus[chambreKey]?[elementKey] == null) {
+          return false;
+        }
+        // Check if comment is required for bad status
+        if (_chambresStatus[chambreKey]?[elementKey] == false) {
+          if (!_chambresComments[chambreKey]!.containsKey(elementKey) ||
+              _chambresComments[chambreKey]![elementKey]!.text.trim().isEmpty) {
+            return false;
+          }
+        }
+      }
+    }
+
     return true;
   }
 
   void _validateAndSave() {
     if (!_isFormValid()) {
-      // Show error message
       showToast(
-        msg: 'Veuillez sélectionner un état pour toutes les pièces',
+        msg:
+            'Veuillez remplir tous les champs requis et ajouter des commentaires pour les éléments en mauvais état',
         type: ToastificationType.error,
       );
       return;
     }
 
-    // Show confirmation modal
+    if (_tenant?.id == null) {
+      showToast(
+        msg: 'Informations du locataire manquantes',
+        type: ToastificationType.error,
+      );
+      return;
+    }
+
+    // Generate OTP code
+    context.read<InventoriesBloc>().add(
+      GenerateCodeEtatLieuxEvent(locataireId: _tenant!.id!),
+    );
+  }
+
+  void _showVerificationCodeModal(BuildContext context) {
+    final codeController = TextEditingController();
+
     showModalBottomSheet(
       showDragHandle: true,
       backgroundColor: Colors.white,
       isScrollControlled: true,
       context: context,
+      isDismissible: false,
+      enableDrag: false,
       builder:
-          (context) => ModalPropertyInspectionConfirmation(
-            onValidated: () {
-              // Handle validation
-              // Navigator.pop(context);
-            },
-            onCancel: () {
-              Navigator.pop(context);
-            },
+          (modalContext) => Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(modalContext).viewInsets.bottom,
+              left: 20.sp,
+              right: 20.sp,
+              top: 20.sp,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Vérification du code OTP',
+                  style:
+                      TextStyle(
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ).sourceSansProBold,
+                ),
+                SizedBox(height: 12.sp),
+                Text(
+                  'Un code de vérification a été envoyé au locataire. Veuillez saisir le code communiqué par le locataire.',
+                  style:
+                      TextStyle(
+                        fontSize: 14.sp,
+                        color: Colors.black87,
+                      ).sourceSansProRegular,
+                ),
+                SizedBox(height: 20.sp),
+                CustomInputTextFactory.createTextInput(
+                  controller: codeController,
+                  hintText: 'Code de vérification',
+                  labelText: 'Code OTP',
+                ),
+                SizedBox(height: 20.sp),
+                SafeArea(
+                  left: false,
+                  right: false,
+                  top: false,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: () {
+                            Navigator.pop(modalContext);
+                          },
+                          style: OutlinedButton.styleFrom(
+                            padding: EdgeInsets.symmetric(vertical: 14.sp),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.r),
+                            ),
+                          ),
+                          child: Text(
+                            'Annuler',
+                            style:
+                                TextStyle(
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w600,
+                                ).sourceSansProSemiBold,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 12.sp),
+                      Expanded(
+                        child: BlocBuilder<InventoriesBloc, InventoriesState>(
+                          builder: (context, state) {
+                            return CustomButton(
+                              text: 'Vérifier',
+                              onPressed: () {
+                                if (codeController.text.trim().isEmpty) {
+                                  showToast(
+                                    msg:
+                                        'Veuillez saisir le code de vérification',
+                                    type: ToastificationType.error,
+                                  );
+                                  return;
+                                }
+
+                                // Verify code
+                                context.read<InventoriesBloc>().add(
+                                  VerifyCodeEtatLieuxEvent(
+                                    locataireId: _tenant!.id!,
+                                    verificationCode:
+                                        codeController.text.trim(),
+                                  ),
+                                );
+                              },
+                              isLoading: state.isLoading ?? false,
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 20.sp),
+              ],
+            ),
           ),
+    );
+  }
+
+  void _saveEstateLocation() {
+    // Prepare parties communes data
+    final partiesCommunesData = <String, dynamic>{};
+    _partiesCommunesStatus.forEach((key, status) {
+      partiesCommunesData[key] = status == true ? 'Bon état' : 'Mauvais état';
+      if (status == false && _partiesCommunesComments.containsKey(key)) {
+        partiesCommunesData['observation_$key'] =
+            _partiesCommunesComments[key]!.text.trim();
+      }
+    });
+
+    // Prepare chambres data
+    final chambresData = <Map<String, dynamic>>[];
+    final chambres = _estateLocation?.chambreModels ?? [];
+
+    for (var chambre in chambres) {
+      final chambreKey = chambre.nom ?? 'Chambre';
+      final chambreData = <String, dynamic>{'nom': chambreKey};
+      _chambresStatus[chambreKey]?.forEach((elementKey, status) {
+        chambreData[elementKey] = status == true ? 'Bon état' : 'Mauvais état';
+        if (status == false &&
+            _chambresComments[chambreKey]!.containsKey(elementKey)) {
+          chambreData['observation_$elementKey'] =
+              _chambresComments[chambreKey]![elementKey]!.text.trim();
+        }
+      });
+
+      chambresData.add(chambreData);
+    }
+
+    // Create request
+    final request = SaveEstateLocationRequest(
+      locataireId: _tenant!.id!,
+      bienId: _propertyData!.id!,
+      typeBien: _propertyData!.type ?? '',
+      communeBien: _propertyData!.commune ?? '',
+      presencePartie: 'oui',
+      partiesCommunes: partiesCommunesData,
+      chambres: chambresData,
+      nombreCle: 2, // You can make this dynamic if needed
+    );
+
+    // Save estate location
+    context.read<InventoriesBloc>().add(
+      SaveEstateLocationEvent(request: request),
     );
   }
 }

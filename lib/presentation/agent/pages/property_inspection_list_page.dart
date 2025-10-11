@@ -62,20 +62,34 @@ class _PropertyInspectionListPageState
   }
 
   Widget _buildContent() {
-    return _inventories.isEmpty
-        ? _buildEmptyState()
-        : Column(
-          children: [
-            ..._inventories
-                .map((inspection) {
-                  return Skeletonizer(
-                    enabled: _isLoading,
-                    child: _buildInspectionCard(inspection),
-                  );
-                })
-                .expand((element) => [element, CustomSpacer()]),
-          ],
-        );
+    return RefreshIndicator.adaptive(
+      onRefresh: () async {
+        context.read<InventoriesBloc>().add(FetchInventoriesEvent());
+      },
+      child: _inventories.isEmpty
+          ? SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: SizedBox(
+                height: context.getSize.height * 0.8,
+                child: _buildEmptyState(),
+              ),
+            )
+          : SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Column(
+                children: [
+                  ..._inventories
+                      .map((inspection) {
+                        return Skeletonizer(
+                          enabled: _isLoading,
+                          child: _buildInspectionCard(inspection),
+                        );
+                      })
+                      .expand((element) => [element, CustomSpacer()]),
+                ],
+              ),
+            ),
+    );
   }
 
   Widget _buildEmptyState() {

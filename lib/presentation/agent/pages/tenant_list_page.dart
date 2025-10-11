@@ -69,25 +69,41 @@ class _TenantListPageState extends State<TenantListPage> {
   Widget _buildTenantList() {
     final state = context.select((TenantBloc bloc) => bloc.state);
     final tenants = state.tenants ?? [];
-    return Skeletonizer(
-      enabled: state.isLoading ?? false,
-      child:
-          tenants.isEmpty
-              ? SizedBox(
+    return RefreshIndicator.adaptive(
+      onRefresh: () async {
+        context.read<TenantBloc>().add(
+          FetchTenantsByStatusEvent(status: widget.listType.value),
+        );
+      },
+      child: Skeletonizer(
+        enabled: state.isLoading ?? false,
+        child: tenants.isEmpty
+            ? SizedBox(
                 height: context.getSize.height,
-                child: EmptyStateWidget(
-                  title: "Aucun locataire disponible",
-                  icon: Icons.search_off,
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: SizedBox(
+                    height: context.getSize.height * 0.8,
+                    child: EmptyStateWidget(
+                      title: "Aucun locataire disponible",
+                      icon: Icons.search_off,
+                    ),
+                  ),
                 ),
               )
-              : Column(
-                children: [
-                  ...tenants
-                      .map((tenant) => _buildTenantCard(tenant: tenant))
-                      .expand((element) => [CustomSpacer(), element]),
-                  SpacerPlatform(),
-                ],
+            : SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Column(
+                  children: [
+
+                    ...tenants
+                        .map((tenant) => _buildTenantCard(tenant: tenant))
+                        .expand((element) => [CustomSpacer(), element]),
+                    SpacerPlatform(),
+                  ],
+                ),
               ),
+      ),
     );
   }
 

@@ -32,7 +32,6 @@ class _PropertyInspectionDetailPageState
 
   bool _isLoading = false;
   late InventoriesState _inventoriesState;
-  InventoryDetailModel? _inventoryDetail;
 
   @override
   void initState() {
@@ -45,7 +44,6 @@ class _PropertyInspectionDetailPageState
   @override
   Widget build(BuildContext context) {
     _inventoriesState = context.select((InventoriesBloc bloc) => bloc.state);
-    _inventoryDetail = _inventoriesState.inventoryDetail;
     _propertyData = _inventoriesState.inventoryDetail?.bien;
     _tenant = _inventoriesState.inventoryDetail?.locataire;
     _isLoading = _inventoriesState.isLoading ?? false;
@@ -186,13 +184,16 @@ class _PropertyInspectionDetailPageState
       text: 'Démarrer l\'état des lieux',
       onPressed: () {
         // Navigate to the inspection form page
-        context.pushNamed(
-          PropertyInspectionFormPage.routeName,
-          pathParameters: {'id': this._propertyData!.id.toString()},
-        );
+        if (_propertyData?.id != null) {
+          context.pushNamed(
+            PropertyInspectionFormPage.routeName,
+            pathParameters: {'id': _propertyData!.id.toString()},
+          );
+        }
       },
       showArrow: true,
       buttonVariant: ButtonVariant.primary,
     );
   }
+
 }

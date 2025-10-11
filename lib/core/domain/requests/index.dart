@@ -15,3 +15,5 @@ part 'make_payment_request.dart';
 part 'encashed_request.dart';
 part 'validate_encashed_request.dart';
 part 'save_estate_location_request.dart';
+part 'generate_code_etat_lieux_request.dart';
+part 'verify_code_etat_lieux_request.dart';

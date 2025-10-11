@@ -72,10 +72,10 @@ class EstateLocationModel {
             ? null
             : PartiesCommunesModel.fromMap(json["parties_communes"]),
     chambreModels:
-        json["chambreModels"] == null
+        json["chambres"] == null
             ? []
             : List<ChambreModel>.from(
-              json["chambreModels"]!.map((x) => ChambreModel.fromMap(x)),
+              json["chambres"]!.map((x) => ChambreModel.fromMap(x)),
             ),
     nombreCle: json["nombre_cle"],
     createdAt:
@@ -92,7 +92,7 @@ class EstateLocationModel {
     "status_etat_entre": statusEtatEntre,
     "status_sorti": statusSorti,
     "parties_communes": partiesCommunesModel?.toMap(),
-    "chambreModels":
+    "chambres":
         chambreModels == null
             ? []
             : List<dynamic>.from(chambreModels!.map((x) => x.toMap())),

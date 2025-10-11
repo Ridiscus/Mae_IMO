@@ -30,4 +30,8 @@ class Endpoints {
 
   static const String generateCashCode = "/agent/paiement/generer-code-especes";
   static const String validateCashCode = "/paiement/verifier-code-especes";
+
+  static const String generateCodeEtatLieux = "/agent/generate";
+  static const String verifyCodeEtatLieux = "/agent/verify";
+  static const String saveEstateLocation = "/agent/etat-lieux";
 }
