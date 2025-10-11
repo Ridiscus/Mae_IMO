@@ -10,7 +10,6 @@ import 'package:maelys_imo/presentation/auth/pages/reset_passord_page.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
 
 import '../../../core/utils/toast/notification_toast.dart';
-import '../../../di_container.dart';
 
 class ForgetPasswordPage extends StatefulWidget {
   static const routeName = 'forgetPassword';

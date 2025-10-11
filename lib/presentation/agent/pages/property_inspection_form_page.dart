@@ -8,6 +8,7 @@ import 'package:maelys_imo/core/domain/requests/index.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
 import 'package:maelys_imo/core/utils/toast/notification_toast.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
+import 'package:maelys_imo/shared/widgets/modals/index.dart';
 import 'package:toastification/toastification.dart';
 
 import '../../../core/manager/state/inventories/inventories_bloc.dart';
@@ -60,14 +61,6 @@ class _PropertyInspectionFormPageState
         // Handle code generated successfully
         if (state.codeGenerated == true) {
           _showVerificationCodeModal(context);
-        }
-
-        // Handle code verified successfully
-        if (state.codeVerified == true) {
-          // Close the modal
-          Navigator.of(context).pop();
-          // Save estate location
-          _saveEstateLocation();
         }
 
         // Handle estate location saved successfully (only navigate on success)
@@ -327,6 +320,7 @@ class _PropertyInspectionFormPageState
             CustomInputTextFactory.createTextAreaInput(
               controller: _partiesCommunesComments[key]!,
               hintText: 'Commentaire sur l\'état...',
+                textInputAction: TextInputAction.done
             ),
           ],
         ],
@@ -556,8 +550,6 @@ class _PropertyInspectionFormPageState
   }
 
   void _showVerificationCodeModal(BuildContext context) {
-    final codeController = TextEditingController();
-
     showModalBottomSheet(
       showDragHandle: true,
       backgroundColor: Colors.white,
@@ -565,107 +557,10 @@ class _PropertyInspectionFormPageState
       context: context,
       isDismissible: false,
       enableDrag: false,
-      builder:
-          (modalContext) => Padding(
-            padding: EdgeInsets.only(
-              bottom: MediaQuery.of(modalContext).viewInsets.bottom,
-              left: 20.sp,
-              right: 20.sp,
-              top: 20.sp,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Vérification du code OTP',
-                  style:
-                      TextStyle(
-                        fontSize: 20.sp,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ).sourceSansProBold,
-                ),
-                SizedBox(height: 12.sp),
-                Text(
-                  'Un code de vérification a été envoyé au locataire. Veuillez saisir le code communiqué par le locataire.',
-                  style:
-                      TextStyle(
-                        fontSize: 14.sp,
-                        color: Colors.black87,
-                      ).sourceSansProRegular,
-                ),
-                SizedBox(height: 20.sp),
-                CustomInputTextFactory.createTextInput(
-                  controller: codeController,
-                  hintText: 'Code de vérification',
-                  labelText: 'Code OTP',
-                ),
-                SizedBox(height: 20.sp),
-                SafeArea(
-                  left: false,
-                  right: false,
-                  top: false,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton(
-                          onPressed: () {
-                            Navigator.pop(modalContext);
-                          },
-                          style: OutlinedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(vertical: 14.sp),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.r),
-                            ),
-                          ),
-                          child: Text(
-                            'Annuler',
-                            style:
-                                TextStyle(
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.w600,
-                                ).sourceSansProSemiBold,
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 12.sp),
-                      Expanded(
-                        child: BlocBuilder<InventoriesBloc, InventoriesState>(
-                          builder: (context, state) {
-                            return CustomButton(
-                              text: 'Vérifier',
-                              onPressed: () {
-                                if (codeController.text.trim().isEmpty) {
-                                  showToast(
-                                    msg:
-                                        'Veuillez saisir le code de vérification',
-                                    type: ToastificationType.error,
-                                  );
-                                  return;
-                                }
-
-                                // Verify code
-                                context.read<InventoriesBloc>().add(
-                                  VerifyCodeEtatLieuxEvent(
-                                    locataireId: _tenant!.id!,
-                                    verificationCode:
-                                        codeController.text.trim(),
-                                  ),
-                                );
-                              },
-                              isLoading: state.isLoading ?? false,
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 20.sp),
-              ],
-            ),
-          ),
+      builder: (modalContext) => ModalVerifyEstateLocationCode(
+        tenantId: _tenant!.id!,
+        onVerified: _saveEstateLocation,
+      ),
     );
   }
 
@@ -708,7 +603,7 @@ class _PropertyInspectionFormPageState
       presencePartie: 'oui',
       partiesCommunes: partiesCommunesData,
       chambres: chambresData,
-      nombreCle: 2, // You can make this dynamic if needed
+      nombreCle: int.tryParse(_estateLocation?.nombreCle ?? "") ?? 1, // You can make this dynamic if needed
     );
 
     // Save estate location
