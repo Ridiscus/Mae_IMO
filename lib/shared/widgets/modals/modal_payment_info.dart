@@ -45,18 +45,20 @@ class ModalPaymentInfo extends StatelessWidget {
         ),
       ),
       child: SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildHeader(),
-            CustomSpacer(),
-            _buildAmountSection(),
-            CustomSpacer(),
-            _buildDetailsSection(),
-            CustomSpacer(),
-            _buildCloseButton(context),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildHeader(),
+              CustomSpacer(),
+              _buildAmountSection(),
+              CustomSpacer(),
+              _buildDetailsSection(),
+              CustomSpacer(),
+              _buildCloseButton(context),
+            ],
+          ),
         ),
       ),
     );

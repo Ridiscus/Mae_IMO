@@ -195,7 +195,7 @@ class _PaymentPageState extends State<PaymentPage> {
           isRequired: true,
           controller: _numberMonthControler,
           focusNode: _focusNode,
-          hintText: "Entrez le noombre de mpois à payé",
+          hintText: "Entrez le nombre de mois à payer",
           validator: (value) {
             if (value == null || value.isEmpty) {
               return "Le nombre de mois est obligatoire";

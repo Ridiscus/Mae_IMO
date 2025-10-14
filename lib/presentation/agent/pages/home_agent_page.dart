@@ -68,14 +68,14 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
             Positioned(child: _buildHeader()),
 
             Positioned.fill(
-              top: MediaQuery.of(context).size.height * .22,
+              top: (MediaQuery.of(context).size.height * .22).sp,
               child: _buildContent(),
             ),
 
             Positioned(
               left: 16.sp,
               right: 16.sp,
-              top: MediaQuery.of(context).size.height * .14,
+              top: (MediaQuery.of(context).size.height * .14).sp,
               child: _buildTotalRentCard(),
             ),
           ],
