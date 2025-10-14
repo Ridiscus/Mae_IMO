@@ -11,6 +11,8 @@ abstract class TenantService {
   Future<ApiResponse<TenantDetailModel>> showDetailTenant({
     required dynamic id,
   });
+
+  Future<ApiResponse<EstateLocationResponseModel>> getPropertyInspections();
 }
 
 class TenantServiceImpl implements TenantService {
@@ -40,6 +42,18 @@ class TenantServiceImpl implements TenantService {
       Endpoints.showDetailTenant(id),
       fromJson: (res) {
         return TenantDetailModel.fromMap(res);
+      },
+    );
+    return response;
+  }
+
+  @override
+  Future<ApiResponse<EstateLocationResponseModel>>
+  getPropertyInspections() async {
+    final response = await apiClient.get(
+      Endpoints.tenantPropertyInspections,
+      fromJson: (res) {
+        return EstateLocationResponseModel.fromMap(res);
       },
     );
     return response;

@@ -3,8 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:maelys_imo/core/constants/app_colors.dart';
+import 'package:maelys_imo/core/domain/models/index.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
 import 'package:maelys_imo/core/manager/state/dashboard/dashboard_bloc.dart';
+import 'package:maelys_imo/core/manager/state/tenant/tenant_bloc.dart';
+import 'package:maelys_imo/presentation/tenant/pages/property_inspection_detail_page.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
 
 class PropertyInspectionPage extends StatefulWidget {
@@ -18,20 +21,25 @@ class PropertyInspectionPage extends StatefulWidget {
 }
 
 class _PropertyInspectionPageState extends State<PropertyInspectionPage> {
-  // Sample property rooms - to be replaced with actual data
-  final List<Map<String, dynamic>> _rooms = [
-    {
-      'name': 'Séjour',
-      'status': true, // null = not set, true = good, false = bad
-    },
-    {'name': 'Cuisine', 'status': true},
-    {'name': 'Chambre principale', 'status': false},
-    {'name': 'Chambre secondaire', 'status': false},
-    {'name': 'Salle de bain', 'status': false},
-  ];
+  TenantDashboardModel? dashboard;
+  EstateLocationResponseModel? propertyInspections;
+
+  @override
+  void initState() {
+    super.initState();
+    // Récupérer les états des lieux au chargement de la page
+    context.read<TenantBloc>().add(const FetchPropertyInspectionsEvent());
+  }
 
   @override
   Widget build(BuildContext context) {
+    dashboard = context.select(
+      (DashboardBloc bloc) => bloc.state.tenantDashboardModel,
+    );
+    propertyInspections = context.select(
+      (TenantBloc bloc) => bloc.state.propertyInspections,
+    );
+
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(
         statusBarColor: AppColors.primary,
@@ -65,26 +73,35 @@ class _PropertyInspectionPageState extends State<PropertyInspectionPage> {
   }
 
   Widget _buildInspectionForm() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildPropertySummary(),
-        CustomSpacer(space: 2),
-        EmptyStateWidget(
-          title: "Aucun état des lieux disponible",
-          icon: Icons.search_off,
-        ),
-        // _buildRoomsList(),
-        // CustomSpacer(),
-      ],
+    return BlocBuilder<TenantBloc, TenantState>(
+      builder: (context, state) {
+        if (state.isLoading == true) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        // final inspections = state.propertyInspections?.data.availableInspections ?? [];
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildPropertySummary(),
+            CustomSpacer(space: 2),
+
+            if (propertyInspections == null || 
+                (propertyInspections?.etatEntree == null && propertyInspections?.etatSortie == null))
+              EmptyStateWidget(
+                title: "Aucun état des lieux disponible",
+                icon: Icons.search_off,
+              )
+            else
+              _buildInspectionsList(),
+          ],
+        );
+      },
     );
   }
 
   Widget _buildPropertySummary() {
-    final dashboard = context.select(
-      (DashboardBloc bloc) => bloc.state.tenantDashboardModel,
-    );
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -128,12 +145,34 @@ class _PropertyInspectionPageState extends State<PropertyInspectionPage> {
     );
   }
 
-  Widget _buildRoomsList() {
+  List<Map<String, dynamic>> _getAvailableInspections() {
+    final inspections = <Map<String, dynamic>>[];
+
+    if (propertyInspections?.etatEntree != null) {
+      inspections.add({
+        'type': 'entree',
+        'data': propertyInspections!.etatEntree!,
+        'label': 'Entrée',
+      });
+    }
+
+    if (propertyInspections?.etatSortie != null) {
+      inspections.add({
+        'type': 'sortie',
+        'data': propertyInspections!.etatSortie!,
+        'label': 'Sortie',
+      });
+    }
+
+    return inspections;
+  }
+
+  Widget _buildInspectionsList() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'État des pièces',
+          'États des lieux disponibles',
           style:
               TextStyle(
                 fontSize: 18.sp,
@@ -142,13 +181,18 @@ class _PropertyInspectionPageState extends State<PropertyInspectionPage> {
               ).sourceSansProSemiBold,
         ),
         CustomSpacer(),
-
-        ..._rooms.map((room) => _buildRoomItem(room)),
+        ..._getAvailableInspections().map(
+          (inspection) => _buildInspectionItem(inspection),
+        ),
       ],
     );
   }
 
-  Widget _buildRoomItem(Map<String, dynamic> room) {
+  Widget _buildInspectionItem(Map<String, dynamic> inspection) {
+    final EstateLocationModel data = inspection['data'];
+    final String type = inspection['label'];
+    final statusColor = AppColors.success; // Les états des lieux récupérés sont généralement terminés
+
     return Container(
       margin: EdgeInsets.only(bottom: 16.sp),
       padding: EdgeInsets.all(16.sp),
@@ -163,80 +207,114 @@ class _PropertyInspectionPageState extends State<PropertyInspectionPage> {
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            room['name'],
-            style:
-                TextStyle(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black,
-                ).sourceSansProSemiBold,
-          ),
-          SizedBox(height: 12.sp),
-          Row(
-            children: [
-              Expanded(
-                child: _buildStatusButton(
-                  label: 'Bon état',
-                  isSelected: room['status'] == true,
-                  color: AppColors.success,
-                  onTap: () {
-                    setState(() {
-                      room['status'] = true;
-                    });
-                  },
+      child: InkWell(
+        onTap: () {
+          // Navigation vers la page de détail
+          _navigateToInspectionDetail(inspection);
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'État des lieux - $type',
+                  style:
+                      TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black,
+                      ).sourceSansProSemiBold,
                 ),
-              ),
-              SizedBox(width: 12.sp),
-              Expanded(
-                child: _buildStatusButton(
-                  label: 'Mauvais état',
-                  isSelected: room['status'] == false,
-                  color: AppColors.redColor,
-                  onTap: () {
-                    setState(() {
-                      room['status'] = false;
-                    });
-                  },
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 8.sp,
+                    vertical: 4.sp,
+                  ),
+                  decoration: BoxDecoration(
+                    color: statusColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Text(
+                    'Terminé',
+                    style:
+                        TextStyle(
+                          fontSize: 12.sp,
+                          color: statusColor,
+                          fontWeight: FontWeight.w500,
+                        ).sourceSansProSemiBold,
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+            SizedBox(height: 8.sp),
+            Text(
+              'Type: ${data.typeBien ?? dashboard?.locataire?.estate?.type ?? ''}',
+              style:
+                  TextStyle(
+                    fontSize: 14.sp,
+                    color: Colors.grey.shade600,
+                  ).sourceSansProRegular,
+            ),
+            SizedBox(height: 4.sp),
+            Text(
+              'Adresse: ${data.communeBien ?? dashboard?.locataire?.estate?.commune ?? ''}',
+              style:
+                  TextStyle(
+                    fontSize: 14.sp,
+                    color: Colors.grey.shade600,
+                  ).sourceSansProRegular,
+            ),
+            SizedBox(height: 4.sp),
+            Text(
+              'Date: ${_formatDate(data.createdAt?.toString() ?? '')}',
+              style:
+                  TextStyle(
+                    fontSize: 14.sp,
+                    color: Colors.grey.shade600,
+                  ).sourceSansProRegular,
+            ),
+            SizedBox(height: 12.sp),
+            Row(
+              children: [
+                Icon(Icons.visibility, size: 16.sp, color: AppColors.primary),
+                SizedBox(width: 4.sp),
+                Text(
+                  'Voir les détails',
+                  style:
+                      TextStyle(
+                        fontSize: 14.sp,
+                        color: AppColors.primary,
+                        fontWeight: FontWeight.w500,
+                      ).sourceSansProSemiBold,
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildStatusButton({
-    required String label,
-    required bool isSelected,
-    required Color color,
-    required VoidCallback onTap,
-  }) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 10.sp),
-      decoration: BoxDecoration(
-        color:
-            isSelected ? color.withOpacity(0.1) : Colors.grey.withOpacity(0.1),
-        border: Border.all(
-          color: isSelected ? color : Colors.grey.withOpacity(0.3),
-          width: 1.sp,
-        ),
-        borderRadius: BorderRadius.circular(8.r),
-      ),
-      child: Center(
-        child: Text(
-          label,
-          style:
-              TextStyle(
-                fontSize: 14.sp,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                color: isSelected ? color : Colors.grey.shade700,
-              ).sourceSansProSemiBold,
-        ),
+  String _formatDate(String dateString) {
+    try {
+      final date = DateTime.parse(dateString);
+      return '${date.day}/${date.month}/${date.year}';
+    } catch (e) {
+      return dateString;
+    }
+  }
+
+  void _navigateToInspectionDetail(Map<String, dynamic> inspection) {
+    final EstateLocationModel data = inspection['data'];
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder:
+            (context) => PropertyInspectionDetailPage(
+              inspectionId: data.id?.toString() ?? '0',
+              inspectionData: data,
+            ),
       ),
     );
   }

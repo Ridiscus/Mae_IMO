@@ -2,6 +2,7 @@ import 'dart:developer' as console;
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart' show GoRoute;
+import 'package:maelys_imo/core/manager/state/tenant/tenant_bloc.dart';
 import 'package:maelys_imo/presentation/agent/pages/home_agent_page.dart';
 
 import '../core/manager/state/auth/auth_bloc.dart';
@@ -34,6 +35,9 @@ class AuthRoutes {
               FetchHistoryPaymentEvent(tenantId: userModel.id!),
             );
             context.read<DashboardBloc>().add(FetchTenantDashboardEvent());
+
+            context.read<TenantBloc>().add(FetchPropertyInspectionsEvent());
+            
             return DashboardTenantPage.routePath;
           }
           if (userModel.isCollectionAgent) {

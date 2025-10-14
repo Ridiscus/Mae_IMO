@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:maelys_imo/core/domain/requests/index.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
 import 'package:maelys_imo/core/manager/state/auth/auth_bloc.dart';
+import 'package:maelys_imo/core/manager/state/tenant/tenant_bloc.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
 import 'package:toastification/toastification.dart';
 
@@ -190,6 +191,8 @@ class _LoginPageState extends State<LoginPage> {
           context.read<PaymentBloc>().add(
             FetchHistoryPaymentEvent(tenantId: state.userModel!.id!),
           );
+          context.read<TenantBloc>().add(FetchPropertyInspectionsEvent());
+          
           context.goNamed(DashboardTenantPage.routeName);
           return;
         }

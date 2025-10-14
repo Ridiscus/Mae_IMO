@@ -21,6 +21,7 @@ class TenantBloc extends HydratedBloc<TenantEvent, TenantState> {
       super(TenantInitial()) {
     on<FetchTenantsByStatusEvent>(_onFetchTenantsByStatusEvent);
     on<ShowTenantEvent>(_onShowTenantEvent);
+    on<FetchPropertyInspectionsEvent>(_onFetchPropertyInspectionsEvent);
   }
 
   @override
@@ -89,6 +90,33 @@ class TenantBloc extends HydratedBloc<TenantEvent, TenantState> {
       }
     } catch (e) {
       console.log("ERROR:: ${e.toString()}", name: "_onShowTenantEvent");
+      emit(state.copyWith(isLoading: false));
+      if (kDebugMode) {
+        rethrow;
+      }
+    }
+  }
+
+  FutureOr<void> _onFetchPropertyInspectionsEvent(
+    FetchPropertyInspectionsEvent event,
+    Emitter<TenantState> emit,
+  ) async {
+    emit(state.copyWith(isLoading: true));
+    try {
+      final result = await _service.getPropertyInspections();
+      if (result.success) {
+        emit(state.copyWith(isLoading: false, propertyInspections: result.data));
+      } else {
+        showToast(msg: result.message ?? "Données non disponibles !");
+        emit(
+          state.copyWith(
+            isLoading: false,
+            failure: Failure(message: result.message!),
+          ),
+        );
+      }
+    } catch (e) {
+      console.log("ERROR:: ${e.toString()}", name: "_onFetchPropertyInspectionsEvent");
       emit(state.copyWith(isLoading: false));
       if (kDebugMode) {
         rethrow;

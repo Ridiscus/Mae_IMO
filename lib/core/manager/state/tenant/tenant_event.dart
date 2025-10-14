@@ -21,3 +21,10 @@ class ShowTenantEvent extends TenantEvent {
   @override
   List<Object?> get props => [id];
 }
+
+class FetchPropertyInspectionsEvent extends TenantEvent {
+  const FetchPropertyInspectionsEvent();
+
+  @override
+  List<Object?> get props => [];
+}

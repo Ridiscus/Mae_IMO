@@ -34,4 +34,5 @@ class Endpoints {
   static const String generateCodeEtatLieux = "/agent/generate";
   static const String verifyCodeEtatLieux = "/agent/verify";
   static const String saveEstateLocation = "/agent/etat-lieux";
+  static const String tenantPropertyInspections = "/tenant/etat-lieu/all";
 }

@@ -1,0 +1,72 @@
+{
+    "success": true,
+    "message": "États des lieux récupérés avec succès",
+    "data": {
+        "locataire": {
+            "id": 1,
+            "name": "Kouakou",
+            "prenom": "Alain",
+            "email": "salamjeanlouis3@gmail.com",
+            "contact": "0798278981",
+            "bien_id": 1
+        },
+        "comptable": {
+            "id": 1,
+            "name": "Bilé",
+            "email": "salamjeanlouis3@gmail.com",
+            "contact": "0798278981"
+        },
+        "etat_lieu_entree": {
+            "id": 1,
+            "locataire_id": 1,
+            "bien_id": 1,
+            "type_bien": "Appartement",
+            "commune_bien": "Paris 15e",
+            "presence_partie": "oui",
+            "status_etat_entre": "En attente",
+            "status_sorti": null,
+            "parties_communes": {
+                "sol": "Propre",
+                "murs": "Propres",
+                "douche": "Fonctionnelle",
+                "lavabo": "Propre",
+                "plafond": "Propre",
+                "robinet": "Fonctionnel",
+                "porte_entre": "Fonctionnelle",
+                "interrupteur": "Fonctionnel",
+                "observation_sol": "Petite rayure près de l'entrée",
+                "observation_murs": "RAS",
+                "observation_douche": "RAS",
+                "observation_lavabo": "Égratignure sur le bord",
+                "observation_plafond": "RAS",
+                "observation_robinet": "Petite fuite",
+                "observation_porte_entre": "Serrure un peu dure",
+                "observation_interrupteur": "RAS"
+            },
+            "chambres": [
+                {
+                    "nom": "Chambre principale",
+                    "sol": "Propre",
+                    "murs": "Propres",
+                    "plafond": "Propre",
+                    "observation_sol": "Parquet en bon état",
+                    "observation_murs": "Petite tache près de la fenêtre",
+                    "observation_plafond": "RAS"
+                },
+                {
+                    "nom": "Chambre d'amis",
+                    "sol": "Propre",
+                    "murs": "Propres",
+                    "plafond": "Propre",
+                    "observation_sol": "RAS",
+                    "observation_murs": "RAS",
+                    "observation_plafond": "RAS"
+                }
+            ],
+            "nombre_cle": "2",
+            "created_at": "2025-10-11T14:01:43.000000Z",
+            "updated_at": "2025-10-11T14:01:43.000000Z"
+        },
+        "etat_lieu_sortie": null
+    }
+}

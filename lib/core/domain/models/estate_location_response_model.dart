@@ -3,15 +3,22 @@ part of 'index.dart';
 class EstateLocationResponseModel {
   final EstateLocationModel? etatEntree;
   final EstateLocationModel? etatSortie;
+  final ComptableInfoModel? comptable;
 
-  EstateLocationResponseModel({this.etatEntree, this.etatSortie});
+  EstateLocationResponseModel({
+    this.etatEntree,
+    this.etatSortie,
+    this.comptable,
+  });
 
   EstateLocationResponseModel copyWith({
     EstateLocationModel? etatEntree,
     EstateLocationModel? etatSortie,
+    ComptableInfoModel? comptable,
   }) => EstateLocationResponseModel(
     etatEntree: etatEntree ?? this.etatEntree,
     etatSortie: etatSortie ?? this.etatSortie,
+    comptable: comptable ?? this.comptable,
   );
 
   factory EstateLocationResponseModel.fromJson(String str) =>
@@ -22,17 +29,22 @@ class EstateLocationResponseModel {
   factory EstateLocationResponseModel.fromMap(Map<String, dynamic> json) =>
       EstateLocationResponseModel(
         etatEntree:
-            json["etat_entree"] == null
+            json["etat_lieu_entree"] == null
                 ? null
-                : EstateLocationModel.fromMap(json["etat_entree"]),
+                : EstateLocationModel.fromMap(json["etat_lieu_entree"]),
         etatSortie:
-            json["etat_sortie"] == null
+            json["etat_lieu_sortie"] == null
                 ? null
-                : EstateLocationModel.fromMap(json["etat_sortie"]),
+                : EstateLocationModel.fromMap(json["etat_lieu_sortie"]),
+        comptable:
+            json["comptable"] == null
+                ? null
+                : ComptableInfoModel.fromJson(json["comptable"]),
       );
 
   Map<String, dynamic> toMap() => {
-    "etat_entree": etatEntree?.toMap(),
-    "etat_sortie": etatSortie?.toMap(),
+    "etat_lieu_entree": etatEntree?.toMap(),
+    "etat_lieu_sortie": etatSortie?.toMap(),
+    "comptable": comptable?.toMap(),
   };
 }
