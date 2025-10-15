@@ -15,7 +15,7 @@ import '../../../core/manager/state/payment/payment_bloc.dart';
 import '../../../core/utils/toast/notification_toast.dart';
 import '../../agent/pages/home_agent_page.dart';
 import '../../tenant/pages/dashboard_tenant_page.dart';
-import '../pages/forget_passord_page.dart';
+import '../pages/forget_password_page.dart';
 
 class LoginPage extends StatefulWidget {
   static const routeName = 'login';

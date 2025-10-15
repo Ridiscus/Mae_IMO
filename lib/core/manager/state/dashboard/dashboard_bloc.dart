@@ -93,7 +93,7 @@ class DashboardBloc extends HydratedBloc<DashboardEvent, DashboardState> {
       }
     } catch (e) {
       console.log("ERROR:: ${e.toString()}", name: "_onContactAgencyEvent");
-      showToast(msg: "Echèc Message non envoyé");
+      showToast(msg: "Échec : Message non envoyé");
       emit(state.copyWith(isLoading: false, mailSent: false));
       if (kDebugMode) {
         rethrow;

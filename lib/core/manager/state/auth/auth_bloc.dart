@@ -110,7 +110,7 @@ class AuthBloc extends HydratedBloc<AuthEvent, AuthState> {
         );
       }
     } catch (e) {
-      showToast(msg: "Echèc de la mise à jour de l'email");
+      showToast(msg: "Échec de la mise à jour de l'email");
       emit(state.copyWith(isLoading: false, updatedEmail: false));
       if (kDebugMode) {
         rethrow;
@@ -139,7 +139,7 @@ class AuthBloc extends HydratedBloc<AuthEvent, AuthState> {
         );
       }
     } catch (e) {
-      showToast(msg: "Echèc de la mise à jour du mot de passe");
+      showToast(msg: "Échec de la mise à jour du mot de passe");
       emit(state.copyWith(isLoading: false, updatedPassword: false));
       if (kDebugMode) {
         rethrow;
@@ -181,7 +181,7 @@ class AuthBloc extends HydratedBloc<AuthEvent, AuthState> {
         );
       }
     } catch (e) {
-      showToast(msg: "Echèc de la mise à jour photo de profil");
+      showToast(msg: "Échec de la mise à jour de la photo de profil");
       emit(state.copyWith(isLoading: false, updatedImage: false));
       if (kDebugMode) {
         rethrow;

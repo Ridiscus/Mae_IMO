@@ -9,9 +9,9 @@ import '../core/manager/state/auth/auth_bloc.dart';
 import '../core/manager/state/dashboard/dashboard_bloc.dart';
 import '../core/manager/state/payment/payment_bloc.dart';
 import '../core/manager/token_manager.dart';
-import '../presentation/auth/pages/forget_passord_page.dart';
+import '../presentation/auth/pages/forget_password_page.dart';
 import '../presentation/auth/pages/login_page.dart';
-import '../presentation/auth/pages/reset_passord_page.dart';
+import '../presentation/auth/pages/reset_password_page.dart';
 import '../presentation/tenant/pages/dashboard_tenant_page.dart';
 
 class AuthRoutes {

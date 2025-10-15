@@ -1,31 +1,29 @@
-import 'dart:convert';
+part of '../index.dart';
 
-import '../index.dart';
-
-class InventorieModelResponse {
+class InventoryModelResponse {
   final List<TenantItemModel>? locataires;
   final int? total;
   final EstateLocationResponseModel? etats_lieu;
 
-  InventorieModelResponse({this.locataires, this.total, this.etats_lieu});
+  InventoryModelResponse({this.locataires, this.total, this.etats_lieu});
 
-  InventorieModelResponse copyWith({
+  InventoryModelResponse copyWith({
     List<TenantItemModel>? locataires,
     int? total,
     EstateLocationResponseModel? etats_lieu,
-  }) => InventorieModelResponse(
+  }) => InventoryModelResponse(
     locataires: locataires ?? this.locataires,
     total: total ?? this.total,
     etats_lieu: etats_lieu ?? this.etats_lieu,
   );
 
-  factory InventorieModelResponse.fromJson(String str) =>
-      InventorieModelResponse.fromMap(json.decode(str));
+  factory InventoryModelResponse.fromJson(String str) =>
+      InventoryModelResponse.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
-  factory InventorieModelResponse.fromMap(Map<String, dynamic> json) =>
-      InventorieModelResponse(
+  factory InventoryModelResponse.fromMap(Map<String, dynamic> json) =>
+      InventoryModelResponse(
         locataires:
             json["locataires"] == null
                 ? []

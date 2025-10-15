@@ -5,8 +5,7 @@
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dio/dio.dart';
+ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,8 +17,7 @@ import 'package:maelys_imo/core/domain/requests/index.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
 import 'package:maelys_imo/core/manager/state/auth/auth_bloc.dart';
 import 'package:maelys_imo/core/manager/state/dashboard/dashboard_bloc.dart';
-import 'package:maelys_imo/core/manager/state/dashboard/dashboard_bloc.dart';
-import 'package:maelys_imo/core/utils/index.dart';
+ import 'package:maelys_imo/core/utils/index.dart';
 import 'package:maelys_imo/presentation/portal/pages/portal_page.dart' show PortalPage;
 
 import 'package:go_router/go_router.dart';
@@ -29,10 +27,8 @@ import 'package:skeletonizer/skeletonizer.dart';
 import '../../core/constants/app_colors.dart' show AppColors;
 import '../../core/constants/assets.dart';
 import '../../core/domain/models/index.dart';
-import '../../core/manager/state/auth/auth_bloc.dart';
-import '../../core/manager/state/estate/estate_bloc.dart';
-import '../../core/utils/index.dart';
-import '../../core/utils/toast/notification_toast.dart';
+ import '../../core/manager/state/estate/estate_bloc.dart';
+ import '../../core/utils/toast/notification_toast.dart';
 import '../../presentation/tenant/pages/contact_agency_page.dart';
 
 // Export QrCodeViewer comme un widget autonome (ne fait pas partie de l'index)

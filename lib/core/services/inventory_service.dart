@@ -1,15 +1,14 @@
 import 'package:maelys_imo/core/domain/models/index.dart';
-import 'package:maelys_imo/core/domain/models/responses/Inventorie_model_response.dart';
-import 'package:maelys_imo/core/domain/requests/index.dart';
+ import 'package:maelys_imo/core/domain/requests/index.dart';
 
 import '../api_manager/api_client.dart';
 import '../api_manager/api_response.dart';
 import '../api_manager/endpoints.dart';
 
-abstract interface class InventorieService {
-  Future<ApiResponse<InventorieModelResponse>> inventorieList();
+abstract interface class InventoryService {
+  Future<ApiResponse<InventoryModelResponse>> inventoryList();
 
-  Future<ApiResponse<InventoryDetailModel>> inventorieDetail({
+  Future<ApiResponse<InventoryDetailModel>> inventoryDetail({
     required String id,
   });
 
@@ -26,24 +25,24 @@ abstract interface class InventorieService {
   );
 }
 
-class InventorieServiceImpl implements InventorieService {
+class InventoryServiceImpl implements InventoryService {
   final ApiClient apiClient;
 
-  InventorieServiceImpl({required this.apiClient});
+  InventoryServiceImpl({required this.apiClient});
 
   @override
-  Future<ApiResponse<InventorieModelResponse>> inventorieList() async {
+  Future<ApiResponse<InventoryModelResponse>> inventoryList() async {
     final response = await apiClient.get(
       Endpoints.inventories,
       fromJson: (res) {
-        return InventorieModelResponse.fromMap(res);
+        return InventoryModelResponse.fromMap(res);
       },
     );
     return response;
   }
 
   @override
-  Future<ApiResponse<InventoryDetailModel>> inventorieDetail({
+  Future<ApiResponse<InventoryDetailModel>> inventoryDetail({
     required String id,
   }) async {
     final response = await apiClient.get(

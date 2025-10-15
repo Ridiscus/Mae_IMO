@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:maelys_imo/core/domain/requests/index.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
 import 'package:maelys_imo/core/manager/state/reset-password/reset_password_bloc.dart';
-import 'package:maelys_imo/presentation/auth/pages/reset_passord_page.dart';
+import 'package:maelys_imo/presentation/auth/pages/reset_password_page.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
 
 import '../../../core/utils/toast/notification_toast.dart';

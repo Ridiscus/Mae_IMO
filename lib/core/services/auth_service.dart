@@ -60,7 +60,7 @@ class AuthServiceImpl implements AuthService {
       );
     }
     return ApiResponse.error(
-      message: response.message ?? "Echèc de la mise à jour de l'email",
+      message: response.message ?? "Échec de la mise à jour de l'email",
     );
   }
 
@@ -80,7 +80,7 @@ class AuthServiceImpl implements AuthService {
       );
     }
     return ApiResponse.error(
-      message: response.message ?? "Echèc de la mise à jour du mot de passe",
+      message: response.message ?? "Échec de la mise à jour du mot de passe",
     );
   }
 
@@ -102,7 +102,7 @@ class AuthServiceImpl implements AuthService {
       );
     }
     return ApiResponse.error(
-      message: response.message ?? "Echèc de la mise à jour photo de profil",
+      message: response.message ?? "Échec de la mise à jour de la photo de profil",
     );
   }
 }

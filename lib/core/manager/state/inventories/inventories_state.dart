@@ -3,7 +3,7 @@ part of 'inventories_bloc.dart';
 class InventoriesState extends Equatable {
   final bool? isLoading;
   final Failure? failure;
-  final InventorieModelResponse? inventories;
+  final InventoryModelResponse? inventories;
   final InventoryDetailModel? inventoryDetail;
   final bool? codeGenerated;
   final bool? codeVerified;
@@ -21,7 +21,7 @@ class InventoriesState extends Equatable {
 
   InventoriesState copyWith({
     bool? isLoading,
-    InventorieModelResponse? inventories,
+    InventoryModelResponse? inventories,
     InventoryDetailModel? inventoryDetail,
     Failure? failure,
     bool? codeGenerated,
@@ -44,7 +44,7 @@ class InventoriesState extends Equatable {
       isLoading: json['isLoading'],
       inventories:
           json['inventories'] != null
-              ? InventorieModelResponse.fromJson(json['inventories'])
+              ? InventoryModelResponse.fromJson(json['inventories'])
               : null,
     );
   }

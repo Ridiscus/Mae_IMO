@@ -3,7 +3,7 @@ import 'package:maelys_imo/core/manager/state/dashboard/dashboard_bloc.dart';
 import 'package:maelys_imo/core/manager/state/payment/payment_bloc.dart';
 import 'package:maelys_imo/core/manager/state/reset-password/reset_password_bloc.dart';
 import 'package:maelys_imo/core/manager/state/tenant/tenant_bloc.dart';
-import 'package:maelys_imo/core/services/Inventorie_service.dart';
+import 'package:maelys_imo/core/services/inventory_service.dart';
 import 'package:maelys_imo/core/services/dashboard_service.dart';
 import 'package:maelys_imo/core/services/estate_service.dart';
 import 'package:maelys_imo/core/services/payment_service.dart';
@@ -72,7 +72,7 @@ Future<void> _initBlocs() async {
   );
 
   getIt.registerLazySingleton<InventoriesBloc>(
-    () => InventoriesBloc(service: getIt<InventorieService>()),
+    () => InventoriesBloc(service: getIt<InventoryService>()),
   );
 }
 
@@ -108,7 +108,7 @@ Future<void> _initServices() async {
     () => TenantServiceImpl(apiClient: getIt<ApiClient>()),
   );
 
-  getIt.registerLazySingleton<InventorieService>(
-    () => InventorieServiceImpl(apiClient: getIt<ApiClient>()),
+  getIt.registerLazySingleton<InventoryService>(
+    () => InventoryServiceImpl(apiClient: getIt<ApiClient>()),
   );
 }
