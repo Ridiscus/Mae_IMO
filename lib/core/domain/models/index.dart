@@ -28,3 +28,4 @@ part 'parties_communes_model.dart';
 part 'estate_location_response_model.dart';
 part 'comptable_info_model.dart';
 part 'responses/inventory_model_response.dart';
+part 'qr_code_model.dart';

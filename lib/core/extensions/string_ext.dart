@@ -83,23 +83,50 @@ extension CurrencyFormater on String {
     try {
       if (toLowerCase() == "null") return false;
       var thisDate = DateTime.parse(this);
-      return thisDate.isAfter(nowDate);
+      var thisMonth = DateFormat('yyyy-MM').format(thisDate);
+      var nowMonth = DateFormat('yyyy-MM').format(nowDate);
+      return thisMonth.compareTo(nowMonth) >= 0;
     } catch (error) {
       if (error is FormatException) {
         var datePart = split("-");
         var y = datePart.firstWhere((element) => element.length >= 3);
         var m = datePart[1];
+        var thisDate = DateTime.parse(this);
+        var nowDate = DateTime.now().copyWith(
+          year: int.parse(y),
+          month: int.parse(m),
+        );
 
-        return DateTime.now()
-            .copyWith(year: int.parse(y), month: int.parse(m))
-            .isAfter(nowDate);
+        var thisMonth = DateFormat('yyyy-MM').format(thisDate);
+        var nowMonth = DateFormat('yyyy-MM').format(nowDate);
+
+        return thisMonth.compareTo(nowMonth) >= 0;
       }
       return false;
     }
   }
 
   bool thisMountIncluded() {
-    return !afterTo(DateTime.now());
+    var nowMonth = DateFormat('yyyy-MM').format(DateTime.now());
+
+    try {
+      if (toLowerCase() == "null") return false;
+      var thisDate = DateFormat('yyyy-MM').format(DateTime.parse(this));
+      return nowMonth.compareTo(thisDate) <= 0;
+    } catch (error) {
+      if (error is FormatException) {
+        var datePart = split("-");
+        var y = datePart.firstWhere((element) => element.length >= 3);
+        var m = datePart[1];
+
+        var thisDate = DateFormat('yyyy-MM').format(
+          DateTime.now().copyWith(year: int.parse(y), month: int.parse(m)),
+        );
+
+        return nowMonth.compareTo(thisDate) <= 0;
+      }
+      return false;
+    }
   }
 
   String firstLetter() {

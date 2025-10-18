@@ -1,5 +1,7 @@
 
 
+import 'dart:developer' as console;
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:maelys_imo/core/utils/index.dart';
 

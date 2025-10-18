@@ -29,13 +29,17 @@ class EstateLocationResponseModel {
   factory EstateLocationResponseModel.fromMap(Map<String, dynamic> json) =>
       EstateLocationResponseModel(
         etatEntree:
-            json["etat_lieu_entree"] == null
+            json["etat_lieu_entree"] == null && json["etat_entree"] == null
                 ? null
-                : EstateLocationModel.fromMap(json["etat_lieu_entree"]),
+                : EstateLocationModel.fromMap(
+                  json["etat_lieu_entree"] ?? json["etat_entree"],
+                ),
         etatSortie:
-            json["etat_lieu_sortie"] == null
+            json["etat_lieu_sortie"] == null && json["etat_sortie"] == null
                 ? null
-                : EstateLocationModel.fromMap(json["etat_lieu_sortie"]),
+                : EstateLocationModel.fromMap(
+                  json["etat_lieu_sortie"] ?? json["etat_sortie"],
+                ),
         comptable:
             json["comptable"] == null
                 ? null

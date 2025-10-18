@@ -2,7 +2,7 @@ part of 'index.dart';
 
 class TenantDashboardModel {
   final TenantModel? locataire;
-  final dynamic qrCode;
+  final QrCodeModel? qrCode;
 
   TenantDashboardModel({this.locataire, this.qrCode});
 
@@ -23,12 +23,14 @@ class TenantDashboardModel {
             json["locataire"] == null
                 ? null
                 : TenantModel.fromMap(json["locataire"]),
-        qrCode: json["qr_code"],
+        qrCode:
+            json["qr_code"] == null
+                ? null
+                : QrCodeModel.fromMap(json["qr_code"]),
       );
 
   Map<String, dynamic> toMap() => {
     "locataire": locataire?.toMap(),
-    "qr_code": qrCode,
+    "qr_code": qrCode?.toMap(),
   };
 }
-

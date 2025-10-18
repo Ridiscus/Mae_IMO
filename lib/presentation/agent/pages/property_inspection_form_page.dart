@@ -482,11 +482,13 @@ class _PropertyInspectionFormPageState
       text: 'Enregistrer cet état',
       onPressed: _validateAndSave,
       showArrow: true,
+      isDisabled: !_isFormValid(),
       iconData: Icons.save,
     );
   }
 
   bool _isFormValid() {
+    if(_partiesCommunesFields.isEmpty && (_estateLocation?.chambreModels ?? []).isEmpty)return false;
     // Check if all parties communes have a status selected (dynamically)
     for (var field in _partiesCommunesFields) {
       final key = field['key']!;

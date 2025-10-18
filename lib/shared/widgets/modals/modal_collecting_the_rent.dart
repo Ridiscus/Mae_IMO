@@ -170,7 +170,6 @@ class _ModalCollectingTheRentState extends State<ModalCollectingTheRent> {
 
       hintText: 'Saisissez le nombre de mois (1-12)',
       onChanged: (value) {
-
         final months = int.tryParse(value) ?? 1;
         if (months >= 1 && months <= 12) {
           setState(() {
@@ -192,14 +191,11 @@ class _ModalCollectingTheRentState extends State<ModalCollectingTheRent> {
   }
 
   Widget _buildAmountSection() {
-    if (widget.amount == null && !_isCodeGenerated)
+    if (widget.amount == null && !_isCodeGenerated) {
       return const SizedBox.shrink();
+    }
 
     final displayAmount = widget.amount ?? '0';
-    final totalAmount =
-        int.tryParse(displayAmount.replaceAll(RegExp(r'[^0-9]'), '')) ?? 0;
-    final monthlyAmount = totalAmount * _selectedMonths;
-
     return Column(
       children: [
         Text(
@@ -212,7 +208,7 @@ class _ModalCollectingTheRentState extends State<ModalCollectingTheRent> {
         ),
         CustomSpacer(space: 0.5),
         Text(
-          '${monthlyAmount.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]} ')} FCFA',
+          displayAmount.toString(),
           style:
               TextStyle(
                 fontSize: 32.sp,
@@ -220,17 +216,6 @@ class _ModalCollectingTheRentState extends State<ModalCollectingTheRent> {
                 color: AppColors.primary,
               ).sourceSansProBold,
         ),
-        if (_selectedMonths > 1) ...[
-          CustomSpacer(space: 0.3),
-          Text(
-            '$displayAmount FCFA × $_selectedMonths mois',
-            style:
-                TextStyle(
-                  fontSize: 14.sp,
-                  color: Colors.grey[500],
-                ).sourceSansProRegular,
-          ),
-        ],
       ],
     );
   }
@@ -307,9 +292,7 @@ class _ModalCollectingTheRentState extends State<ModalCollectingTheRent> {
           textInputAction: TextInputAction.done,
           onChanged: (value) {
             _codeController.text = value;
-            setState(() {
-
-            });
+            setState(() {});
           },
           validator: (value) {
             if (value == null || value.isEmpty) {
@@ -318,7 +301,6 @@ class _ModalCollectingTheRentState extends State<ModalCollectingTheRent> {
             return null;
           },
         ),
-
       ],
     );
   }
@@ -326,7 +308,8 @@ class _ModalCollectingTheRentState extends State<ModalCollectingTheRent> {
   Widget _buildValidateButton() {
     return CustomButton(
       text: 'Valider le paiement',
-      onPressed: (_isLoading || _codeController.text.isEmpty) ? null : _validateCode,
+      onPressed:
+          (_isLoading || _codeController.text.isEmpty) ? null : _validateCode,
       isLoading: _isLoading,
       buttonVariant: ButtonVariant.primary,
       textStyle:

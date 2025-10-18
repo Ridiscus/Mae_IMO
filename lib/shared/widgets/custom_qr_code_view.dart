@@ -12,6 +12,7 @@ class CustomQrCodeView extends StatelessWidget {
     this.size = 80,
     this.backgroundColor,
     this.padding,
+
   });
 
   @override
@@ -20,7 +21,7 @@ class CustomQrCodeView extends StatelessWidget {
       buildWhen: (previous, current) => current.tenantDashboardModel?.qrCode != null,
       builder: (context, state) {
         return QrImageView(
-          data: state.tenantDashboardModel?.qrCode ?? "",
+          data: state.tenantDashboardModel?.qrCode?.code ?? "",
           version: QrVersions.auto,
           size: size,
           backgroundColor: backgroundColor ?? Colors.white,

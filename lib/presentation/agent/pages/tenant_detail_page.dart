@@ -29,7 +29,7 @@ class _TenantDetailPageState extends State<TenantDetailPage> {
   TenantDetailModel? _tenant;
   bool _isLoading = false;
 
-  bool get allReadyPay =>
+  bool get allReadyPay => kDebugMode ? false:
       (_tenant?.prochainMoisAPayer?.dejaPaye ?? false) ||
       (_tenant?.prochainMoisAPayer?.moisCouvert?.thisMountIncluded() ?? false);
 
