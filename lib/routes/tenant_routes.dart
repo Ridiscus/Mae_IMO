@@ -27,11 +27,11 @@ class TenantRoutes {
       path: PaymentPage.routePath,
       builder: (context, state) => const PaymentPage(),
     ),
-    GoRoute(
-      name: CheckoutCinetpayPage.routeName,
-      path: CheckoutCinetpayPage.routePath,
-      builder: (context, state) => const CheckoutCinetpayPage(),
-    ),
+    // GoRoute(
+    //   name: CheckoutCinetpayPage.routeName,
+    //   path: CheckoutCinetpayPage.routePath,
+    //   builder: (context, state) => const CheckoutCinetpayPage(),
+    // ),
     GoRoute(
       name: ContactAgencyPage.routeName,
       path: ContactAgencyPage.routePath,

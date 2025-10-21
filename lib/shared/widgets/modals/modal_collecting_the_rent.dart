@@ -208,7 +208,7 @@ class _ModalCollectingTheRentState extends State<ModalCollectingTheRent> {
         ),
         CustomSpacer(space: 0.5),
         Text(
-          displayAmount.toString(),
+          displayAmount.toString().formatCurrency(),
           style:
               TextStyle(
                 fontSize: 32.sp,
@@ -301,7 +301,80 @@ class _ModalCollectingTheRentState extends State<ModalCollectingTheRent> {
             return null;
           },
         ),
+        CustomSpacer(space: 0.5),
+
+        // Option pour scanner le QR code
+        Center(
+          child: TextButton.icon(
+            onPressed: _showQrCodeScanner,
+            icon: Icon(Icons.qr_code_scanner, color: AppColors.primary),
+            label: Text(
+              'Scanner le QR code du locataire',
+              style:
+                  TextStyle(
+                    fontSize: 14.sp,
+                    color: AppColors.primary,
+                  ).sourceSansProSemiBold,
+            ),
+          ),
+        ),
       ],
+    );
+  }
+
+  void _showQrCodeScanner() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder:
+          (context) => Container(
+            height: MediaQuery.of(context).size.height * 0.7,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(30.r),
+                topRight: Radius.circular(30.r),
+              ),
+            ),
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(16.sp),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Scanner le QR code',
+                        style:
+                            TextStyle(
+                              fontSize: 20.sp,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.black,
+                            ).sourceSansProBold,
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: QrCodeViewer(
+                    onQrCodeScanned: (String scannedCode) async {
+                      if (scannedCode.isNotEmpty) {
+                        setState(() {
+                          _codeController.text = scannedCode;
+                        });
+                        _validateCode();
+                      }
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
     );
   }
 
