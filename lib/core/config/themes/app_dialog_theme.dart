@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../constants/app_colors.dart';
 
 class AppDialogTheme {
-  static DialogTheme light = DialogTheme(
+  static DialogThemeData light = DialogThemeData(
     alignment: Alignment.center,
     backgroundColor: Colors.white,
     titleTextStyle: TextStyle(
