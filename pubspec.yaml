@@ -47,7 +47,7 @@ dependencies:
   qr_flutter: ^4.1.0
   qr_code_scanner: ^1.0.1
   ios_keyboard_action: ^0.0.7
-  skeletonizer: ^1.4.3
+  skeletonizer: ^2.1.0+1
   cached_network_image: ^3.4.1
   url_launcher: ^6.3.2
   file_picker: ^10.3.3
