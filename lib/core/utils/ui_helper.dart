@@ -104,24 +104,31 @@ class UIHelper {
       File? file;
 
       if (source == 'gallery') {
-        // Vérifier les permissions pour le stockage
-        final storagePermission = await Permission.photos.request();
-        if (storagePermission.isDenied) {
-          showToast(msg: "Permission requise pour accéder à la galerie");
-          return null;
+        final permissions = [
+          Permission.photos,
+          Permission.storage,
+          Permission.mediaLibrary,
+        ];
+
+        for (var permission in permissions) {
+          final permissionStatus = await permission.request();
+
+          if (permissionStatus.isGranted) {
+            // Utiliser FilePicker pour sélectionner une image depuis la galerie
+            FilePickerResult? result = await FilePicker.platform.pickFiles(
+              type: FileType.image,
+              allowMultiple: false,
+            );
+
+            if (result == null || result.xFiles.isEmpty) {
+              return null;
+            }
+
+            file = File(result.xFiles.first.path);
+            break;
+          }
         }
 
-        // Utiliser FilePicker pour sélectionner une image depuis la galerie
-        FilePickerResult? result = await FilePicker.platform.pickFiles(
-          type: FileType.image,
-          allowMultiple: false,
-        );
-
-        if (result == null || result.xFiles.isEmpty) {
-          return null;
-        }
-
-        file = File(result.xFiles.first.path);
       } else if (source == 'camera') {
         // Vérifier les permissions pour la caméra
         final cameraPermission = await Permission.camera.request();

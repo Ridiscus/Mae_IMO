@@ -53,6 +53,7 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
       useSafeArea: true,
       showDragHandle: true,
       backgroundColor: Colors.white,
+      useRootNavigator: true,
       builder:
           (context) => ModalPaymentInfo(
             month: month,
