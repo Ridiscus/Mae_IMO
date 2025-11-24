@@ -78,8 +78,8 @@ class SearchBarWidget extends StatelessWidget {
                   backgroundColor: filterButtonColor ?? AppColors.orange,
                   child: SvgPicture.asset(
                     Assets.filter,
-                    width: 15.sp,
-                    height: 15.sp,
+                    width: 10.sp,
+                    height: 10.sp,
                   ),
                 ),
               ),

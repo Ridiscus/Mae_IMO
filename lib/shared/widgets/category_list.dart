@@ -19,8 +19,8 @@ class CategoryList extends StatelessWidget {
         ? SizedBox.shrink()
         : Skeletonizer(
           enabled: (state.isLoading ?? false),
-          child: SizedBox(
-            height: 35.h,
+          child: Container(
+            constraints: BoxConstraints(maxHeight: 45.h),
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: categories.length,

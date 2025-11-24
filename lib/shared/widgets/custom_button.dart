@@ -77,6 +77,7 @@ class CustomButton extends StatelessWidget {
             isLoading
                 ? CircularProgressIndicator(color: Colors.white)
                 : Stack(
+                  alignment: Alignment.center,
                   children: [
                     Center(
                       child: Text(
@@ -109,7 +110,7 @@ class CustomButton extends StatelessWidget {
                                   : Icon(
                                     iconData ?? Icons.adaptive.arrow_forward,
                                     color: buttonColor,
-                                    size: (iconSize ?? 40.w) * 0.6,
+                                    size: (iconSize ?? 30.w) * 0.6,
                                   ),
                         ),
                       ),
