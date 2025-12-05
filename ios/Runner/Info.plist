@@ -46,13 +46,11 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>NSCameraUsageDescription</key>
-    <string>Nous avons besoin d'accéder à votre caméra pour capturer des photos.</string>
+    <string>La caméra est utilisée pour scanner des QR codes et permettre la capture de photos pour votre profil.</string>
     <key>NSPhotoLibraryUsageDescription</key>
-    <string>Nous avons besoin d'accéder à votre galerie photo pour sélectionner des images.</string>
+    <string>L’accès à vos photos permet d’importer des images dans votre profil</string>
     <key>NSPhotoLibraryAddUsageDescription</key>
     <string>Nous avons besoin d'accéder à votre galerie photo pour sauvegarder des images.</string>
-    <key>NSMicrophoneUsageDescription</key>
-    <string>Cette application n'utilise pas le microphone.</string>
     <key>NSDocumentsFolderUsageDescription</key>
     <string>Nous avons besoin d'accéder à vos documents pour sélectionner des fichiers.</string>
     <key>LSApplicationQueriesSchemes</key>
