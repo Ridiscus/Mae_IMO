@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart' show GoRoute;
 
+import '../presentation/agent/pages/tenant_validation_page.dart';
 import '../presentation/tenant/pages/checkout_cinetpay_page.dart';
 import '../presentation/tenant/pages/contact_agency_page.dart';
 import '../presentation/tenant/pages/dashboard_tenant_page.dart';
@@ -37,5 +38,17 @@ class TenantRoutes {
       path: ContactAgencyPage.routePath,
       builder: (context, state) => const ContactAgencyPage(),
     ),
+
+
+    GoRoute(
+      path: '/tenant-validation/:id', // Le chemin URL
+      name: TenantValidationPage.routeName, // Le nom défini dans la classe
+      builder: (context, state) {
+        final id = state.pathParameters['id']!;
+        return TenantValidationPage(propertyId: id);
+      },
+    ),
+
+
   ];
 }

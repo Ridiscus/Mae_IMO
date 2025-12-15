@@ -142,7 +142,7 @@ class _VisitRequestPageState extends State<VisitRequestPage> {
         CustomSpacer(),
         _buildSummaryItem(
           icon: Icons.hotel_outlined,
-          label: 'Chambres : ${_property?.nombreDeChambres ?? '0'}',
+          label: 'Chambres : ${_property?.nombreChambres ?? '0'}',
         ),
       ],
     );

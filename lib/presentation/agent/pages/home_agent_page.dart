@@ -298,7 +298,7 @@ class _HomeAgentPageState extends State<HomeAgentPage> {
   Widget _buildPropertyInspectionCard() {
     return StatsCardWidget(
       title: 'États des lieux à effectuer',
-      value: '${_agentDashboardModel?.etatsLieuEffectues ?? 0}',
+      value: '${_agentDashboardModel?.etatsLieuEnAttente ?? 0}',
       iconData: Icons.home_work_outlined,
       iconBackgroundColor: AppColors.primary,
       arrowColor: AppColors.primary,

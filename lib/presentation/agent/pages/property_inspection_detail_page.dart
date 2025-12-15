@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:maelys_imo/core/constants/app_colors.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
 import 'package:maelys_imo/presentation/agent/pages/property_inspection_form_page.dart';
+import 'package:maelys_imo/presentation/agent/pages/tenant_validation_page.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -50,10 +51,21 @@ class _PropertyInspectionDetailPageState
 
     return BlocListener<InventoriesBloc, InventoriesState>(
       listener: (context, state) {
-        if (state.isLoading == false &&
-            state.inventoryDetail == null &&
-            state.failure == null) {
+        // 1. Gestion existante du chargement des détails
+        if (state.isLoading == false && state.inventoryDetail == null && state.failure == null) {
           context.pop();
+        }
+
+        // 2. NOUVEAU : Redirection si le code a été généré avec succès
+        // On vérifie "codeGenerated == true" (variable existante dans ton State)
+        if (state.codeGenerated == true) {
+          // IMPORTANT : On remet le codeGenerated à null ou on s'assure de ne pas boucler
+          // Mais comme le bloc le remet à null au début de l'event, c'est bon.
+
+          context.pushNamed(
+            TenantValidationPage.routeName,
+            pathParameters: {'id': widget.propertyId},
+          );
         }
       },
       child: FormWithHeaderLayout(
@@ -75,7 +87,7 @@ class _PropertyInspectionDetailPageState
         CustomSpacer(),
         _buildTenantInfoCard(),
         Spacer(),
-        _buildStartInspectionButton(),
+        _buildStartInspectionButton(context),
         SpacerPlatform(),
       ],
     );
@@ -179,15 +191,31 @@ class _PropertyInspectionDetailPageState
     );
   }
 
-  Widget _buildStartInspectionButton() {
+
+
+
+
+
+
+
+  Widget _buildStartInspectionButton(BuildContext context) {
+    // On récupère l'état pour savoir si ça charge (pour le spinner sur le bouton)
+    final isLoading = context.select((InventoriesBloc bloc) => bloc.state.isLoading ?? false);
+
     return CustomButton(
       text: 'Démarrer l\'état des lieux',
+      isLoading: isLoading, // Affiche le chargement sur le bouton
       onPressed: () {
-        // Navigate to the inspection form page
-        if (_propertyData?.id != null) {
-          context.pushNamed(
-            PropertyInspectionFormPage.routeName,
-            pathParameters: {'id': _propertyData!.id.toString()},
+        // On vérifie qu'on a bien les infos du locataire
+        if (_tenant?.id != null) {
+          // ON UTILISE L'EVENT EXISTANT DU BLOC
+          context.read<InventoriesBloc>().add(
+            GenerateCodeEtatLieuxEvent(locataireId: _tenant!.id!),
+          );
+        } else {
+          // Sécurité si pas de locataire
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Impossible de trouver l'ID du locataire"))
           );
         }
       },
@@ -195,5 +223,6 @@ class _PropertyInspectionDetailPageState
       buttonVariant: ButtonVariant.primary,
     );
   }
+
 
 }

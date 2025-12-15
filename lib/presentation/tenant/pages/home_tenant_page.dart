@@ -33,6 +33,8 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
   late PaymentState _paymentState;
   bool _loadingAll = true;
 
+  Timer? _refreshTimer; // Variable pour le timer
+
   late TenantDashboardModel _tenantDashboardModel;
 
   bool thisMountIncluded = false;
@@ -67,6 +69,27 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
     );
   }
 
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Lance une vérification automatique toutes les 15 secondes
+    _refreshTimer = Timer.periodic(const Duration(seconds: 15), (timer) {
+      // On recharge le dashboard discrètement en arrière-plan
+      context.read<DashboardBloc>().add(FetchTenantDashboardEvent());
+    });
+  }
+
+  @override
+  void dispose() {
+    _refreshTimer?.cancel(); // TRES IMPORTANT : Arrêter le timer quand on quitte la page
+    super.dispose();
+  }
+
+
+
+
   @override
   Widget build(BuildContext context) {
     _authState = context.select((AuthBloc bloc) => bloc.state);
@@ -87,27 +110,25 @@ class _HomeTenantPageState extends State<HomeTenantPage> {
     return PageWithHeaderLayout(
       headerContent: _buildHeaderContent(),
       bodyContent: _buildContent(),
+
+      // --- CORRECTION ICI ---
       onRefresh: () async {
-        final completer = Completer<void>();
-
-        // Écouter les changements d'état pour savoir quand le chargement est terminé
-        late StreamSubscription subscription;
-        subscription = context.read<PaymentBloc>().stream.listen((state) {
-          if (state.isLoading) {
-            subscription.cancel();
-            completer.complete();
-          }
-        });
-
-        // Déclencher le chargement des données
+        // 1. On lance la mise à jour des Paiements (comme avant)
         context.read<PaymentBloc>().add(
           FetchHistoryPaymentEvent(tenantId: _userModel.id!),
         );
 
-        // Attendre que le chargement soit terminé
-        return completer.future;
+        // 2. IMPORTANT : On lance la mise à jour du Dashboard (C'est là qu'est le QR Code)
+        context.read<DashboardBloc>().add(
+            FetchTenantDashboardEvent() // <--- C'est la ligne qui manquait !
+        );
+
+        // 3. Petit délai pour laisser le temps aux requêtes de partir et à l'animation de se faire
+        // (Les blocs mettront à jour l'UI automatiquement grâce aux listeners)
+        await Future.delayed(const Duration(seconds: 2));
       },
     );
+
   }
 
   Widget _buildHeaderContent() {

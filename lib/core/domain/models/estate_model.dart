@@ -7,7 +7,7 @@ class EstateModel {
   final String? utilisation;
   final String? description;
   final String? superficie;
-  final String? nombreDeChambres;
+  final String? nombreChambres;
   final String? nombreDeToilettes;
   final String? garage;
   final String? avance;
@@ -32,7 +32,7 @@ class EstateModel {
     this.utilisation,
     this.description,
     this.superficie,
-    this.nombreDeChambres,
+    this.nombreChambres,
     this.nombreDeToilettes,
     this.garage,
     this.avance,
@@ -82,7 +82,7 @@ class EstateModel {
     utilisation: utilisation ?? this.utilisation,
     description: description ?? this.description,
     superficie: superficie ?? this.superficie,
-    nombreDeChambres: nombreDeChambres ?? this.nombreDeChambres,
+    nombreChambres: nombreDeChambres ?? this.nombreChambres,
     nombreDeToilettes: nombreDeToilettes ?? this.nombreDeToilettes,
     garage: garage ?? this.garage,
     avance: avance ?? this.avance,
@@ -125,7 +125,7 @@ class EstateModel {
       utilisation: json["utilisation"],
       description: json["description"],
       superficie: json["superficie"],
-      nombreDeChambres: json["nombre_de_chambres"],
+      nombreChambres: json["nombre_de_chambres"],
       nombreDeToilettes: json["nombre_de_toilettes"],
       garage: json["garage"],
       avance: json["avance"],
@@ -161,7 +161,7 @@ class EstateModel {
     "utilisation": utilisation,
     "description": description,
     "superficie": superficie,
-    "nombre_de_chambres": nombreDeChambres,
+    "nombre_de_chambres": nombreChambres,
     "nombre_de_toilettes": nombreDeToilettes,
     "garage": garage,
     "avance": avance,

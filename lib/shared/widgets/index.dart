@@ -22,7 +22,7 @@ import 'package:maelys_imo/presentation/portal/pages/portal_page.dart' show Port
 
 import 'package:go_router/go_router.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import '../../core/constants/app_colors.dart' show AppColors;
 import '../../core/constants/assets.dart';

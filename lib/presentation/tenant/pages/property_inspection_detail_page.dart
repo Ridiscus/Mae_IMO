@@ -172,15 +172,25 @@ class _PropertyInspectionDetailPageState
     );
   }
 
+
+
+
+
   Widget _buildRoomsList() {
-    final partiesCommunes = widget.inspectionData.partiesCommunesModel?.toMap() ?? {};
+    // 1. Récupération des données
+    final partiesCommunesMap = widget.inspectionData.partiesCommunesModel?.toMap() ?? {};
     final chambres = widget.inspectionData.chambreModels ?? [];
+
+    // 2. Filtrage des clés (On enlève les observations pour ne garder que les éléments physiques)
+    final partiesCommunesKeys = partiesCommunesMap.keys
+        .where((key) => !key.startsWith('observation_'))
+        .toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Parties Communes Section
-        if (partiesCommunes.isNotEmpty) ...[
+        // --- SECTION PARTIES COMMUNES (EN GRILLE) ---
+        if (partiesCommunesKeys.isNotEmpty) ...[
           Text(
             'Parties Communes',
             style: TextStyle(
@@ -190,11 +200,40 @@ class _PropertyInspectionDetailPageState
             ).sourceSansProBold,
           ),
           SizedBox(height: 16.sp),
-          ..._buildPartiesCommunesItems(partiesCommunes),
+
+          GridView.builder(
+            padding: EdgeInsets.zero,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2, // 2 colonnes
+              crossAxisSpacing: 12.sp,
+              mainAxisSpacing: 12.sp,
+              // ATTENTION : Si le texte dépasse, tu devras ajuster ce chiffre (ex: 0.6 ou 0.8)
+              childAspectRatio: 0.8,
+            ),
+            itemCount: partiesCommunesKeys.length,
+            itemBuilder: (context, index) {
+              final key = partiesCommunesKeys[index];
+
+              // --- CORRECTION ICI ---
+              // On récupère les infos manquantes depuis la Map
+              final status = partiesCommunesMap[key]; // Ex: "Bon état"
+              final observation = partiesCommunesMap['observation_$key']; // Ex: "Rayures"
+
+              // On passe les 3 arguments attendus par ta fonction
+              return _buildPartiesCommunesItem(
+                _formatLabel(key), // Arg 1 : Label
+                status?.toString() ?? '', // Arg 2 : Statut
+                observation?.toString(), // Arg 3 : Observation (optionnel)
+              );
+            },
+          ),
+
           SizedBox(height: 24.sp),
         ],
 
-        // Chambres Section
+        // --- SECTION CHAMBRES ---
         if (chambres.isNotEmpty) ...[
           Text(
             'Chambres',
@@ -210,6 +249,7 @@ class _PropertyInspectionDetailPageState
       ],
     );
   }
+
 
   List<Widget> _buildPartiesCommunesItems(Map<String, dynamic> partiesCommunes) {
     final items = <Widget>[];

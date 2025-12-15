@@ -6,8 +6,8 @@ extension EstateExt on EstateModel {
     if (superficie != null) {
       amenities.add(AmenityModel(text: '$superficie M²')); // M\u00B2
     }
-    if (nombreDeChambres != null) {
-      amenities.add(AmenityModel(text: '$nombreDeChambres Chambre(s)'));
+    if (nombreChambres != null) {
+      amenities.add(AmenityModel(text: '$nombreChambres Chambre(s)'));
     }
     if (nombreDeToilettes != null) {
       amenities.add(AmenityModel(text: '$nombreDeToilettes Toilette(s)'));
