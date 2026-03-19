@@ -37,6 +37,9 @@ class PageWithHeaderLayout extends StatelessWidget {
   final bool scrollableBody;
 
   final RefreshCallback? onRefresh;
+
+  final double? headerHeight;
+
   /// Creates a page with header layout.
   const PageWithHeaderLayout({
     super.key,
@@ -52,30 +55,60 @@ class PageWithHeaderLayout extends StatelessWidget {
         FloatingActionButtonLocation.centerFloat,
     this.scrollableBody = true,
     this.onRefresh,
+    this.headerHeight,
   });
 
   @override
   Widget build(BuildContext context) {
+    final double computedHeaderHeight =
+        headerHeight ?? (MediaQuery.of(context).size.height * .25).sp;
+    final double bodyTopOffset = (computedHeaderHeight * 0.8).sp;
+
     return Scaffold(
       backgroundColor: bodyBackgroundColor ?? AppColors.scaffold,
-      body: SafeArea(
-        top: false,
-        child: Column(
-          children: [
-            AppHeaderLayout(
+      body: Stack(
+        children: [
+          // 1. Header background and content
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: AppHeaderLayout(
               backgroundColor: headerBackgroundColor,
               padding: headerPadding,
               roundedBottomCorners: roundedBottomCorners,
               content: headerContent,
+              height: computedHeaderHeight,
+              bottomRadius: 30.r,
             ),
+          ),
 
-            ScrollableBodyWidget(
-              bodyContent: bodyContent,
-              bodyPadding: bodyPadding,
-              onRefresh: onRefresh,
+          // 2. Main body content
+          Positioned.fill(
+            top: bodyTopOffset,
+            child: Container(
+              decoration: BoxDecoration(
+                color: bodyBackgroundColor ?? AppColors.scaffold,
+                borderRadius:
+                    roundedBottomCorners
+                        ? BorderRadius.only(
+                          topLeft: Radius.circular(30.r),
+                          topRight: Radius.circular(30.r),
+                        )
+                        : null,
+              ),
+              clipBehavior: Clip.antiAlias,
+              child: ScrollableBodyWidget(
+                bodyContent: bodyContent,
+                bodyPadding:
+                    bodyPadding ?? EdgeInsets.fromLTRB(16.w, 30.h, 16.w, 40.h),
+                onRefresh: onRefresh,
+                useExpanded:
+                    false, // Correction : Désactive l'Expanded ici car nous sommes dans un Positioned
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
       floatingActionButton: floatingActionButton,
       floatingActionButtonLocation:

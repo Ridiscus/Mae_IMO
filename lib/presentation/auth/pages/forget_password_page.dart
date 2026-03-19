@@ -26,8 +26,6 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
     text: kDebugMode ? "MA935006-AGT962609" : "",
   );
 
-
-
   @override
   Widget build(BuildContext context) {
     return FormWithHeaderLayout(
@@ -64,9 +62,9 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
           controller: _codeIdController,
           hintText: 'Entrez votre identifiant de connexion',
         ),
-        Spacer(),
+        const Spacer(),
         _buildSendLinkButton(),
-        SizedBox(height: 24.r),
+        SizedBox(height: MediaQuery.of(context).padding.bottom + 16.r),
       ],
     );
   }

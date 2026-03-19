@@ -22,7 +22,8 @@ class MoneyFormatter extends TextInputFormatter {
     for (var i = 0; i < reversed.length; i += 3) {
       final end = i + 3;
       chunks.add(
-          reversed.substring(i, end > reversed.length ? reversed.length : end));
+        reversed.substring(i, end > reversed.length ? reversed.length : end),
+      );
     }
 
     // On reconstruit la chaîne dans le bon sens

@@ -16,7 +16,6 @@ class TokenManager {
   late Box _box;
 
   /// Initialise Hive et ouvre la box de stockage.
-  ///
   /// Cette méthode doit être appelée avant toute utilisation de TokenManager,
   /// généralement au démarrage de l'application.
   static Future<void> init() async {
@@ -31,7 +30,6 @@ class TokenManager {
   }
 
   /// Initialise la clé de chiffrement si elle n'existe pas déjà.
-  ///
   /// Génère une nouvelle clé de chiffrement aléatoire de 32 bytes
   /// et la stocke de manière sécurisée dans Hive.
   Future<void> _initializeEncryptionKey() async {

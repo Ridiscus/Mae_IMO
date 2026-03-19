@@ -94,9 +94,13 @@ class AuthBloc extends HydratedBloc<AuthEvent, AuthState> {
             userModel:
                 state.userModel!.isTenant
                     ? state.userModel!.asTenant()!.copyWith(email: result.data)
-                    : state.userModel!.asCollectionAgent()!.copyWith(
-                      email: result.data,
-                    ),
+                    : state.userModel!.isCollectionAgent
+                        ? state.userModel!.asCollectionAgent()!.copyWith(
+                          email: result.data,
+                        )
+                        : state.userModel!.asCommercial()!.copyWith(
+                          email: result.data,
+                        ),
           ),
         );
       } else {
@@ -165,9 +169,13 @@ class AuthBloc extends HydratedBloc<AuthEvent, AuthState> {
                     ? state.userModel!.asTenant()!.copyWith(
                       profileImage: result.data,
                     )
-                    : state.userModel!.asCollectionAgent()!.copyWith(
-                      profileImage: result.data,
-                    ),
+                    : state.userModel!.isCollectionAgent
+                        ? state.userModel!.asCollectionAgent()!.copyWith(
+                          profileImage: result.data,
+                        )
+                        : state.userModel!.asCommercial()!.copyWith(
+                          profileImage: result.data,
+                        ),
           ),
         );
       } else {

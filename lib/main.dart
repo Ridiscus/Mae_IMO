@@ -19,7 +19,6 @@ import 'package:maelys_imo/routes/app_route.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:talker_bloc_logger/talker_bloc_logger.dart';
 import 'package:toastification/toastification.dart';
-
 import 'core/config/themes/app_theme.dart';
 import 'core/constants/constants.dart';
 import 'core/manager/state/auth/auth_bloc.dart';

@@ -20,6 +20,12 @@ class AppHeaderLayout extends StatelessWidget {
   /// The radius of the bottom corners when [roundedBottomCorners] is true.
   final double? bottomRadius;
 
+  /// Optional fixed height for the header.
+  final double? height;
+
+  /// Whether to align the illustration to the right.
+  final bool alignRight;
+
   /// Creates an app header layout with customizable content.
   const AppHeaderLayout({
     super.key,
@@ -28,6 +34,8 @@ class AppHeaderLayout extends StatelessWidget {
     this.padding,
     this.roundedBottomCorners = true,
     this.bottomRadius,
+    this.height,
+    this.alignRight = false,
   });
 
   @override
@@ -35,19 +43,30 @@ class AppHeaderLayout extends StatelessWidget {
     return Container(
       padding:
           padding ??
-          EdgeInsets.symmetric(horizontal: 16.sp).copyWith(bottom: 16.sp),
+          EdgeInsets.symmetric(horizontal: 16.sp).copyWith(bottom: 24.sp),
       width: double.infinity,
+      height: height,
       decoration: BoxDecoration(
         color: backgroundColor ?? AppColors.primary,
         borderRadius:
             roundedBottomCorners
                 ? BorderRadius.only(
-                  bottomLeft: Radius.circular(bottomRadius ?? 20.r),
-                  bottomRight: Radius.circular(bottomRadius ?? 20.r),
+                  bottomLeft: Radius.circular(bottomRadius ?? 30.r),
+                  bottomRight: Radius.circular(bottomRadius ?? 30.r),
                 )
                 : null,
       ),
-      child: SafeArea(child: content),
+      child: Stack(
+        children: [
+          IllustrationHeader(
+            color: Colors.white,
+            primaryAlpha: 0.1,
+            secondaryAlpha: 0.05,
+            alignRight: alignRight,
+          ),
+          SafeArea(child: content),
+        ],
+      ),
     );
   }
 }

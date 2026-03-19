@@ -16,7 +16,6 @@ import 'profile_tenant_page.dart';
 class DashboardContentPage extends StatelessWidget {
   static const routeName = 'dashboardContent';
   static const routePath = '/dashboard';
-
   const DashboardContentPage({Key? key}) : super(key: key);
 
   @override

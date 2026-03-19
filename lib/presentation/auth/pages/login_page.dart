@@ -9,29 +9,29 @@ import 'package:maelys_imo/core/manager/state/auth/auth_bloc.dart';
 import 'package:maelys_imo/core/manager/state/tenant/tenant_bloc.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
 import 'package:toastification/toastification.dart';
-
 import '../../../core/manager/state/dashboard/dashboard_bloc.dart';
 import '../../../core/manager/state/payment/payment_bloc.dart';
 import '../../../core/utils/toast/notification_toast.dart';
 import '../../agent/pages/home_agent_page.dart';
+import '../../commercial/pages/dashboard_commercial_page.dart';
 import '../../tenant/pages/dashboard_tenant_page.dart';
 import '../pages/forget_password_page.dart';
 
 class LoginPage extends StatefulWidget {
   static const routeName = 'login';
   static const routePath = '/login';
-
   const LoginPage({super.key});
-
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController(
-    text: kDebugMode ? "MA407898-AGT227811" : "",
+    // text: kDebugMode ? "MA407898-AGT227811" : "",
+    text: kDebugMode ? "COM246664" : "",
   );
   final TextEditingController _passwordController = TextEditingController(
+    // text: "azertyui",
     text: "azertyui",
   );
   bool _obscureText = true;
@@ -186,13 +186,18 @@ class _LoginPageState extends State<LoginPage> {
           return;
         }
 
+        if (state.userModel!.isCommercial) {
+          // context.read<DashboardBloc>().add(FetchCommercialDashboardEvent());
+          context.goNamed(DashboardCommercialPage.routeName);
+          return;
+        }
+
         if (state.userModel!.isTenant) {
           context.read<DashboardBloc>().add(FetchTenantDashboardEvent());
           context.read<PaymentBloc>().add(
             FetchHistoryPaymentEvent(tenantId: state.userModel!.id!),
           );
           context.read<TenantBloc>().add(FetchPropertyInspectionsEvent());
-          
           context.goNamed(DashboardTenantPage.routeName);
           return;
         }
@@ -207,8 +212,8 @@ class _LoginPageState extends State<LoginPage> {
       builder: (context, state) {
         return CustomButton(
           text: 'Se connecter',
-          isLoading: state.isLoading ?? false,
-          isDisabled: state.isLoading ?? false,
+          isLoading: state.isLoading,
+          isDisabled: state.isLoading,
           showArrow: true,
           onPressed: () {
             if (_usernameController.text.isEmpty) {

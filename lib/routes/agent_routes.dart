@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart' show GoRoute;
 
- import '../core/manager/state/tenant/tenant_bloc.dart';
+import '../core/manager/state/tenant/tenant_bloc.dart';
 import '../presentation/agent/pages/home_agent_page.dart';
 import '../presentation/agent/pages/profile_agent_page.dart';
 import '../presentation/agent/pages/property_inspection_detail_page.dart';
@@ -45,7 +45,6 @@ class AgentRoutes {
       builder: (context, state) {
         final tenantId = state.pathParameters['id'] ?? '';
         context.read<TenantBloc>().add(ShowTenantEvent(id: tenantId));
-
         return TenantDetailPage(tenantId: tenantId);
       },
     ),

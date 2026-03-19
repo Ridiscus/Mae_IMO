@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:ui';
+// import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
@@ -11,6 +11,7 @@ part 'tenant_model.dart';
 part 'estate_type_model.dart';
 part 'estate_model.dart';
 part 'collection_agent_model.dart';
+part 'commercial_model.dart';
 part 'agency_model.dart';
 part 'tenant_dashboard_model.dart';
 part 'document_model.dart';
@@ -29,3 +30,7 @@ part 'estate_location_response_model.dart';
 part 'comptable_info_model.dart';
 part 'responses/inventory_model_response.dart';
 part 'qr_code_model.dart';
+part 'owner_model.dart';
+part 'property_model.dart';
+part 'activity_model.dart';
+part 'commercial_dashboard_model.dart';

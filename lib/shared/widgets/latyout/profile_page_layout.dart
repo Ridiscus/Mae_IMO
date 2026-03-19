@@ -223,6 +223,7 @@ class ProfilePageLayout extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.all(16.r),
       margin: EdgeInsets.only(top: 16.sp),
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(

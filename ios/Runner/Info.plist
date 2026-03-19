@@ -22,10 +22,65 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>maelysimo.deeplink</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>maelysimo</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>maelysimo.https</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>https</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>sms</string>
+		<string>tel</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAllowsArbitraryLoads</key>
+	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>La caméra est utilisée pour scanner des QR codes et permettre la capture de photos pour votre profil.</string>
+	<key>NSDocumentsFolderUsageDescription</key>
+	<string>Nous avons besoin d'accéder à vos documents pour sélectionner des fichiers.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Nous avons besoin d'accéder à votre galerie photo pour sauvegarder des images.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>L’accès à vos photos permet d’importer des images dans votre profil</string>
+	<key>UIApplicationSceneManifest</key>
+	<dict>
+		<key>UIApplicationSupportsMultipleScenes</key>
+		<false/>
+		<key>UISceneConfigurations</key>
+		<dict>
+			<key>UIWindowSceneSessionRoleApplication</key>
+			<array>
+				<dict>
+					<key>UISceneClassName</key>
+					<string>UIWindowScene</string>
+					<key>UISceneConfigurationName</key>
+					<string>flutter</string>
+					<key>UISceneDelegateClassName</key>
+					<string>FlutterSceneDelegate</string>
+					<key>UISceneStoryboardFile</key>
+					<string>Main</string>
+				</dict>
+			</array>
+		</dict>
+	</dict>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
@@ -45,47 +100,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>NSCameraUsageDescription</key>
-    <string>La caméra est utilisée pour scanner des QR codes et permettre la capture de photos pour votre profil.</string>
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>L’accès à vos photos permet d’importer des images dans votre profil</string>
-    <key>NSPhotoLibraryAddUsageDescription</key>
-    <string>Nous avons besoin d'accéder à votre galerie photo pour sauvegarder des images.</string>
-    <key>NSDocumentsFolderUsageDescription</key>
-    <string>Nous avons besoin d'accéder à vos documents pour sélectionner des fichiers.</string>
-    <key>LSApplicationQueriesSchemes</key>
-    <array>
-      <string>sms</string>
-      <string>tel</string>
-    </array>
-    
-    <!-- Deep link URL schemes configuration -->
-    <key>CFBundleURLTypes</key>
-    <array>
-        <dict>
-            <key>CFBundleURLName</key>
-            <string>maelysimo.deeplink</string>
-            <key>CFBundleURLSchemes</key>
-            <array>
-                <string>maelysimo</string>
-            </array>
-        </dict>
-        <dict>
-            <key>CFBundleURLName</key>
-            <string>maelysimo.https</string>
-            <key>CFBundleURLSchemes</key>
-            <array>
-                <string>https</string>
-            </array>
-        </dict>
-    </array>
-    
-    <!-- Associated Domains for Universal Links -->
-    <key>com.apple.developer.associated-domains</key>
-    <array>
-        <string>applinks:maelysimo.com</string>
-    </array>
-    <key>NSAllowsArbitraryLoads</key>
-    <true/>
+	<key>com.apple.developer.associated-domains</key>
+	<array>
+		<string>applinks:maelysimo.com</string>
+	</array>
 </dict>
 </plist>

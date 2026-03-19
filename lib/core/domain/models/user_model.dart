@@ -4,6 +4,7 @@ enum UserType {
   tenant('tenant'),
   locataire('locataire'),
   collectionAgent('collection_agent'),
+  commercial('commercial'),
   unknown('unknown');
 
   const UserType(this.value);
@@ -18,6 +19,8 @@ enum UserType {
       case 'collection_agent':
       case 'agent':
         return UserType.collectionAgent;
+      case 'commercial':
+        return UserType.commercial;
       default:
         return UserType.unknown;
     }
@@ -74,6 +77,8 @@ abstract class UserModel {
         return TenantModel.fromMap(json);
       case UserType.collectionAgent:
         return CollectionAgentModel.fromMap(json);
+      case UserType.commercial:
+        return CommercialModel.fromMap(json);
       case UserType.unknown:
       default:
         // Si le type n'est pas spécifié, on essaie de deviner selon les champs présents
@@ -103,6 +108,8 @@ abstract class UserModel {
 
   bool get isCollectionAgent => userType == UserType.collectionAgent;
 
+  bool get isCommercial => userType == UserType.commercial;
+
   bool get isUnknownType => userType == UserType.unknown;
 
   // Cast sécurisé vers TenantModel
@@ -115,10 +122,16 @@ abstract class UserModel {
     return isCollectionAgent ? this as CollectionAgentModel : null;
   }
 
+  // Cast sécurisé vers CommercialModel
+  CommercialModel? asCommercial() {
+    return isCommercial ? this as CommercialModel : null;
+  }
+
   // Méthode pour exécuter une action selon le type
   T when<T>({
     required T Function(TenantModel tenant) onTenant,
     required T Function(CollectionAgentModel agent) onCollectionAgent,
+    required T Function(CommercialModel commercial) onCommercial,
     required T Function(UserModel user) onUnknown,
   }) {
     switch (userType) {
@@ -126,6 +139,8 @@ abstract class UserModel {
         return onTenant(this as TenantModel);
       case UserType.collectionAgent:
         return onCollectionAgent(this as CollectionAgentModel);
+      case UserType.commercial:
+        return onCommercial(this as CommercialModel);
       case UserType.unknown:
       default:
         return onUnknown(this);
@@ -158,7 +173,7 @@ abstract class UserModel {
     'email': json["email"],
     'passwordResetToken': json["password_reset_token"],
     'passwordResetExpires': json["password_reset_expires"],
-    'contact': json["contact"] ??  json["telephone"],
+    'contact': json["contact"] ?? json["telephone"],
     'profileImage': json["profile_image"],
     'agenceId': json["agence_id"],
     'proprietaireId': json["proprietaire_id"],

@@ -6,7 +6,6 @@ import 'package:flutter/material.dart' show NavigatorState;
 import 'package:flutter/widgets.dart' show GlobalKey;
 import 'package:go_router/go_router.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart' show PrettyDioLogger;
-
 import '../manager/token_manager.dart';
 import 'api_error_handler.dart';
 import 'api_response.dart';
@@ -99,7 +98,12 @@ class ApiClient {
       );
       return _processResponse<T>(response, fromJson);
     } on DioException catch (e) {
-      return ApiResponse.error(message: ApiErrorHandler.handleError<T>(e));
+      final errors =
+          e.response?.data is Map ? e.response?.data['errors'] : null;
+      return ApiResponse.error(
+        message: ApiErrorHandler.handleError<T>(e),
+        errors: errors,
+      );
     } catch (e) {
       if (kDebugMode) {
         rethrow;
@@ -130,7 +134,12 @@ class ApiClient {
 
       return _processResponse<T>(response, fromJson);
     } on DioException catch (e) {
-      return ApiResponse.error(message: ApiErrorHandler.handleError<T>(e));
+      final errors =
+          e.response?.data is Map ? e.response?.data['errors'] : null;
+      return ApiResponse.error(
+        message: ApiErrorHandler.handleError<T>(e),
+        errors: errors,
+      );
     } catch (e) {
       if (kDebugMode) {
         rethrow;
@@ -161,7 +170,12 @@ class ApiClient {
 
       return _processResponse<T>(response, fromJson);
     } on DioException catch (e) {
-      return ApiResponse.error(message: ApiErrorHandler.handleError<T>(e));
+      final errors =
+          e.response?.data is Map ? e.response?.data['errors'] : null;
+      return ApiResponse.error(
+        message: ApiErrorHandler.handleError<T>(e),
+        errors: errors,
+      );
     } catch (e) {
       if (kDebugMode) {
         rethrow;
@@ -192,7 +206,12 @@ class ApiClient {
 
       return _processResponse<T>(response, fromJson);
     } on DioException catch (e) {
-      return ApiResponse.error(message: ApiErrorHandler.handleError<T>(e));
+      final errors =
+          e.response?.data is Map ? e.response?.data['errors'] : null;
+      return ApiResponse.error(
+        message: ApiErrorHandler.handleError<T>(e),
+        errors: errors,
+      );
     } catch (e) {
       if (kDebugMode) {
         rethrow;
@@ -220,10 +239,12 @@ class ApiClient {
 
     try {
       final T? data =
-          fromJson != null &&
-                  response.data != null &&
-                  response.data['data'] != null
-              ? fromJson(response.data['data'] ?? (response.data as dynamic))
+          fromJson != null && response.data != null
+              ? fromJson(
+                (response.data is Map && response.data.containsKey('data'))
+                    ? response.data['data']
+                    : response.data,
+              )
               : response.data as dynamic;
 
       final message = response.data?['message'];

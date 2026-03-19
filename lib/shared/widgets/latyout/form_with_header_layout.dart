@@ -19,6 +19,14 @@ class FormWithHeaderLayout extends StatelessWidget {
   /// If null, it will use the default Navigator.pop behavior.
   final VoidCallback? onBackPressed;
 
+  /// Padding autour du contenu de l'entête (back button + titre).
+  /// Par défaut : EdgeInsets.only(left: 0, right: 16).
+  final EdgeInsets? headerPadding;
+
+  /// Taille de la police du titre dans l'entête.
+  /// Par défaut : 24.sp.
+  final double? headerTitleSize;
+
   /// Creates a form with header layout.
   const FormWithHeaderLayout({
     super.key,
@@ -27,19 +35,26 @@ class FormWithHeaderLayout extends StatelessWidget {
     this.contentColor,
     this.onBackPressed,
     this.padding,
+    this.headerPadding,
+    this.headerTitleSize,
   });
 
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion(
-      value: SystemUiOverlayStyle(statusBarColor: AppColors.primary),
+      value: SystemUiOverlayStyle(
+        statusBarColor: AppColors.primary,
+        statusBarIconBrightness: Brightness.light,
+      ),
       child: Scaffold(
+        backgroundColor: AppColors.scaffold,
         body: Stack(
           children: [
-            _buildHeader(context),
-
+            // Header
+            Positioned(top: 0, left: 0, right: 0, child: _buildHeader(context)),
+            // Form Content
             Positioned.fill(
-              top: MediaQuery.of(context).size.height * .22,
+              top: (MediaQuery.of(context).size.height * .18).sp,
               child: _buildFormContainer(),
             ),
           ],
@@ -50,48 +65,35 @@ class FormWithHeaderLayout extends StatelessWidget {
 
   /// Builds the colored header section with a back button and title.
   Widget _buildHeader(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      color: AppColors.primary,
-      child: Stack(
-        children: [
-          Positioned.fill(
-            left: 12.sp,
-            right: 12.sp,
-            child: SafeArea(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CircularBackButton(onPressed: onBackPressed),
-                  CustomSpacer(),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.sp),
-                    child: Text(
-                      headerTitle,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style:
-                          
-                          TextStyle(
-                            fontSize: 28.sp,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ).sourceSansProBold,
-                    ),
-                  ),
-                ],
+    return AppHeaderLayout(
+      height: (MediaQuery.of(context).size.height * .25).sp,
+      bottomRadius: 30.sp,
+      alignRight: true,
+      content: SafeArea(
+        bottom: false,
+        child: Padding(
+          padding: headerPadding ?? EdgeInsets.only(left: 0.sp, right: 16.sp),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CircularBackButton(onPressed: onBackPressed),
+              const Spacer(),
+              Flexible(
+                child: Text(
+                  headerTitle,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style:
+                      TextStyle(
+                        fontSize: headerTitleSize ?? 24.sp,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ).sourceSansProBold,
+                ),
               ),
-            ),
+            ],
           ),
-
-          // Utiliser le nouveau composant IllustrationHeader
-          IllustrationHeader(
-            color: Colors.white,
-            primaryAlpha: 0.07,
-            secondaryAlpha: 0.03,
-            alignRight: true,
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -101,6 +103,7 @@ class FormWithHeaderLayout extends StatelessWidget {
     return Container(
       width: double.infinity,
       margin: EdgeInsets.only(top: 20.sp),
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: contentColor ?? Colors.white,
         borderRadius: BorderRadius.only(
@@ -109,7 +112,6 @@ class FormWithHeaderLayout extends StatelessWidget {
         ),
       ),
       padding: padding ?? EdgeInsets.all(16.sp),
-
       child: LayoutBuilder(
         builder: (context, constraints) {
           return SingleChildScrollView(

@@ -9,6 +9,7 @@ import 'package:maelys_imo/routes/tenant_shell_routes.dart';
 
 import '../main.dart' show navigatorKey;
 import 'auth_routes.dart';
+import 'commercial_routes.dart';
 
 /// Observateur personnalisé pour imprimer les changements de route
 class RouteObserver extends NavigatorObserver {
@@ -24,7 +25,9 @@ class RouteObserver extends NavigatorObserver {
   void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
     super.didPop(route, previousRoute);
     if (kDebugMode) {
-      print('⬅️ Retour de: ${route.settings.name ?? 'Route sans nom'} vers: ${previousRoute?.settings.name ?? 'Route sans nom'}');
+      print(
+        '⬅️ Retour de: ${route.settings.name ?? 'Route sans nom'} vers: ${previousRoute?.settings.name ?? 'Route sans nom'}',
+      );
     }
   }
 
@@ -32,7 +35,9 @@ class RouteObserver extends NavigatorObserver {
   void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
     super.didReplace(newRoute: newRoute, oldRoute: oldRoute);
     if (kDebugMode) {
-      print('🔄 Remplacement de: ${oldRoute?.settings.name ?? 'Route sans nom'} par: ${newRoute?.settings.name ?? 'Route sans nom'}');
+      print(
+        '🔄 Remplacement de: ${oldRoute?.settings.name ?? 'Route sans nom'} par: ${newRoute?.settings.name ?? 'Route sans nom'}',
+      );
     }
   }
 }
@@ -58,7 +63,7 @@ class AppRoute {
           print('📍 Query params: ${state.uri.queryParameters}');
         }
       }
-      
+
       // If we're on the home page and trying to go back, exit the app
       // if (state.matchedLocation == MainHomePage.routePath) {
       // Return null to prevent navigation, which will cause the app to exit
@@ -71,9 +76,12 @@ class AppRoute {
     routes: [
       ...StarterRoutes.routes,
       ...AuthRoutes.routes,
-      ...TenantShellRoutes.routes, // Utilisation des routes shell pour le tenant
-      ...TenantRoutes.routes,      // Garder les routes tenant pour les pages hors shell
+      ...TenantShellRoutes
+          .routes, // Utilisation des routes shell pour le tenant
+      ...TenantRoutes
+          .routes, // Garder les routes tenant pour les pages hors shell
       ...AgentRoutes.routes,
+      ...CommercialRoutes.routes,
       ...ProfileRoutes.routes,
     ],
   );

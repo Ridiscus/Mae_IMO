@@ -146,7 +146,6 @@ class _PortalPageState extends State<PortalPage> {
                 context.pushNamed(LoginPage.routeName);
               },
             ),
-            SizedBox(width: 16.w),
             Expanded(
               child: Text(
                 'Maelys-imo',

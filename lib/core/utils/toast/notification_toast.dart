@@ -1,37 +1,35 @@
-
 import 'package:maelys_imo/core/utils/toast/toastification_type_wrapper.dart';
 import "package:flutter/material.dart"
     show
-    Alignment,
-    BorderRadius,
-    BoxDecoration,
-    BoxShadow,
-    BuildContext,
-    CircleAvatar,
-    Color,
-    Colors,
-    Container,
-    EdgeInsets,
-    Expanded,
-    FontWeight,
-    GestureDetector,
-    Icon,
-    MediaQuery,
-    Offset,
-    Row,
-    SizedBox,
-    Text,
-    TextOverflow,
-    TextStyle,
-    VoidCallback;
+        Alignment,
+        BorderRadius,
+        BoxDecoration,
+        BoxShadow,
+        BuildContext,
+        CircleAvatar,
+        Color,
+        Colors,
+        Container,
+        EdgeInsets,
+        Expanded,
+        FontWeight,
+        GestureDetector,
+        Icon,
+        MediaQuery,
+        Offset,
+        Row,
+        SizedBox,
+        Text,
+        TextOverflow,
+        TextStyle,
+        VoidCallback;
 import 'package:flutter_screenutil/flutter_screenutil.dart' show SizeExtension;
 import 'package:toastification/toastification.dart'
     show
-    ToastificationCallbacks,
-    ToastificationItem,
-    ToastificationType,
-    toastification;
-
+        ToastificationCallbacks,
+        ToastificationItem,
+        ToastificationType,
+        toastification;
 
 void clearToast() {
   toastification.dismissAll();
@@ -55,6 +53,7 @@ void showToast({
   String? textAction,
   VoidCallback? onTapAction,
 }) {
+  clearToast();
   toastification.showCustom(
     autoCloseDuration: Duration(seconds: 3),
     alignment: alignment,

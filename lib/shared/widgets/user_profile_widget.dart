@@ -112,6 +112,7 @@ class UserProfileWidget extends StatelessWidget {
     return user.when<Widget>(
       onTenant: (tenant) => _buildTenantInfo(tenant),
       onCollectionAgent: (agent) => _buildAgentInfo(agent),
+      onCommercial: (commercial) => _buildCommercialInfo(commercial),
       onUnknown: (user) => _buildGenericInfo(user),
     );
   }
@@ -149,6 +150,18 @@ class UserProfileWidget extends StatelessWidget {
             Icons.cake,
             '${DateTime.now().year - agent.dateNaissance!.year} ans',
           ),
+      ],
+    );
+  }
+
+  Widget _buildCommercialInfo(CommercialModel commercial) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (commercial.email != null)
+          _buildInfoRow(Icons.email, commercial.email!),
+        if (commercial.contact != null)
+          _buildInfoRow(Icons.phone, commercial.contact!),
       ],
     );
   }
@@ -226,6 +239,7 @@ class UserProfileWidget extends StatelessWidget {
     return user.when<Widget>(
       onTenant: (tenant) => _buildTenantActions(tenant),
       onCollectionAgent: (agent) => _buildAgentActions(agent),
+      onCommercial: (commercial) => _buildCommercialActions(commercial),
       onUnknown: (user) => _buildGenericActions(user),
     );
   }
@@ -312,6 +326,47 @@ class UserProfileWidget extends StatelessWidget {
     );
   }
 
+  Widget _buildCommercialActions(CommercialModel commercial) {
+    return Row(
+      children: [
+        Expanded(
+          child: ElevatedButton.icon(
+            onPressed: () {
+              // Action: Voir les agences
+            },
+            icon: Icon(Icons.business_outlined, size: 16.sp),
+            label: Text(
+              'Agences',
+              style: TextStyle(fontSize: 12.sp).sourceSansProRegular,
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              foregroundColor: Colors.white,
+              padding: EdgeInsets.symmetric(vertical: 8.h),
+            ),
+          ),
+        ),
+        SizedBox(width: 8.w),
+        Expanded(
+          child: OutlinedButton.icon(
+            onPressed: () {
+              // Action: Voir les statistiques
+            },
+            icon: Icon(Icons.bar_chart_outlined, size: 16.sp),
+            label: Text(
+              'Stats',
+              style: TextStyle(fontSize: 12.sp).sourceSansProRegular,
+            ),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: AppColors.primary,
+              padding: EdgeInsets.symmetric(vertical: 8.h),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildGenericActions(UserModel user) {
     return SizedBox(
       width: double.infinity,
@@ -337,6 +392,7 @@ class UserProfileWidget extends StatelessWidget {
     return user.when<Color>(
       onTenant: (tenant) => Colors.blue,
       onCollectionAgent: (agent) => Colors.green,
+      onCommercial: (commercial) => AppColors.primary,
       onUnknown: (user) => Colors.grey,
     );
   }
@@ -345,6 +401,7 @@ class UserProfileWidget extends StatelessWidget {
     return user.when<IconData>(
       onTenant: (tenant) => Icons.home,
       onCollectionAgent: (agent) => Icons.work,
+      onCommercial: (commercial) => Icons.person_search_outlined,
       onUnknown: (user) => Icons.person,
     );
   }
@@ -353,6 +410,7 @@ class UserProfileWidget extends StatelessWidget {
     return user.when<String>(
       onTenant: (tenant) => 'Locataire',
       onCollectionAgent: (agent) => 'Agent',
+      onCommercial: (commercial) => 'Commercial',
       onUnknown: (user) => 'Utilisateur',
     );
   }

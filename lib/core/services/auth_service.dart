@@ -7,13 +7,10 @@ import '../manager/token_manager.dart';
 
 abstract interface class AuthService {
   Future<ApiResponse<UserModel>> signIn({required LoginRequest dto});
-
   Future<ApiResponse<String>> updateEmail({required UpdateEmailRequest dto});
-
   Future<ApiResponse<String>> updatePassword({
     required UpdatePasswordRequest dto,
   });
-
   Future<ApiResponse<String>> updateProfileImage({
     required UpdateProfileImageRequest dto,
   });
@@ -21,7 +18,6 @@ abstract interface class AuthService {
 
 class AuthServiceImpl implements AuthService {
   final String TAG = "auth_service";
-
   final ApiClient apiClient;
   final Endpoints endpoints;
 
@@ -29,6 +25,23 @@ class AuthServiceImpl implements AuthService {
 
   @override
   Future<ApiResponse<UserModel>> signIn({required LoginRequest dto}) async {
+    // Simulation pour le compte commercial (en attendant l'API)
+    if (dto.codeId.toUpperCase() == "COMMERCIAL") {
+      await Future.delayed(
+        const Duration(seconds: 1),
+      ); // Simule un délai réseau
+      return ApiResponse.success(
+        data: CommercialModel(
+          id: 0,
+          codeId: "COMMERCIAL-001",
+          name: "Noble",
+          prenom: "Christ",
+          email: "commercial@maelysimo.com",
+          contact: "+225 0554772283",
+        ),
+      );
+    }
+
     final response = await apiClient.post(Endpoints.login, data: dto.toJson());
 
     if (response.success) {
@@ -102,7 +115,8 @@ class AuthServiceImpl implements AuthService {
       );
     }
     return ApiResponse.error(
-      message: response.message ?? "Échec de la mise à jour de la photo de profil",
+      message:
+          response.message ?? "Échec de la mise à jour de la photo de profil",
     );
   }
 }

@@ -7,8 +7,6 @@ class AgencyModel {
   final String? email;
   final String? commune;
   final String? password;
-  final dynamic passwordResetToken;
-  final dynamic passwordResetExpires;
   final String? contact;
   final String? adresse;
   final String? rccm;
@@ -19,6 +17,7 @@ class AgencyModel {
   final String? profileImage;
   final DateTime? createdAt;
   final DateTime? updatedAt;
+  final String? commercialId;
 
   AgencyModel({
     this.id,
@@ -27,8 +26,6 @@ class AgencyModel {
     this.email,
     this.commune,
     this.password,
-    this.passwordResetToken,
-    this.passwordResetExpires,
     this.contact,
     this.adresse,
     this.rccm,
@@ -39,6 +36,7 @@ class AgencyModel {
     this.profileImage,
     this.createdAt,
     this.updatedAt,
+    this.commercialId,
   });
 
   AgencyModel copyWith({
@@ -60,6 +58,7 @@ class AgencyModel {
     String? profileImage,
     DateTime? createdAt,
     DateTime? updatedAt,
+    String? commercialId,
   }) => AgencyModel(
     id: id ?? this.id,
     codeId: codeId ?? this.codeId,
@@ -67,8 +66,6 @@ class AgencyModel {
     email: email ?? this.email,
     commune: commune ?? this.commune,
     password: password ?? this.password,
-    passwordResetToken: passwordResetToken ?? this.passwordResetToken,
-    passwordResetExpires: passwordResetExpires ?? this.passwordResetExpires,
     contact: contact ?? this.contact,
     adresse: adresse ?? this.adresse,
     rccm: rccm ?? this.rccm,
@@ -79,6 +76,7 @@ class AgencyModel {
     profileImage: profileImage ?? this.profileImage,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
+    commercialId: commercialId ?? this.commercialId,
   );
 
   factory AgencyModel.fromJson(String str) =>
@@ -93,8 +91,6 @@ class AgencyModel {
     email: json["email"],
     commune: json["commune"],
     password: json["password"],
-    passwordResetToken: json["password_reset_token"],
-    passwordResetExpires: json["password_reset_expires"],
     contact: json["contact"],
     adresse: json["adresse"],
     rccm: json["rccm"],
@@ -107,6 +103,7 @@ class AgencyModel {
         json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
     updatedAt:
         json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
+    commercialId: json["commercial_id"],
   );
 
   Map<String, dynamic> toMap() => {
@@ -116,8 +113,6 @@ class AgencyModel {
     "email": email,
     "commune": commune,
     "password": password,
-    "password_reset_token": passwordResetToken,
-    "password_reset_expires": passwordResetExpires,
     "contact": contact,
     "adresse": adresse,
     "rccm": rccm,
@@ -128,5 +123,6 @@ class AgencyModel {
     "profile_image": profileImage,
     "created_at": createdAt?.toIso8601String(),
     "updated_at": updatedAt?.toIso8601String(),
+    "commercial_id": commercialId,
   };
 }

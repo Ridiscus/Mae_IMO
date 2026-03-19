@@ -1,7 +1,7 @@
 part of 'index.dart';
 
 /// Un widget de champ de texte personnalisé qui respecte le design de maelys_imo
-class CustomInputText extends StatelessWidget {
+class CustomInputText extends StatefulWidget {
   /// Le contrôleur du champ de texte
   final TextEditingController? controller;
 
@@ -56,6 +56,9 @@ class CustomInputText extends StatelessWidget {
   /// Les actions du clavier
   final TextInputAction? textInputAction;
 
+  /// Le texte d'erreur provenant de l'API
+  final String? errorText;
+
   /// Le focus node pour le champ
   final FocusNode? focusNode;
 
@@ -80,91 +83,148 @@ class CustomInputText extends StatelessWidget {
     this.centerText = false,
     this.textInputAction,
     this.focusNode,
+    this.errorText,
   }) : super(key: key);
 
   @override
+  State<CustomInputText> createState() => _CustomInputTextState();
+}
+
+class _CustomInputTextState extends State<CustomInputText> {
+  String? _validationError;
+
+  @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
-      initialValue: initialValue,
-      focusNode: focusNode,
-      textAlign: centerText ? TextAlign.center : TextAlign.start,
-      style: GoogleFonts.sourceSans3(
-        fontSize: 16.sp,
-        color: Colors.black,
-        fontWeight: FontWeight.w500,
-      ),
-      decoration: InputDecoration(
-        filled: true,
-        fillColor: Colors.white,
-        hintText: hintText,
-        labelText: labelText,
-        hintStyle: TextStyle(
-          fontSize: 16.sp,
-          color: Colors.black38,
-          letterSpacing: -.2,
-        ),
-        labelStyle: GoogleFonts.sourceSans3(
-          fontSize: 16.sp,
-          color: Colors.black,
-        ),
-        contentPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15.r), // Forme très arrondie
-          borderSide: BorderSide(
-            color: Colors.black.withValues(alpha: .1),
-            width: 1.w,
+    final String? displayError = widget.errorText ?? _validationError;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        TextFormField(
+          controller: widget.controller,
+          initialValue: widget.initialValue,
+          focusNode: widget.focusNode,
+          textAlign: widget.centerText ? TextAlign.center : TextAlign.start,
+          style:
+              const TextStyle(
+                fontSize: 16,
+                color: Colors.black,
+                fontWeight: FontWeight.w500,
+              ).sourceSansProSemiBold,
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.white,
+            hintText: widget.hintText,
+            labelText: widget.labelText,
+            hintStyle:
+                const TextStyle(
+                  fontSize: 16,
+                  color: Colors.black38,
+                  letterSpacing: -.2,
+                ).sourceSansProRegular,
+            labelStyle:
+                const TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                ).sourceSansProRegular,
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: 20.w,
+              vertical: 16.h,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15.r), // Forme très arrondie
+              borderSide: BorderSide(
+                color: Colors.black.withValues(alpha: .1),
+                width: 1.w,
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15.r),
+              borderSide: BorderSide(
+                color: Colors.black.withValues(alpha: .1),
+                width: 1.w,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15.r),
+              borderSide: BorderSide(
+                color: Colors.black.withValues(alpha: .1),
+                width: 1.w,
+              ),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15.r),
+              borderSide: BorderSide(color: Colors.red, width: 1.w),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15.r),
+              borderSide: BorderSide(color: Colors.red, width: 1.w),
+            ),
+            // On cache le message d'erreur par défaut pour utiliser notre propre Row
+            errorStyle: const TextStyle(height: 0, fontSize: 0),
+            prefixIcon:
+                widget.prefixIcon != null
+                    ? Padding(
+                      padding: EdgeInsets.only(left: 16.w, right: 8.w),
+                      child: Icon(widget.prefixIcon, color: Colors.black),
+                    )
+                    : null,
+            suffixIcon:
+                widget.suffixIcon != null
+                    ? GestureDetector(
+                      onTap: widget.onSuffixIconTap,
+                      child: Padding(
+                        padding: EdgeInsets.only(right: 16.w, left: 8.w),
+                        child: Icon(widget.suffixIcon, color: Colors.black),
+                      ),
+                    )
+                    : null,
           ),
+          obscureText: widget.isPassword,
+          readOnly: widget.readOnly,
+          maxLines: widget.maxLines,
+          keyboardType: widget.keyboardType,
+          onChanged: widget.onChanged,
+          onFieldSubmitted: widget.onSubmitted,
+          validator: (value) {
+            final error = (widget.validator ??
+                    (widget.isRequired ? _requiredValidator : null))
+                ?.call(value);
+            if (_validationError != error) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (mounted) setState(() => _validationError = error);
+              });
+            }
+            return error != null
+                ? ''
+                : null; // On retourne une chaîne vide pour indiquer qu'il y a une erreur sans afficher le texte par défaut
+          },
+          inputFormatters: widget.inputFormatters,
+          textInputAction: widget.textInputAction,
         ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15.r),
-          borderSide: BorderSide(
-            color: Colors.black.withValues(alpha: .1),
-            width: 1.w,
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15.r),
-          borderSide: BorderSide(
-            color: Colors.black.withValues(alpha: .1),
-            width: 1.w,
-          ),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15.r),
-          borderSide: BorderSide(color: Colors.red, width: 1.w),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15.r),
-          borderSide: BorderSide(color: Colors.red, width: 1.w),
-        ),
-        prefixIcon:
-            prefixIcon != null
-                ? Padding(
-                  padding: EdgeInsets.only(left: 16.w, right: 8.w),
-                  child: Icon(prefixIcon, color: Colors.black),
-                )
-                : null,
-        suffixIcon:
-            suffixIcon != null
-                ? GestureDetector(
-                  onTap: onSuffixIconTap,
-                  child: Padding(
-                    padding: EdgeInsets.only(right: 16.w, left: 8.w),
-                    child: Icon(suffixIcon, color: Colors.black),
+        if (displayError != null && displayError.isNotEmpty)
+          Padding(
+            padding: EdgeInsets.only(top: 6.h, left: 12.w),
+            child: Row(
+              children: [
+                Icon(Icons.error_outline, color: Colors.red[700], size: 14.sp),
+                SizedBox(width: 4.w),
+                Expanded(
+                  child: Text(
+                    displayError,
+                    style:
+                        TextStyle(
+                          color: Colors.red[700],
+                          fontSize: 12.sp,
+                          height: 1.2,
+                        ).sourceSansProRegular,
                   ),
-                )
-                : null,
-      ),
-      obscureText: isPassword,
-      readOnly: readOnly,
-      maxLines: maxLines,
-      keyboardType: keyboardType,
-      onChanged: onChanged,
-      onFieldSubmitted: onSubmitted,
-      validator: validator ?? (isRequired ? _requiredValidator : null),
-      inputFormatters: inputFormatters,
-      textInputAction: textInputAction,
+                ),
+              ],
+            ),
+          ),
+      ],
     );
   }
 
@@ -196,6 +256,7 @@ class CustomInputTextFactory {
     TextInputAction? textInputAction,
     FocusNode? focusNode,
     TextInputType? keyboardType,
+    String? errorText,
   }) {
     return CustomInputText(
       controller: controller,
@@ -213,6 +274,7 @@ class CustomInputTextFactory {
       textInputAction: textInputAction,
       focusNode: focusNode,
       keyboardType: keyboardType,
+      errorText: errorText,
     );
   }
 
@@ -232,6 +294,7 @@ class CustomInputTextFactory {
     TextInputAction? textInputAction,
     FocusNode? focusNode,
     TextInputType? keyboardType,
+    String? errorText,
   }) {
     return IOSKeyboardAction(
       focusNode: focusNode ?? FocusNode(),
@@ -257,6 +320,7 @@ class CustomInputTextFactory {
         textInputAction: textInputAction,
         focusNode: focusNode,
         keyboardType: keyboardType ?? TextInputType.number,
+        errorText: errorText,
       ),
     );
   }
@@ -276,6 +340,7 @@ class CustomInputTextFactory {
     bool readOnly = false,
     TextInputAction? textInputAction,
     FocusNode? focusNode,
+    String? errorText,
   }) {
     return CustomInputText(
       controller: controller,
@@ -293,6 +358,7 @@ class CustomInputTextFactory {
       textInputAction: textInputAction,
       focusNode: focusNode,
       maxLines: 4,
+      errorText: errorText,
     );
   }
 
@@ -310,6 +376,7 @@ class CustomInputTextFactory {
     bool isRequired = true,
     TextInputAction? textInputAction,
     FocusNode? focusNode,
+    String? errorText,
   }) {
     return CustomInputText(
       controller: controller,
@@ -329,6 +396,7 @@ class CustomInputTextFactory {
       isRequired: isRequired,
       textInputAction: textInputAction,
       focusNode: focusNode,
+      errorText: errorText,
     );
   }
 
@@ -346,6 +414,7 @@ class CustomInputTextFactory {
     bool readOnly = false,
     TextInputAction? textInputAction,
     FocusNode? focusNode,
+    String? errorText,
   }) {
     return CustomInputText(
       controller: controller,
@@ -361,6 +430,7 @@ class CustomInputTextFactory {
       readOnly: readOnly,
       textInputAction: textInputAction,
       focusNode: focusNode,
+      errorText: errorText,
     );
   }
 
@@ -406,6 +476,7 @@ class CustomInputTextFactory {
     VoidCallback? onClear,
     bool isRequired = false,
     FocusNode? focusNode,
+    String? errorText,
   }) {
     return CustomInputText(
       controller: controller,
@@ -418,6 +489,7 @@ class CustomInputTextFactory {
       isRequired: isRequired,
       textInputAction: TextInputAction.search,
       focusNode: focusNode,
+      errorText: errorText,
     );
   }
 

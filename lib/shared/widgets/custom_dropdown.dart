@@ -24,6 +24,12 @@ class CustomDropdown<T> extends StatelessWidget {
   /// Si le dropdown doit prendre toute la largeur disponible
   final bool isExpanded;
 
+  /// Le texte d'erreur à afficher
+  final String? errorText;
+
+  /// Si le chargement est en cours
+  final bool isLoading;
+
   /// Crée un [CustomDropdown] avec le style de l'application.
   const CustomDropdown({
     super.key,
@@ -34,87 +40,127 @@ class CustomDropdown<T> extends StatelessWidget {
     this.hintText,
     this.labelText,
     this.isExpanded = true,
+    this.errorText,
+    this.isLoading = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    return DropdownMenu<T>(
-      width: isExpanded ? MediaQuery.of(context).size.width - 32.w : null,
-      initialSelection: value,
-      enableFilter: false,
-      enableSearch: false,
-      leadingIcon: null,
-      trailingIcon: Icon(
-        Icons.keyboard_arrow_down,
-        color: Colors.grey[600],
-        size: 24.r,
-      ),
-      label: labelText != null ? Text(labelText!) : null,
-      hintText: hintText,
-      textStyle: GoogleFonts.sourceSans3(
-        fontSize: 16.sp,
-        color: Colors.black,
-        fontWeight: FontWeight.w500,
-      ),
-      inputDecorationTheme: InputDecorationTheme(
-        filled: true,
-        fillColor: Colors.white,
-        hintStyle: TextStyle(
-          fontSize: 16.sp,
-          color: Colors.black38,
-          letterSpacing: -.2,
-        ),
-        labelStyle: GoogleFonts.sourceSans3(
-          fontSize: 16.sp,
-          color: Colors.black,
-        ),
-        contentPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15.r), // Forme très arrondie
-          borderSide: BorderSide(
-            color: Colors.black.withValues(alpha: .1),
-            width: 1.w,
-          ),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15.r),
-          borderSide: BorderSide(
-            color: Colors.black.withValues(alpha: .1),
-            width: 1.w,
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15.r),
-          borderSide: BorderSide(
-            color: Colors.black.withValues(alpha: .1),
-            width: 1.w,
-          ),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15.r),
-          borderSide: BorderSide(color: Colors.red, width: 1.w),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15.r),
-          borderSide: BorderSide(color: Colors.red, width: 1.w),
-        ),
-      ),
-      onSelected: onChanged,
-      dropdownMenuEntries: items.map<DropdownMenuEntry<T>>((T item) {
-        return DropdownMenuEntry<T>(
-          value: item,
-          label: itemLabelBuilder(item),
-          style: ButtonStyle(
-            textStyle: MaterialStateProperty.all(
-              GoogleFonts.sourceSans3(
-                fontSize: 16.r,
-                color: Colors.grey[600],
-                fontWeight: FontWeight.w400,
+    final hasError = errorText != null && errorText!.isNotEmpty;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        DropdownMenu<T>(
+          width: isExpanded ? MediaQuery.of(context).size.width - 40.w : null,
+          initialSelection: value,
+          enableFilter: false,
+          enableSearch: false,
+          leadingIcon: null,
+          trailingIcon:
+              isLoading
+                  ? SizedBox(
+                    height: 20.r,
+                    width: 20.r,
+                    child: const CircularProgressIndicator(strokeWidth: 2),
+                  )
+                  : Icon(
+                    Icons.keyboard_arrow_down,
+                    color: Colors.grey[600],
+                    size: 24.r,
+                  ),
+          label: labelText != null ? Text(labelText!) : null,
+          hintText: hintText,
+          textStyle:
+              const TextStyle(
+                fontSize: 16,
+                color: Colors.black,
+                fontWeight: FontWeight.w500,
+              ).sourceSansProSemiBold,
+          inputDecorationTheme: InputDecorationTheme(
+            filled: true,
+            fillColor: Colors.white,
+            hintStyle:
+                const TextStyle(
+                  fontSize: 16,
+                  color: Colors.black38,
+                  letterSpacing: -.2,
+                ).sourceSansProRegular,
+            labelStyle:
+                const TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                ).sourceSansProRegular,
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: 20.w,
+              vertical: 16.h,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15.r),
+              borderSide: BorderSide(
+                color:
+                    hasError ? Colors.red : Colors.black.withValues(alpha: .1),
+                width: 1.w,
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15.r),
+              borderSide: BorderSide(
+                color:
+                    hasError ? Colors.red : Colors.black.withValues(alpha: .1),
+                width: 1.w,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15.r),
+              borderSide: BorderSide(
+                color:
+                    hasError ? Colors.red : Colors.black.withValues(alpha: .1),
+                width: 1.w,
               ),
             ),
           ),
-        );
-      }).toList(),
+          onSelected: onChanged,
+          dropdownMenuEntries:
+              items.map<DropdownMenuEntry<T>>((T item) {
+                return DropdownMenuEntry<T>(
+                  value: item,
+                  label: itemLabelBuilder(item),
+                  style: ButtonStyle(
+                    textStyle: WidgetStateProperty.all(
+                      const TextStyle(
+                        fontSize: 16,
+                        color: Colors.black54,
+                        fontWeight: FontWeight.w400,
+                      ).sourceSansProRegular,
+                    ),
+                  ),
+                );
+              }).toList(),
+        ),
+        if (hasError) ...[
+          SizedBox(height: 6.h),
+          Padding(
+            padding: EdgeInsets.only(left: 4.w),
+            child: Row(
+              children: [
+                Icon(Icons.error_outline, color: Colors.red, size: 14.sp),
+                SizedBox(width: 4.w),
+                Expanded(
+                  child: Text(
+                    errorText!,
+                    style:
+                        TextStyle(
+                          color: Colors.red,
+                          fontSize: 12.sp,
+                        ).sourceSansProRegular,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ],
     );
   }
 }
@@ -130,6 +176,7 @@ class CustomDropdownFactory {
     String? hintText,
     String? labelText,
     bool isExpanded = true,
+    String? errorText,
   }) {
     return CustomDropdown<T>(
       value: value,
@@ -139,6 +186,7 @@ class CustomDropdownFactory {
       hintText: hintText,
       labelText: labelText,
       isExpanded: isExpanded,
+      errorText: errorText,
     );
   }
 }
