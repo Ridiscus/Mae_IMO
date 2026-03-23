@@ -463,6 +463,7 @@ class DashboardServiceImpl implements DashboardService {
     );
   }
 
+  @override
   Future<ApiResponse<String>> updateProperty({
     required dynamic propertyId,
     required String type,
@@ -567,17 +568,9 @@ class DashboardServiceImpl implements DashboardService {
         rib.path,
         filename: rib.path.split('/').last,
       );
-      fields['rib_file'] = await MultipartFile.fromFile(
-        rib.path,
-        filename: rib.path.split('/').last,
-      );
     }
     if (rccmFile != null) {
       fields['rccm_file'] = await MultipartFile.fromFile(
-        rccmFile.path,
-        filename: rccmFile.path.split('/').last,
-      );
-      fields['rccm'] = await MultipartFile.fromFile(
         rccmFile.path,
         filename: rccmFile.path.split('/').last,
       );
@@ -587,17 +580,9 @@ class DashboardServiceImpl implements DashboardService {
         dfeFile.path,
         filename: dfeFile.path.split('/').last,
       );
-      fields['dfe'] = await MultipartFile.fromFile(
-        dfeFile.path,
-        filename: dfeFile.path.split('/').last,
-      );
     }
     if (profileImage != null) {
       fields['profile_image'] = await MultipartFile.fromFile(
-        profileImage.path,
-        filename: profileImage.path.split('/').last,
-      );
-      fields['profil_image'] = await MultipartFile.fromFile(
         profileImage.path,
         filename: profileImage.path.split('/').last,
       );
@@ -645,31 +630,21 @@ class DashboardServiceImpl implements DashboardService {
     };
 
     if (profileImage != null) {
-      fields['profil_image'] = await MultipartFile.fromFile(
-        profileImage.path,
-        filename: profileImage.path.split('/').last,
-      );
       fields['profile_image'] = await MultipartFile.fromFile(
         profileImage.path,
         filename: profileImage.path.split('/').last,
       );
     }
+
     if (cniFile != null) {
       fields['cni'] = await MultipartFile.fromFile(
         cniFile.path,
         filename: cniFile.path.split('/').last,
       );
-      fields['cni_file'] = await MultipartFile.fromFile(
-        cniFile.path,
-        filename: cniFile.path.split('/').last,
-      );
     }
+
     if (ribFile != null) {
       fields['rib'] = await MultipartFile.fromFile(
-        ribFile.path,
-        filename: ribFile.path.split('/').last,
-      );
-      fields['rib_file'] = await MultipartFile.fromFile(
         ribFile.path,
         filename: ribFile.path.split('/').last,
       );

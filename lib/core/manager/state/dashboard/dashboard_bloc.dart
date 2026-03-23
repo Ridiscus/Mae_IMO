@@ -301,6 +301,7 @@ class DashboardBloc extends HydratedBloc<DashboardEvent, DashboardState> {
         );
         // Optionnel: On peut rafraîchir la liste des agences directement
         add(FetchCommercialAgencesEvent());
+        add(FetchCommercialDashboardEvent());
       } else {
         final Map<String, dynamic> formErrors = {};
         if (result.errors is Map) {
@@ -385,6 +386,7 @@ class DashboardBloc extends HydratedBloc<DashboardEvent, DashboardState> {
           ),
         );
         add(const FetchCommercialOwnersEvent());
+        add(FetchCommercialDashboardEvent());
       } else {
         final Map<String, dynamic> formErrors = {};
         if (result.errors is Map) {
@@ -476,6 +478,8 @@ class DashboardBloc extends HydratedBloc<DashboardEvent, DashboardState> {
           ),
         );
         add(const FetchCommercialPropertiesEvent());
+        add(FetchCommercialDashboardEvent());
+        add(FetchCommercialDashboardEvent());
       } else {
         final Map<String, dynamic> formErrors = {};
         if (result.errors is Map) {
@@ -566,6 +570,7 @@ class DashboardBloc extends HydratedBloc<DashboardEvent, DashboardState> {
           ),
         );
         add(const FetchCommercialPropertiesEvent());
+        add(FetchCommercialDashboardEvent());
       } else {
         final Map<String, dynamic> formErrors = {};
         if (result.errors is Map) {
@@ -657,6 +662,7 @@ class DashboardBloc extends HydratedBloc<DashboardEvent, DashboardState> {
           ),
         );
         add(const FetchCommercialPropertiesEvent());
+        add(FetchCommercialDashboardEvent());
       } else {
         final Map<String, dynamic> formErrors = {};
         if (result.errors is Map) {
@@ -742,6 +748,7 @@ class DashboardBloc extends HydratedBloc<DashboardEvent, DashboardState> {
           ),
         );
         add(const FetchCommercialAgencesEvent());
+        add(FetchCommercialDashboardEvent());
       } else {
         final Map<String, dynamic> formErrors = {};
         if (result.errors is Map) {
@@ -852,6 +859,7 @@ class DashboardBloc extends HydratedBloc<DashboardEvent, DashboardState> {
           type: ToastificationType.success,
         );
         add(const FetchCommercialPropertiesEvent());
+        add(FetchCommercialDashboardEvent());
       } else {
         emit(state.copyWith(isDeletingProperty: false));
         showToast(

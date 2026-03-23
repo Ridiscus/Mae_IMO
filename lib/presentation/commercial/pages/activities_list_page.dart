@@ -5,87 +5,91 @@ import 'package:maelys_imo/core/constants/app_colors.dart';
 import 'package:maelys_imo/core/domain/models/index.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:maelys_imo/core/manager/state/dashboard/dashboard_bloc.dart';
 import 'activity_detail_page.dart';
 
 class ActivitiesListPage extends StatelessWidget {
   static const routeName = 'activitiesListCommercial';
   static const routePath = '/commercial/activities';
 
-  ActivitiesListPage({super.key});
+  final List<ActivityModel>? externalActivities;
 
-  final List<ActivityModel> activities = [
-    ActivityModel(
-      id: 1,
-      codeId: 'AG4021',
-      title: 'Agence Horizon',
-      description: 'Nouvelle agence partenaire enregistrée avec succès.',
-      type: ActivityType.agency,
-      date: DateTime(2024, 3, 12),
-    ),
-    ActivityModel(
-      id: 2,
-      codeId: 'PR2209',
-      title: 'M. Koffi Kouadio',
-      description: 'Mise à jour des informations de contact du propriétaire.',
-      type: ActivityType.owner,
-      date: DateTime(2024, 3, 11),
-    ),
-    ActivityModel(
-      id: 3,
-      codeId: 'B8832',
-      title: 'Résidence Prestige',
-      description: 'Nouveau bien immobilier ajouté au catalogue.',
-      type: ActivityType.property,
-      date: DateTime(2024, 3, 10),
-    ),
-    ActivityModel(
-      id: 4,
-      codeId: 'AG3910',
-      title: 'Immo Concept',
-      description: 'Renouvellement du contrat de partenariat.',
-      type: ActivityType.agency,
-      date: DateTime(2024, 3, 9),
-    ),
-    ActivityModel(
-      id: 5,
-      codeId: 'PR1102',
-      title: 'Mme. Awa Koné',
-      description: 'Enregistrement d\'un nouveau propriétaire.',
-      type: ActivityType.owner,
-      date: DateTime(2024, 3, 8),
-    ),
-  ];
+  ActivitiesListPage({super.key, this.externalActivities});
 
   @override
   Widget build(BuildContext context) {
-    return PageWithHeaderLayout(
-      headerHeight: MediaQuery.of(context).size.height * .20,
-      bodyPadding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 40.h),
-      headerContent: Row(
-        children: [
-          const CircularBackButton(),
-          SizedBox(width: 12.w),
-          Text(
-            'Toutes les activités',
-            style:
-                TextStyle(
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ).sourceSansProBold,
+    return BlocBuilder<DashboardBloc, DashboardState>(
+      builder: (context, state) {
+        final activitiesFromState =
+            state.commercialDashboardModel?.recentActivities
+                ?.map((e) => e.toActivityModel())
+                .toList() ??
+            [];
+
+        final displayActivities = externalActivities ?? activitiesFromState;
+
+        return PageWithHeaderLayout(
+          headerHeight: MediaQuery.of(context).size.height * .20,
+          bodyPadding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 40.h),
+          headerContent: Row(
+            children: [
+              const CircularBackButton(),
+              SizedBox(width: 12.w),
+              Text(
+                externalActivities != null
+                    ? 'Activités d\'aujourd\'hui'
+                    : 'Toutes les activités',
+                style:
+                    TextStyle(
+                      fontSize: 20.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ).sourceSansProBold,
+              ),
+            ],
           ),
-        ],
-      ),
-      bodyContent: ListView.separated(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: activities.length,
-        separatorBuilder: (context, index) => SizedBox(height: 12.h),
-        itemBuilder: (context, index) {
-          final activity = activities[index];
-          return _buildActivityCard(context, activity);
-        },
-      ),
+          bodyContent:
+              displayActivities.isEmpty
+                  ? Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 100.h),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.history_rounded,
+                            size: 64.sp,
+                            color: Colors.grey[300],
+                          ),
+                          SizedBox(height: 16.h),
+                          Text(
+                            externalActivities != null
+                                ? 'Aucune activité aujourd\'hui'
+                                : 'Aucune activité enregistrée',
+                            style:
+                                TextStyle(
+                                  fontSize: 16.sp,
+                                  color: Colors.grey[500],
+                                ).sourceSansProRegular,
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                  : ListView.separated(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: displayActivities.length,
+                    separatorBuilder:
+                        (context, index) => SizedBox(height: 12.h),
+                    itemBuilder: (context, index) {
+                      final activity = displayActivities[index];
+                      return _buildActivityCard(context, activity);
+                    },
+                  ),
+        );
+      },
     );
   }
 

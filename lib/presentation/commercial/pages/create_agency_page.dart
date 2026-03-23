@@ -5,7 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:maelys_imo/core/manager/state/dashboard/dashboard_bloc.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
+import 'package:maelys_imo/core/constants/app_colors.dart';
+import 'package:maelys_imo/core/extensions/index.dart';
 import '../widgets/file_picker_widget.dart';
+import '../widgets/file_preview_modal.dart';
 import '../widgets/success_modal.dart';
 
 class CreateAgencyPage extends StatefulWidget {
@@ -95,6 +98,64 @@ class _CreateAgencyPageState extends State<CreateAgencyPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Center(
+                    child: Column(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            if (_profileImage != null) {
+                              FilePreviewModal.show(
+                                context,
+                                file: _profileImage!,
+                                label: 'Image de profil',
+                              );
+                            } else {
+                              // Trigger pick file if empty
+                              // Since FilePickerWidget is below, maybe we just do nothing or show hint
+                            }
+                          },
+                          child: Container(
+                            width: 100.sp,
+                            height: 100.sp,
+                            decoration: BoxDecoration(
+                              color: AppColors.primary.withValues(alpha: 0.1),
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: AppColors.primary.withValues(alpha: 0.2),
+                                width: 2,
+                              ),
+                            ),
+                            child: ClipOval(
+                              child:
+                                  (_profileImage != null)
+                                      ? Image.file(
+                                        _profileImage!,
+                                        fit: BoxFit.cover,
+                                      )
+                                      : Center(
+                                        child: Icon(
+                                          Icons.business_outlined,
+                                          size: 40.sp,
+                                          color: AppColors.primary,
+                                        ),
+                                      ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 12.h),
+                        Text(
+                          'Logo / Image de l\'agence',
+                          style:
+                              TextStyle(
+                                fontSize: 13.sp,
+                                color: Colors.grey[600],
+                              ).sourceSansProRegular,
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 32.h),
+
                   CustomInputText(
                     controller: _nameController,
                     labelText: 'Nom de l\'agence',

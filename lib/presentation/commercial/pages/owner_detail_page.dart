@@ -372,22 +372,45 @@ class _OwnerDetailPageState extends State<OwnerDetailPage> {
     return Center(
       child: Column(
         children: [
-          Container(
-            width: 100.sp,
-            height: 100.sp,
-            decoration: BoxDecoration(
-              color: AppColors.primary.withValues(alpha: 0.1),
-              shape: BoxShape.circle,
-            ),
-            child: ClipOval(
-              child:
-                  (o.profilImage != null && o.profilImage!.isNotEmpty)
-                      ? UIHelper.cachedNetworkImage(
-                        Endpoints.storageUrl(o.profilImage),
-                        height: 100,
-                        fit: BoxFit.cover,
-                      )
-                      : _buildInitialsAvatar(o),
+          GestureDetector(
+            onTap: () {
+              if (_isEditing && _newProfileImage != null) {
+                FilePreviewModal.show(
+                  context,
+                  file: _newProfileImage!,
+                  label: 'Nouvelle Photo de Profil',
+                );
+              } else if (o.profilImage != null && o.profilImage!.isNotEmpty) {
+                FilePreviewModal.show(
+                  context,
+                  url: Endpoints.storageUrl(o.profilImage),
+                  label: 'Photo de Profil',
+                );
+              }
+            },
+            child: Container(
+              width: 100.sp,
+              height: 100.sp,
+              decoration: BoxDecoration(
+                color: AppColors.primary.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: AppColors.primary.withValues(alpha: 0.2),
+                  width: 2,
+                ),
+              ),
+              child: ClipOval(
+                child:
+                    (_isEditing && _newProfileImage != null)
+                        ? Image.file(_newProfileImage!, fit: BoxFit.cover)
+                        : (o.profilImage != null && o.profilImage!.isNotEmpty)
+                        ? UIHelper.cachedNetworkImage(
+                          Endpoints.storageUrl(o.profilImage),
+                          height: 100,
+                          fit: BoxFit.cover,
+                        )
+                        : _buildInitialsAvatar(o),
+              ),
             ),
           ),
           SizedBox(height: 16.h),

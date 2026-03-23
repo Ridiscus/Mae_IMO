@@ -12,13 +12,15 @@ class AppColors {
 
   static Color get orange => Color.fromRGBO(242, 138, 21, 1);
 
+  static Color get orange2 => Color(0xFFff5e14);
+
   static Color get redColor => Color.fromRGBO(132, 32, 41, 1);
 
   static Color get success => Color.fromRGBO(4, 139, 19, 1);
 
   static Color get black => Color.fromRGBO(33, 33, 33, 1);
-  static Color get fillColor => Color(0xFFEDEDED);
 
+  static Color get fillColor => Color(0xFFEDEDED);
 
   // 100% = FF
   // 75% = BF

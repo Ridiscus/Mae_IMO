@@ -18,6 +18,7 @@ import 'properties_list_page.dart';
 import 'create_agency_page.dart';
 import 'create_owner_page.dart';
 import 'activities_list_page.dart';
+import 'activity_detail_page.dart';
 import 'profile_commercial_page.dart';
 import 'create_agency_property_page.dart';
 import 'create_owner_property_page.dart';
@@ -772,7 +773,18 @@ class _DashboardCommercialPageState extends State<DashboardCommercialPage> {
                   ).sourceSansProBold,
             ),
             TextButton(
-              onPressed: () => context.pushNamed(ActivitiesListPage.routeName),
+              onPressed: () {
+                final today = DateFormat('yyyy-MM-dd').format(DateTime.now());
+                final todayActivities =
+                    activities
+                        .where((a) => a.rawDate.startsWith(today))
+                        .map((a) => a.toActivityModel())
+                        .toList();
+                context.pushNamed(
+                  ActivitiesListPage.routeName,
+                  extra: todayActivities,
+                );
+              },
               style: TextButton.styleFrom(
                 padding: EdgeInsets.zero,
                 minimumSize: const Size(0, 0),
@@ -807,7 +819,7 @@ class _DashboardCommercialPageState extends State<DashboardCommercialPage> {
             padding: EdgeInsets.symmetric(vertical: 4.h),
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: activities.length,
+            itemCount: activities.length > 5 ? 5 : activities.length,
             separatorBuilder:
                 (context, index) => Divider(
                   height: 1,
@@ -822,10 +834,10 @@ class _DashboardCommercialPageState extends State<DashboardCommercialPage> {
                 child: InkWell(
                   onTap: () {
                     HapticFeedback.lightImpact();
-                    // context.pushNamed(
-                    //   ActivityDetailPage.routeName,
-                    //   extra: activity,
-                    // );
+                    context.pushNamed(
+                      ActivityDetailPage.routeName,
+                      extra: activity.toActivityModel(),
+                    );
                   },
                   borderRadius:
                       index == 0

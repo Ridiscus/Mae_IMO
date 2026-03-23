@@ -93,7 +93,10 @@ class CommercialRoutes {
     GoRoute(
       name: ActivitiesListPage.routeName,
       path: ActivitiesListPage.routePath,
-      builder: (context, state) => ActivitiesListPage(),
+      builder: (context, state) {
+        final activities = state.extra as List<ActivityModel>?;
+        return ActivitiesListPage(externalActivities: activities);
+      },
     ),
     GoRoute(
       name: ActivityDetailPage.routeName,

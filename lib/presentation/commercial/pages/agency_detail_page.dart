@@ -99,7 +99,7 @@ class _AgencyDetailPageState extends State<AgencyDetailPage> {
     if (_formKey.currentState!.validate()) {
       context.read<DashboardBloc>().add(
         UpdateAgencyEvent(
-          id: agence.id!,
+          id: agence.codeId!,
           name: _nameController.text,
           email: _emailController.text,
           contact: _contactController.text,
@@ -346,22 +346,45 @@ class _AgencyDetailPageState extends State<AgencyDetailPage> {
     return Center(
       child: Column(
         children: [
-          Container(
-            width: 100.sp,
-            height: 100.sp,
-            decoration: BoxDecoration(
-              color: AppColors.primary.withValues(alpha: 0.1),
-              shape: BoxShape.circle,
-            ),
-            child: ClipOval(
-              child:
-                  (a.profileImage != null && a.profileImage!.isNotEmpty)
-                      ? UIHelper.cachedNetworkImage(
-                        Endpoints.storageUrl(a.profileImage),
-                        height: 100,
-                        fit: BoxFit.cover,
-                      )
-                      : _buildInitialsAvatar(a),
+          GestureDetector(
+            onTap: () {
+              if (_isEditing && _newProfileImage != null) {
+                FilePreviewModal.show(
+                  context,
+                  file: _newProfileImage!,
+                  label: 'Nouvelle Photo de Profil',
+                );
+              } else if (a.profileImage != null && a.profileImage!.isNotEmpty) {
+                FilePreviewModal.show(
+                  context,
+                  url: Endpoints.storageUrl(a.profileImage),
+                  label: 'Photo de Profil',
+                );
+              }
+            },
+            child: Container(
+              width: 100.sp,
+              height: 100.sp,
+              decoration: BoxDecoration(
+                color: AppColors.primary.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: AppColors.primary.withValues(alpha: 0.2),
+                  width: 2,
+                ),
+              ),
+              child: ClipOval(
+                child:
+                    (_isEditing && _newProfileImage != null)
+                        ? Image.file(_newProfileImage!, fit: BoxFit.cover)
+                        : (a.profileImage != null && a.profileImage!.isNotEmpty)
+                        ? UIHelper.cachedNetworkImage(
+                          Endpoints.storageUrl(a.profileImage),
+                          height: 100,
+                          fit: BoxFit.cover,
+                        )
+                        : _buildInitialsAvatar(a),
+              ),
             ),
           ),
           SizedBox(height: 16.h),

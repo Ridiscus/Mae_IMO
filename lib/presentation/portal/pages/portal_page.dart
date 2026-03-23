@@ -47,6 +47,7 @@ class _PortalPageState extends State<PortalPage> {
         statusBarIconBrightness: Brightness.light,
       ),
       child: PageWithHeaderLayout(
+        // headerBackgroundColor: AppColors.orange2,
         headerBackgroundColor: AppColors.orange,
         bodyPadding: EdgeInsets.only(top: 16.sp),
         headerContent: _buildHeaderContent(),
