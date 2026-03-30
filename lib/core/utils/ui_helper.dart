@@ -78,20 +78,75 @@ class UIHelper {
       // Afficher le modal de sélection
       final String? source = await showModalBottomSheet<String>(
         context: context,
-        useSafeArea: true,
+        backgroundColor: Colors.transparent,
         builder: (BuildContext context) {
-          return SafeArea(
-            child: Wrap(
-              children: [
-                ListTile(
-                  leading: Icon(Icons.photo_library),
-                  title: Text('Galerie'),
-                  onTap: () => Navigator.of(context).pop('gallery'),
+          return Container(
+            padding: EdgeInsets.fromLTRB(24.sp, 12.sp, 24.sp, 32.sp),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(28.r)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.1),
+                  blurRadius: 20,
+                  offset: const Offset(0, -5),
                 ),
-                ListTile(
-                  leading: Icon(Icons.photo_camera),
-                  title: Text('Caméra'),
-                  onTap: () => Navigator.of(context).pop('camera'),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Handle/Marqueur de swipe
+                Container(
+                  width: 40.w,
+                  height: 4.h,
+                  margin: EdgeInsets.only(bottom: 24.h),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(2.r),
+                  ),
+                ),
+                Text(
+                  'Ajouter une photo',
+                  style:
+                      TextStyle(
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ).sourceSansProBold,
+                ),
+                SizedBox(height: 8.h),
+                Text(
+                  'Choisissez la source de votre image',
+                  style:
+                      TextStyle(
+                        fontSize: 14.sp,
+                        color: Colors.grey[500],
+                      ).sourceSansProRegular,
+                ),
+                SizedBox(height: 32.h),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildSourceOption(
+                        context: context,
+                        icon: Icons.photo_library_rounded,
+                        label: 'Galerie',
+                        color: Colors.blue,
+                        onTap: () => Navigator.of(context).pop('gallery'),
+                      ),
+                    ),
+                    SizedBox(width: 16.w),
+                    Expanded(
+                      child: _buildSourceOption(
+                        context: context,
+                        icon: Icons.photo_camera_rounded,
+                        label: 'Caméra',
+                        color: Colors.teal,
+                        onTap: () => Navigator.of(context).pop('camera'),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -183,5 +238,50 @@ class UIHelper {
       showToast(msg: "Erreur lors de la sélection de l'image");
       return null;
     }
+  }
+
+  static Widget _buildSourceOption({
+    required BuildContext context,
+    required IconData icon,
+    required String label,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16.r),
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 20.h),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey[200]!),
+            borderRadius: BorderRadius.circular(16.r),
+          ),
+          child: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.all(12.sp),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(icon, color: color, size: 28.sp),
+              ),
+              SizedBox(height: 12.h),
+              Text(
+                label,
+                style:
+                    TextStyle(
+                      fontSize: 15.sp,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ).sourceSansProSemiBold,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

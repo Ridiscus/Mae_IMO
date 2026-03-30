@@ -212,14 +212,14 @@ class _AgencyDetailPageState extends State<AgencyDetailPage> {
                     prefixIcon: Icons.badge_outlined,
                   ),
                   _buildEditableInfoRow(
-                    'Nom',
+                    'Nom de l\'agence',
                     agence.name ?? 'N/A',
                     controller: _nameController,
                     prefixIcon: Icons.business_outlined,
                     errorText: state.formErrors?['name'],
                   ),
                   _buildEditableInfoRow(
-                    'Email',
+                    'Email professionnel',
                     agence.email ?? 'N/A',
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
@@ -227,7 +227,7 @@ class _AgencyDetailPageState extends State<AgencyDetailPage> {
                     errorText: state.formErrors?['email'],
                   ),
                   _buildEditableInfoRow(
-                    'Contact',
+                    'Contact téléphonique',
                     agence.contact ?? 'N/A',
                     controller: _contactController,
                     keyboardType: TextInputType.phone,
@@ -236,6 +236,7 @@ class _AgencyDetailPageState extends State<AgencyDetailPage> {
                   ),
                 ]),
                 SizedBox(height: 24.h),
+
                 // Localisation
                 _buildSectionTitle('Localisation'),
                 _buildInfoCard([
@@ -247,7 +248,7 @@ class _AgencyDetailPageState extends State<AgencyDetailPage> {
                     errorText: state.formErrors?['commune'],
                   ),
                   _buildEditableInfoRow(
-                    'Adresse Complète',
+                    'Adresse complète',
                     agence.adresse ?? 'N/A',
                     controller: _addressController,
                     prefixIcon: Icons.map_outlined,
@@ -258,53 +259,53 @@ class _AgencyDetailPageState extends State<AgencyDetailPage> {
 
                 // Documents & Juridique
                 _buildSectionTitle('Documents & Juridique'),
-                _buildInfoCard([
-                  _buildEditableInfoRow(
-                    'N° RCCM',
-                    agence.rccm ?? 'N/A',
-                    controller: _rccmController,
-                    prefixIcon: Icons.numbers_outlined,
-                    errorText: state.formErrors?['rccm'],
-                  ),
-                  _buildEditableFileRow(
-                    'Fiche RCCM',
-                    agence.rccmFile,
-                    (file) => setState(() => _newRccmFile = file),
-                    serverUrl:
-                        agence.rccmFile != null
-                            ? Endpoints.storageUrl(agence.rccmFile)
-                            : null,
-                  ),
-                  const Divider(),
-                  _buildEditableInfoRow(
-                    'N° DFE',
-                    agence.dfe ?? 'N/A',
-                    controller: _dfeController,
-                    prefixIcon: Icons.description_outlined,
-                    errorText: state.formErrors?['dfe'],
-                  ),
-                  _buildEditableFileRow(
-                    'Fiche DFE',
-                    agence.dfeFile,
-                    (file) => setState(() => _newDfeFile = file),
-                    serverUrl:
-                        agence.dfeFile != null
-                            ? Endpoints.storageUrl(agence.dfeFile)
-                            : null,
-                  ),
-                  const Divider(),
-                  _buildEditableFileRow(
-                    'RIB / Coordonnées Bancaires',
-                    agence.rib,
-                    (file) => setState(() => _newRibFile = file),
-                    serverUrl:
-                        agence.rib != null
-                            ? Endpoints.storageUrl(agence.rib)
-                            : null,
-                  ),
-                  if (_isEditing) ...[
-                    const Divider(),
-                    _buildEditableFileRow(
+                if (_isEditing)
+                  _buildInfoCard([
+                    _buildEditableInfoRow(
+                      'N° RCCM',
+                      agence.rccm ?? 'N/A',
+                      controller: _rccmController,
+                      prefixIcon: Icons.numbers_outlined,
+                      errorText: state.formErrors?['rccm'],
+                    ),
+                    _buildFilePickerSection(
+                      'Fiche RCCM',
+                      agence.rccmFile,
+                      (file) => setState(() => _newRccmFile = file),
+                      serverUrl:
+                          agence.rccmFile != null
+                              ? Endpoints.storageUrl(agence.rccmFile)
+                              : null,
+                    ),
+                    const Divider(height: 32),
+                    _buildEditableInfoRow(
+                      'N° DFE',
+                      agence.dfe ?? 'N/A',
+                      controller: _dfeController,
+                      prefixIcon: Icons.description_outlined,
+                      errorText: state.formErrors?['dfe'],
+                    ),
+                    _buildFilePickerSection(
+                      'Fiche DFE',
+                      agence.dfeFile,
+                      (file) => setState(() => _newDfeFile = file),
+                      serverUrl:
+                          agence.dfeFile != null
+                              ? Endpoints.storageUrl(agence.dfeFile)
+                              : null,
+                    ),
+                    const Divider(height: 32),
+                    _buildFilePickerSection(
+                      'RIB / Coordonnées Bancaires',
+                      agence.rib,
+                      (file) => setState(() => _newRibFile = file),
+                      serverUrl:
+                          agence.rib != null
+                              ? Endpoints.storageUrl(agence.rib)
+                              : null,
+                    ),
+                    const Divider(height: 32),
+                    _buildFilePickerSection(
                       'Photo de profil',
                       agence.profileImage,
                       (file) => setState(() => _newProfileImage = file),
@@ -313,8 +314,51 @@ class _AgencyDetailPageState extends State<AgencyDetailPage> {
                               ? Endpoints.storageUrl(agence.profileImage)
                               : null,
                     ),
-                  ],
-                ]),
+                  ])
+                else
+                  Column(
+                    children: [
+                      _buildInfoCard([
+                        _buildEditableInfoRow(
+                          'N° RCCM',
+                          agence.rccm ?? 'N/A',
+                          isEditable: false,
+                          prefixIcon: Icons.numbers_outlined,
+                        ),
+                        SizedBox(height: 8.h),
+                        _buildFilePreviewCard(
+                          'Fiche RCCM',
+                          agence.rccmFile,
+                          agence.rccmFile != null
+                              ? Endpoints.storageUrl(agence.rccmFile)
+                              : null,
+                        ),
+                        const Divider(height: 32),
+                        _buildEditableInfoRow(
+                          'N° DFE',
+                          agence.dfe ?? 'N/A',
+                          isEditable: false,
+                          prefixIcon: Icons.description_outlined,
+                        ),
+                        SizedBox(height: 8.h),
+                        _buildFilePreviewCard(
+                          'Fiche DFE',
+                          agence.dfeFile,
+                          agence.dfeFile != null
+                              ? Endpoints.storageUrl(agence.dfeFile)
+                              : null,
+                        ),
+                        const Divider(height: 32),
+                        _buildFilePreviewCard(
+                          'Relevé d\'Identité Bancaire (RIB)',
+                          agence.rib,
+                          agence.rib != null
+                              ? Endpoints.storageUrl(agence.rib)
+                              : null,
+                        ),
+                      ]),
+                    ],
+                  ),
                 SizedBox(height: 20.h),
               ],
             ),
@@ -402,7 +446,7 @@ class _AgencyDetailPageState extends State<AgencyDetailPage> {
                 TextStyle(
                   fontSize: 14.sp,
                   color: Colors.grey[600],
-                ).sourceSansProRegular,
+                ).sourceSansProSemiBold,
           ),
         ],
       ),
@@ -487,27 +531,43 @@ class _AgencyDetailPageState extends State<AgencyDetailPage> {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8.h),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            label,
-            style:
-                TextStyle(
-                  fontSize: 14.sp,
-                  color: Colors.grey[600],
-                ).sourceSansProRegular,
+          Container(
+            padding: EdgeInsets.all(8.sp),
+            decoration: BoxDecoration(
+              color: AppColors.primary.withValues(alpha: 0.05),
+              borderRadius: BorderRadius.circular(8.r),
+            ),
+            child: Icon(
+              prefixIcon ?? Icons.info_outline,
+              color: AppColors.primary,
+              size: 18.sp,
+            ),
           ),
-          SizedBox(width: 16.w),
+          SizedBox(width: 12.w),
           Expanded(
-            child: Text(
-              value,
-              textAlign: TextAlign.end,
-              style:
-                  TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black87,
-                  ).sourceSansProSemiBold,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style:
+                      TextStyle(
+                        fontSize: 12.sp,
+                        color: Colors.grey[600],
+                      ).sourceSansProRegular,
+                ),
+                Text(
+                  value,
+                  style:
+                      TextStyle(
+                        fontSize: 15.sp,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ).sourceSansProBold,
+                ),
+              ],
             ),
           ),
         ],
@@ -515,71 +575,129 @@ class _AgencyDetailPageState extends State<AgencyDetailPage> {
     );
   }
 
-  Widget _buildEditableFileRow(
+  Widget _buildFilePreviewCard(
+    String label,
+    String? fileName,
+    String? serverUrl,
+  ) {
+    if (fileName == null || fileName.isEmpty) {
+      return Padding(
+        padding: EdgeInsets.symmetric(vertical: 8.h),
+        child: Row(
+          children: [
+            Icon(
+              Icons.warning_amber_rounded,
+              color: Colors.orange,
+              size: 18.sp,
+            ),
+            SizedBox(width: 8.w),
+            Text(
+              '$label non fourni',
+              style:
+                  TextStyle(
+                    fontSize: 13.sp,
+                    color: Colors.grey[500],
+                    fontStyle: FontStyle.italic,
+                  ).sourceSansProItalic,
+            ),
+          ],
+        ),
+      );
+    }
+
+    final isPdf = fileName.toLowerCase().endsWith('.pdf');
+
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 4.h),
+      padding: EdgeInsets.all(12.sp),
+      decoration: BoxDecoration(
+        color: AppColors.primary.withValues(alpha: 0.03),
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(color: AppColors.primary.withValues(alpha: 0.1)),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: EdgeInsets.all(10.sp),
+            decoration: BoxDecoration(
+              color:
+                  isPdf
+                      ? Colors.red.withValues(alpha: 0.1)
+                      : Colors.blue.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(10.r),
+            ),
+            child: Icon(
+              isPdf
+                  ? Icons.picture_as_pdf_rounded
+                  : Icons.insert_drive_file_rounded,
+              color: isPdf ? Colors.red[700] : Colors.blue[700],
+              size: 24.sp,
+            ),
+          ),
+          SizedBox(width: 12.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style:
+                      TextStyle(
+                        fontSize: 11.sp,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.primary.withValues(alpha: 0.7),
+                        letterSpacing: 0.5,
+                      ).sourceSansProSemiBold,
+                ),
+                Text(
+                  fileName.split('/').last,
+                  style:
+                      TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ).sourceSansProBold,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () {
+                FilePreviewModal.show(context, url: serverUrl, label: label);
+              },
+              borderRadius: BorderRadius.circular(20.r),
+              child: Container(
+                padding: EdgeInsets.all(8.sp),
+                child: Icon(
+                  Icons.visibility_outlined,
+                  color: AppColors.primary,
+                  size: 22.sp,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFilePickerSection(
     String label,
     String? currentFileName,
     Function(File?) onFileSelected, {
     String? serverUrl,
   }) {
-    if (_isEditing) {
-      return Padding(
-        padding: EdgeInsets.symmetric(vertical: 8.h),
-        child: FilePickerWidget(
-          label: label,
-          hint: currentFileName ?? 'Aucun fichier sélectionné',
-          onFileSelected: onFileSelected,
-          serverUrl: serverUrl,
-        ),
-      );
-    }
-
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8.h),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            label,
-            style:
-                TextStyle(
-                  fontSize: 14.sp,
-                  color: Colors.grey[600],
-                ).sourceSansProRegular,
-          ),
-          if (currentFileName != null)
-            TextButton.icon(
-              onPressed: () {
-                FilePreviewModal.show(
-                  context,
-                  url: Endpoints.storageUrl(currentFileName),
-                  label: label,
-                );
-              },
-              icon: Icon(Icons.visibility_outlined, size: 18.sp),
-              label: Text(
-                'Voir',
-                style: TextStyle(fontSize: 13.sp).sourceSansProSemiBold,
-              ),
-              style: TextButton.styleFrom(
-                foregroundColor: AppColors.primary,
-                padding: EdgeInsets.symmetric(horizontal: 12.w),
-                backgroundColor: AppColors.primary.withValues(alpha: 0.05),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.r),
-                ),
-              ),
-            )
-          else
-            Text(
-              'Non fourni',
-              style:
-                  TextStyle(
-                    fontSize: 14.sp,
-                    fontStyle: FontStyle.italic,
-                    color: Colors.grey[400],
-                  ).sourceSansProItalic,
-            ),
-        ],
+      child: FilePickerWidget(
+        label: label,
+        hint: currentFileName ?? 'Sélectionner un fichier',
+        onFileSelected: onFileSelected,
+        serverUrl: serverUrl,
       ),
     );
   }

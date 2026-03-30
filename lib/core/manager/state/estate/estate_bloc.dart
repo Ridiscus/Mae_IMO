@@ -68,16 +68,34 @@ class EstateBloc extends HydratedBloc<EstateEvent, EstateState> {
     FetchEstateEvent event,
     Emitter<EstateState> emit,
   ) async {
-    emit(state.copyWith(isLoading: true));
+    final String type = event.dto?.type ?? 'all';
+    final String commune = event.dto?.commune ?? '';
+    final String cacheKey = "${type}_$commune";
+
+    // Si les données sont déjà en cache, on les affiche instantanément
+    if (state.cache?.containsKey(cacheKey) ?? false) {
+      emit(state.copyWith(isLoading: false, estates: state.cache![cacheKey]));
+    } else {
+      emit(state.copyWith(isLoading: true));
+    }
+
     try {
       final result = await _service.estatesAvailable(dto: event.dto);
 
       if (result.success) {
+        final List<EstateModel> newEstates = result.data?.data ?? [];
+
+        // Mise à jour du cache
+        final Map<String, List<EstateModel>> updatedCache =
+            Map<String, List<EstateModel>>.from(state.cache ?? {});
+        updatedCache[cacheKey] = newEstates;
+
         emit(
           state.copyWith(
             isLoading: false,
-            estates: result.data?.data ?? [],
+            estates: newEstates,
             paginate: result.data,
+            cache: updatedCache,
           ),
         );
       } else {
@@ -90,7 +108,12 @@ class EstateBloc extends HydratedBloc<EstateEvent, EstateState> {
       }
     } catch (e) {
       console.log(e.toString(), name: "catch _onFetchEstateEvent");
-      emit(state.copyWith(isLoading: false));
+      emit(
+        state.copyWith(
+          isLoading: false,
+          failure: Failure(message: "Erreur technique : ${e.toString()}"),
+        ),
+      );
     }
   }
 

@@ -37,49 +37,41 @@ class ActivityDetailPage extends StatelessWidget {
           _buildActivityHeader(),
           SizedBox(height: 24.h),
           _buildInfoSection(),
-          SizedBox(height: 30.h),
-          _buildActionButtons(context),
+          SizedBox(height: 32.h),
+          // _buildActionButtons(context),
+          // SizedBox(height: 40.h),
         ],
       ),
     );
   }
 
   Widget _buildActivityHeader() {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.all(20.sp),
-      decoration: BoxDecoration(
-        color: AppColors.primary.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(20.r),
-      ),
+    return Center(
       child: Column(
         children: [
           Container(
-            padding: EdgeInsets.all(16.sp),
-            decoration: const BoxDecoration(
-              color: Colors.white,
+            padding: EdgeInsets.all(24.sp),
+            decoration: BoxDecoration(
+              color: AppColors.primary.withValues(alpha: 0.1),
               shape: BoxShape.circle,
+              border: Border.all(
+                color: AppColors.primary.withValues(alpha: 0.05),
+                width: 6,
+              ),
             ),
-            child: Icon(activity.icon, color: AppColors.primary, size: 40.sp),
+            child: Icon(activity.icon, color: AppColors.primary, size: 48.sp),
           ),
-          SizedBox(height: 16.h),
+          SizedBox(height: 20.h),
           Text(
             activity.title,
             textAlign: TextAlign.center,
             style:
                 TextStyle(
-                  fontSize: 20.sp,
+                  fontSize: 22.sp,
                   fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                  letterSpacing: -0.5,
                 ).sourceSansProBold,
-          ),
-          SizedBox(height: 4.h),
-          Text(
-            '${activity.typeLabel} • #${activity.codeId}',
-            style:
-                TextStyle(
-                  fontSize: 14.sp,
-                  color: Colors.grey[600],
-                ).sourceSansProRegular,
           ),
         ],
       ),
@@ -87,97 +79,117 @@ class ActivityDetailPage extends StatelessWidget {
   }
 
   Widget _buildInfoSection() {
-    return Container(
-      padding: EdgeInsets.all(20.sp),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'DESCRIPTION',
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.only(left: 4.w, bottom: 12.h),
+          child: Text(
+            'INFORMATIONS GÉNÉRALES',
             style:
                 TextStyle(
                   fontSize: 12.sp,
                   fontWeight: FontWeight.bold,
-                  color: Colors.grey[400],
-                  letterSpacing: 1.2,
+                  color: Colors.grey[500],
+                  letterSpacing: 1.5,
                 ).sourceSansProBold,
           ),
-          SizedBox(height: 12.h),
-          Text(
-            activity.description,
-            style:
-                TextStyle(
-                  fontSize: 15.sp,
-                  color: Colors.black87,
-                  height: 1.5,
-                ).sourceSansProRegular,
-          ),
-          Divider(height: 32.h, color: Colors.grey[100]),
-          _buildInfoRow(
-            'Date',
-            '${activity.date.day.toString().padLeft(2, '0')}/${activity.date.month.toString().padLeft(2, '0')}/${activity.date.year}',
-          ),
-          _buildInfoRow('Heure', '14:30'), // Mock time
-          _buildInfoRow('Statut', 'Terminé', valueColor: AppColors.success),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildInfoRow(String label, String value, {Color? valueColor}) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8.h),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            label,
-            style:
-                TextStyle(
-                  fontSize: 14.sp,
-                  color: Colors.grey[600],
-                ).sourceSansProRegular,
-          ),
-          Text(
-            value,
-            style:
-                TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.bold,
-                  color: valueColor ?? Colors.black87,
-                ).sourceSansProBold,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildActionButtons(BuildContext context) {
-    return Column(
-      children: [
-        CustomButton(
-          text: 'VOIR L\'ÉLÉMENT LIÉ',
-          onPressed: () {
-            // Logic to navigate to Agency/Owner/Property detail would go here
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Redirection vers l\'élément lié...'),
+        ),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(24.r),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.03),
+                blurRadius: 20,
+                offset: const Offset(0, 10),
               ),
-            );
-          },
+            ],
+          ),
+          child: Column(
+            children: [
+              _buildDetailItem(
+                Icons.description_outlined,
+                'Description',
+                activity.description,
+              ),
+              _divider(),
+              _buildDetailItem(
+                Icons.category_outlined,
+                'Type d\'activité',
+                activity.typeLabel,
+              ),
+              _divider(),
+              _buildDetailItem(
+                Icons.calendar_today_outlined,
+                'Date de l\'action',
+                '${activity.date.day.toString().padLeft(2, '0')}/${activity.date.month.toString().padLeft(2, '0')}/${activity.date.year}',
+              ),
+              _divider(),
+              _buildDetailItem(
+                Icons.access_time_outlined,
+                'Heure précise',
+                '${activity.date.hour.toString().padLeft(2, '0')}:${activity.date.minute.toString().padLeft(2, '0')}',
+              ),
+            ],
+          ),
         ),
       ],
+    );
+  }
+
+  Widget _buildDetailItem(IconData icon, String label, String value) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 14.h),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: EdgeInsets.all(10.sp),
+            decoration: BoxDecoration(
+              color: Colors.grey.withValues(alpha: 0.05),
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+            child: Icon(icon, color: Colors.grey[600], size: 20.sp),
+          ),
+          SizedBox(width: 16.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style:
+                      TextStyle(
+                        fontSize: 12.sp,
+                        color: Colors.grey[500],
+                      ).sourceSansProRegular,
+                ),
+                SizedBox(height: 2.h),
+                Text(
+                  value,
+                  style:
+                      TextStyle(
+                        fontSize: 15.sp,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87,
+                      ).sourceSansProSemiBold,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _divider() {
+    return Divider(
+      height: 1,
+      color: Colors.grey.withValues(alpha: 0.08),
+      indent: 48.w,
     );
   }
 }

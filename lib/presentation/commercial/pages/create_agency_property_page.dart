@@ -226,11 +226,12 @@ class _CreateAgencyPropertyPageState extends State<CreateAgencyPropertyPage> {
                   _buildSectionTitle('Information du bien'),
                   SizedBox(height: 16.h),
 
-                  CustomDropdown<AgencyModel?>(
+                  CustomSearchableDropdown<AgencyModel?>(
                     labelText: 'Sélectionnez l\'agence',
                     hintText: 'Choisir une agence',
                     value: _selectedAgency,
                     items: agencies,
+                    showSearch: true,
                     onChanged: (val) {
                       setState(() {
                         _selectedAgency = val;
@@ -242,11 +243,12 @@ class _CreateAgencyPropertyPageState extends State<CreateAgencyPropertyPage> {
                   ),
                   CustomSpacer(),
 
-                  CustomDropdown<String?>(
+                  CustomSearchableDropdown<String?>(
                     labelText: 'Type de bien',
                     hintText: 'Choisir le type',
                     value: _selectedPropertyType,
                     items: _propertyTypes,
+                    showSearch: false,
                     onChanged:
                         (val) => setState(() => _selectedPropertyType = val),
                     itemLabelBuilder: (val) => val ?? '',
@@ -263,11 +265,12 @@ class _CreateAgencyPropertyPageState extends State<CreateAgencyPropertyPage> {
                   ),
                   CustomSpacer(),
 
-                  CustomDropdown<String?>(
+                  CustomSearchableDropdown<String?>(
                     labelText: 'Commune',
                     hintText: 'Choisir la commune',
                     value: _selectedCommune,
                     items: _communesAbidjan,
+                    showSearch: true,
                     onChanged: (val) => setState(() => _selectedCommune = val),
                     itemLabelBuilder: (val) => val ?? '',
                     errorText: state.formErrors?['commune'],
@@ -296,21 +299,24 @@ class _CreateAgencyPropertyPageState extends State<CreateAgencyPropertyPage> {
                   ),
                   CustomSpacer(),
 
-                  CustomDropdown<bool>(
+                  CustomSearchableDropdown<bool>(
                     labelText: 'Garage',
+                    hintText: 'Possède un garage ?',
                     value: _hasGarage,
                     items: const [false, true],
+                    showSearch: false,
                     onChanged:
                         (val) => setState(() => _hasGarage = val ?? false),
                     itemLabelBuilder: (val) => val ? 'Oui' : 'Non',
                   ),
                   CustomSpacer(),
 
-                  CustomDropdown<String?>(
+                  CustomSearchableDropdown<String?>(
                     labelText: 'Type d\'utilisation',
                     hintText: 'Choisir l\'utilisation',
                     value: _utilizationType,
                     items: _utilizationTypes,
+                    showSearch: false,
                     onChanged: (val) => setState(() => _utilizationType = val),
                     itemLabelBuilder: (val) => val ?? '',
                     errorText: state.formErrors?['utilisation'],
@@ -325,11 +331,12 @@ class _CreateAgencyPropertyPageState extends State<CreateAgencyPropertyPage> {
                   ],
                   CustomSpacer(),
 
-                  CustomDropdown<String?>(
+                  CustomSearchableDropdown<String?>(
                     labelText: 'Disponibilité',
                     hintText: 'Choisir la disponibilité',
                     value: _selectedDisponibilite,
                     items: _disponibilites,
+                    showSearch: false,
                     onChanged:
                         (val) => setState(() => _selectedDisponibilite = val),
                     itemLabelBuilder: (val) => val ?? '',

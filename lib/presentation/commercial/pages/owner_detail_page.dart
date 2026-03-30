@@ -417,7 +417,7 @@ class _OwnerDetailPageState extends State<OwnerDetailPage> {
           Text(
             _isEditing
                 ? "${_lastNameController.text} ${_firstNameController.text}"
-                : o.fullName,
+                : o.fullName ?? '',
             style:
                 TextStyle(
                   fontSize: 22.sp,

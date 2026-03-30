@@ -6,6 +6,7 @@ import 'package:maelys_imo/core/domain/models/index.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:maelys_imo/core/manager/state/dashboard/dashboard_bloc.dart';
 import 'activity_detail_page.dart';
 
@@ -21,11 +22,12 @@ class ActivitiesListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<DashboardBloc, DashboardState>(
       builder: (context, state) {
+        final todayStr = DateFormat('yyyy-MM-dd').format(DateTime.now());
         final activitiesFromState =
-            state.commercialDashboardModel?.recentActivities
-                ?.map((e) => e.toActivityModel())
-                .toList() ??
-            [];
+            (state.commercialDashboardModel?.recentActivities ?? [])
+                .where((e) => e.rawDate.startsWith(todayStr))
+                .map((e) => e.toActivityModel())
+                .toList();
 
         final displayActivities = externalActivities ?? activitiesFromState;
 
@@ -37,9 +39,7 @@ class ActivitiesListPage extends StatelessWidget {
               const CircularBackButton(),
               SizedBox(width: 12.w),
               Text(
-                externalActivities != null
-                    ? 'Activités d\'aujourd\'hui'
-                    : 'Toutes les activités',
+                'Activités d\'aujourd\'hui',
                 style:
                     TextStyle(
                       fontSize: 20.sp,
@@ -53,25 +53,45 @@ class ActivitiesListPage extends StatelessWidget {
               displayActivities.isEmpty
                   ? Center(
                     child: Padding(
-                      padding: EdgeInsets.only(top: 100.h),
+                      padding: EdgeInsets.only(top: 80.h),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(
-                            Icons.history_rounded,
-                            size: 64.sp,
-                            color: Colors.grey[300],
+                          Container(
+                            padding: EdgeInsets.all(24.sp),
+                            decoration: BoxDecoration(
+                              color: Colors.grey.withValues(alpha: 0.05),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.history_rounded,
+                              size: 80.sp,
+                              color: Colors.grey[300],
+                            ),
                           ),
-                          SizedBox(height: 16.h),
+                          SizedBox(height: 24.h),
                           Text(
-                            externalActivities != null
-                                ? 'Aucune activité aujourd\'hui'
-                                : 'Aucune activité enregistrée',
+                            'Aucune activité aujourd\'hui',
                             style:
                                 TextStyle(
-                                  fontSize: 16.sp,
-                                  color: Colors.grey[500],
-                                ).sourceSansProRegular,
+                                  fontSize: 18.sp,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black87,
+                                ).sourceSansProBold,
+                          ),
+                          SizedBox(height: 12.h),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 40.w),
+                            child: Text(
+                              'Il semble que vous n\'ayez pas encore d\'activités enregistrées pour cette journée.',
+                              textAlign: TextAlign.center,
+                              style:
+                                  TextStyle(
+                                    fontSize: 14.sp,
+                                    color: Colors.grey[500],
+                                    height: 1.5,
+                                  ).sourceSansProRegular,
+                            ),
                           ),
                         ],
                       ),

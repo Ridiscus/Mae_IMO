@@ -53,16 +53,22 @@ class ApiErrorHandler<T> {
               }
               break;
             case DioExceptionType.connectionError:
-              switch (error.response!.statusCode) {
-                case 404:
-                  errorDescription = "Format de donnée non valid";
-                case 500:
-                case 503:
-                  errorDescription = "Une erreur est survenue";
-                  break;
-                default:
-                  errorDescription =
-                      "La connexion au serveur API a échoué en raison de la connexion internet";
+              if (error.response != null) {
+                switch (error.response!.statusCode) {
+                  case 404:
+                    errorDescription = "Format de donnée non valide";
+                    break;
+                  case 500:
+                  case 503:
+                    errorDescription = "Une erreur est survenue";
+                    break;
+                  default:
+                    errorDescription =
+                        "La connexion au serveur API a échoué en raison de la connexion internet";
+                }
+              } else {
+                errorDescription =
+                    "Impossible de joindre le serveur. Veuillez vérifier votre connexion internet.";
               }
               break;
             case DioExceptionType.unknown:

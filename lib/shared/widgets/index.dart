@@ -41,6 +41,7 @@ part 'custom_circle_avatar_user.dart';
 part 'custom_date_picker.dart';
 part 'custom_drawer.dart';
 part 'custom_dropdown.dart';
+part 'custom_searchable_dropdown.dart';
 part 'custom_input_text.dart';
 part 'custom_scaffold.dart';
 part 'custom_spacer.dart';

@@ -17,6 +17,9 @@ class CustomInputText extends StatefulWidget {
   /// L'icône à afficher sur la droite du champ
   final IconData? suffixIcon;
 
+  /// Un widget personnalisé à afficher sur la droite du champ (prioritaire sur suffixIcon)
+  final Widget? suffixWidget;
+
   /// La fonction appelée quand on clique sur l'icône de suffixe
   final VoidCallback? onSuffixIconTap;
 
@@ -68,6 +71,7 @@ class CustomInputText extends StatefulWidget {
     this.hintText,
     this.prefixIcon,
     this.suffixIcon,
+    this.suffixWidget,
     this.onSuffixIconTap,
     this.onChanged,
     this.onSubmitted,
@@ -171,15 +175,20 @@ class _CustomInputTextState extends State<CustomInputText> {
                     )
                     : null,
             suffixIcon:
-                widget.suffixIcon != null
-                    ? GestureDetector(
-                      onTap: widget.onSuffixIconTap,
-                      child: Padding(
-                        padding: EdgeInsets.only(right: 16.w, left: 8.w),
-                        child: Icon(widget.suffixIcon, color: Colors.black),
-                      ),
+                widget.suffixWidget != null
+                    ? Padding(
+                      padding: EdgeInsets.only(right: 16.w, left: 8.w),
+                      child: widget.suffixWidget,
                     )
-                    : null,
+                    : (widget.suffixIcon != null
+                        ? GestureDetector(
+                          onTap: widget.onSuffixIconTap,
+                          child: Padding(
+                            padding: EdgeInsets.only(right: 16.w, left: 8.w),
+                            child: Icon(widget.suffixIcon, color: Colors.black),
+                          ),
+                        )
+                        : null),
           ),
           obscureText: widget.isPassword,
           readOnly: widget.readOnly,

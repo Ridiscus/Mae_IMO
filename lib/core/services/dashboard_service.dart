@@ -352,12 +352,14 @@ class DashboardServiceImpl implements DashboardService {
     };
 
     if (mainImage != null) {
-      final file = await MultipartFile.fromFile(
+      data["main_image"] = await MultipartFile.fromFile(
         mainImage.path,
         filename: mainImage.path.split('/').last,
       );
-      data["main_image"] = file;
-      data["image1"] = file;
+      data["image1"] = await MultipartFile.fromFile(
+        mainImage.path,
+        filename: mainImage.path.split('/').last,
+      );
     }
 
     if (additionalImages != null) {
@@ -381,6 +383,7 @@ class DashboardServiceImpl implements DashboardService {
     if (response.success) {
       return ApiResponse.success(message: response.message);
     }
+
     return ApiResponse.error(
       message: response.message,
       errors: response.errors,
@@ -503,12 +506,14 @@ class DashboardServiceImpl implements DashboardService {
     };
 
     if (mainImage != null) {
-      final file = await MultipartFile.fromFile(
+      data["main_image"] = await MultipartFile.fromFile(
         mainImage.path,
         filename: mainImage.path.split('/').last,
       );
-      data["main_image"] = file;
-      data["image1"] = file;
+      data["image1"] = await MultipartFile.fromFile(
+        mainImage.path,
+        filename: mainImage.path.split('/').last,
+      );
     }
 
     if (additionalImages != null) {

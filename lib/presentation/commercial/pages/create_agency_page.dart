@@ -7,6 +7,7 @@ import 'package:maelys_imo/core/manager/state/dashboard/dashboard_bloc.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
 import 'package:maelys_imo/core/constants/app_colors.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
+import 'package:maelys_imo/core/utils/index.dart';
 import '../widgets/file_picker_widget.dart';
 import '../widgets/file_preview_modal.dart';
 import '../widgets/success_modal.dart';
@@ -36,6 +37,15 @@ class _CreateAgencyPageState extends State<CreateAgencyPage> {
   File? _ribFile;
   File? _rccmFile;
   File? _dfeFile;
+
+  Future<void> _pickProfilePicker() async {
+    final result = await UIHelper.pickImage(context);
+    if (result != null) {
+      setState(() {
+        _profileImage = result;
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -101,61 +111,97 @@ class _CreateAgencyPageState extends State<CreateAgencyPage> {
                   Center(
                     child: Column(
                       children: [
-                        GestureDetector(
-                          onTap: () {
-                            if (_profileImage != null) {
-                              FilePreviewModal.show(
-                                context,
-                                file: _profileImage!,
-                                label: 'Image de profil',
-                              );
-                            } else {
-                              // Trigger pick file if empty
-                              // Since FilePickerWidget is below, maybe we just do nothing or show hint
-                            }
-                          },
-                          child: Container(
-                            width: 100.sp,
-                            height: 100.sp,
-                            decoration: BoxDecoration(
-                              color: AppColors.primary.withValues(alpha: 0.1),
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: AppColors.primary.withValues(alpha: 0.2),
-                                width: 2,
+                        Stack(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                if (_profileImage != null) {
+                                  FilePreviewModal.show(
+                                    context,
+                                    file: _profileImage!,
+                                    label: 'Logo / Image de l\'agence',
+                                  );
+                                } else {
+                                  _pickProfilePicker();
+                                }
+                              },
+                              child: Container(
+                                width: 100.sp,
+                                height: 100.sp,
+                                decoration: BoxDecoration(
+                                  color: AppColors.primary.withValues(
+                                    alpha: 0.1,
+                                  ),
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: AppColors.primary.withValues(
+                                      alpha: 0.2,
+                                    ),
+                                    width: 2,
+                                  ),
+                                ),
+                                child: ClipOval(
+                                  child:
+                                      (_profileImage != null)
+                                          ? Image.file(
+                                            _profileImage!,
+                                            fit: BoxFit.cover,
+                                          )
+                                          : Center(
+                                            child: Icon(
+                                              Icons.business_outlined,
+                                              size: 40.sp,
+                                              color: AppColors.primary,
+                                            ),
+                                          ),
+                                ),
                               ),
                             ),
-                            child: ClipOval(
-                              child:
-                                  (_profileImage != null)
-                                      ? Image.file(
-                                        _profileImage!,
-                                        fit: BoxFit.cover,
-                                      )
-                                      : Center(
-                                        child: Icon(
-                                          Icons.business_outlined,
-                                          size: 40.sp,
-                                          color: AppColors.primary,
-                                        ),
-                                      ),
+                            Positioned(
+                              bottom: 0,
+                              right: 0,
+                              child: GestureDetector(
+                                onTap: _pickProfilePicker,
+                                child: Container(
+                                  padding: EdgeInsets.all(8.sp),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.primary,
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: Colors.white,
+                                      width: 2,
+                                    ),
+                                  ),
+                                  child: Icon(
+                                    Icons.camera_alt,
+                                    color: Colors.white,
+                                    size: 16.sp,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
+                          ],
                         ),
                         SizedBox(height: 12.h),
-                        Text(
-                          'Logo / Image de l\'agence',
-                          style:
-                              TextStyle(
-                                fontSize: 13.sp,
-                                color: Colors.grey[600],
-                              ).sourceSansProRegular,
+                        GestureDetector(
+                          onTap: _pickProfilePicker,
+                          child: Text(
+                            (_profileImage != null)
+                                ? 'Changer le logo'
+                                : 'Ajouter un logo (Optionnel)',
+                            style:
+                                TextStyle(
+                                  fontSize: 13.sp,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.primary,
+                                ).sourceSansProSemiBold,
+                          ),
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(height: 32.h),
-
+                  SizedBox(height: 24.h),
+                  _buildSectionTitle('Identité de l\'agence'),
                   CustomInputText(
                     controller: _nameController,
                     labelText: 'Nom de l\'agence',
@@ -176,15 +222,6 @@ class _CreateAgencyPageState extends State<CreateAgencyPage> {
                   ),
                   CustomSpacer(),
                   CustomInputText(
-                    controller: _communeController,
-                    labelText: 'Commune',
-                    hintText: 'Ex: Cocody',
-                    isRequired: true,
-                    prefixIcon: Icons.location_on_outlined,
-                    errorText: state.formErrors?['commune'],
-                  ),
-                  CustomSpacer(),
-                  CustomInputText(
                     controller: _contactController,
                     labelText: 'Contact',
                     hintText: '05XXXXXXXX',
@@ -192,6 +229,17 @@ class _CreateAgencyPageState extends State<CreateAgencyPage> {
                     keyboardType: TextInputType.phone,
                     prefixIcon: Icons.phone_outlined,
                     errorText: state.formErrors?['contact'],
+                  ),
+                  SizedBox(height: 32.h),
+
+                  _buildSectionTitle('Localisation'),
+                  CustomInputText(
+                    controller: _communeController,
+                    labelText: 'Commune',
+                    hintText: 'Ex: Cocody',
+                    isRequired: true,
+                    prefixIcon: Icons.location_on_outlined,
+                    errorText: state.formErrors?['commune'],
                   ),
                   CustomSpacer(),
                   CustomInputText(
@@ -202,30 +250,9 @@ class _CreateAgencyPageState extends State<CreateAgencyPage> {
                     prefixIcon: Icons.map_outlined,
                     errorText: state.formErrors?['adresse'],
                   ),
-                  SizedBox(height: 24.h),
+                  SizedBox(height: 32.h),
 
-                  SizedBox(height: 24.h),
-
-                  // Photos
-                  FilePickerWidget(
-                    label: 'Image de profil (Optionnel)',
-                    hint: 'Sélectionner le logo ou l\'image de l\'agence',
-                    onFileSelected:
-                        (file) => setState(() => _profileImage = file),
-                    errorText: state.formErrors?['profile_image'],
-                  ),
-                  CustomSpacer(),
-
-                  // RIB
-                  FilePickerWidget(
-                    label: 'RIB (Pièce jointe)',
-                    hint: 'Sélectionner le relevé d\'identité bancaire',
-                    onFileSelected: (file) => setState(() => _ribFile = file),
-                    errorText: state.formErrors?['rib'],
-                  ),
-                  CustomSpacer(),
-
-                  // RCCM
+                  _buildSectionTitle('Documents & Juridique'),
                   CustomInputText(
                     controller: _rccmNumberController,
                     labelText: 'N° RCCM',
@@ -244,7 +271,6 @@ class _CreateAgencyPageState extends State<CreateAgencyPage> {
                   ),
                   CustomSpacer(),
 
-                  // DFE
                   CustomInputText(
                     controller: _dfeNumberController,
                     labelText: 'N° DFE',
@@ -261,6 +287,15 @@ class _CreateAgencyPageState extends State<CreateAgencyPage> {
                     onFileSelected: (file) => setState(() => _dfeFile = file),
                     errorText: state.formErrors?['dfe_file'],
                   ),
+                  CustomSpacer(),
+
+                  FilePickerWidget(
+                    label: 'RIB (Pièce jointe)',
+                    hint: 'Sélectionner le relevé d\'identité bancaire',
+                    onFileSelected: (file) => setState(() => _ribFile = file),
+                    errorText: state.formErrors?['rib'],
+                  ),
+                  CustomSpacer(),
 
                   SizedBox(height: 40.h),
                   CustomButton(
@@ -276,6 +311,22 @@ class _CreateAgencyPageState extends State<CreateAgencyPage> {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Padding(
+      padding: EdgeInsets.only(left: 4.w, bottom: 12.h),
+      child: Text(
+        title.toUpperCase(),
+        style:
+            TextStyle(
+              fontSize: 12.sp,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey[600],
+              letterSpacing: 1.2,
+            ).sourceSansProBold,
+      ),
     );
   }
 }

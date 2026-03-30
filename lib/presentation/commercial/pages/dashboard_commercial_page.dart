@@ -233,7 +233,11 @@ class _DashboardCommercialPageState extends State<DashboardCommercialPage> {
       builder: (context, state) {
         final dashboard = state.commercialDashboardModel;
         final statistics = dashboard?.statistics;
-        final activities = dashboard?.recentActivities ?? [];
+        final todayStr = DateFormat('yyyy-MM-dd').format(DateTime.now());
+        final activities =
+            (dashboard?.recentActivities ?? [])
+                .where((a) => a.rawDate.startsWith(todayStr))
+                .toList();
 
         return Container(
           width: double.infinity,
@@ -737,20 +741,56 @@ class _DashboardCommercialPageState extends State<DashboardCommercialPage> {
           SizedBox(height: 16.h),
           Container(
             width: double.infinity,
-            padding: EdgeInsets.all(20.sp),
+            padding: EdgeInsets.symmetric(vertical: 40.h, horizontal: 24.w),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(20.r),
+              borderRadius: BorderRadius.circular(24.r),
+              border: Border.all(color: Colors.grey.withValues(alpha: 0.1)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.02),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
             ),
-            child: Center(
-              child: Text(
-                'Aucune activité récente',
-                style:
-                    TextStyle(
-                      fontSize: 14.sp,
-                      color: Colors.grey[600],
-                    ).sourceSansProRegular,
-              ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: EdgeInsets.all(16.sp),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary.withValues(alpha: 0.08),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.history_rounded,
+                    color: AppColors.primary,
+                    size: 32.sp,
+                  ),
+                ),
+                SizedBox(height: 16.h),
+                Text(
+                  'Activités d\'aujourd\'hui',
+                  style:
+                      TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ).sourceSansProBold,
+                ),
+                SizedBox(height: 8.h),
+                Text(
+                  'Vous n\'avez pas encore effectué d\'activités pour cette journée.',
+                  textAlign: TextAlign.center,
+                  style:
+                      TextStyle(
+                        fontSize: 13.sp,
+                        color: Colors.grey[500],
+                        height: 1.4,
+                      ).sourceSansProRegular,
+                ),
+              ],
             ),
           ),
         ],
@@ -774,12 +814,8 @@ class _DashboardCommercialPageState extends State<DashboardCommercialPage> {
             ),
             TextButton(
               onPressed: () {
-                final today = DateFormat('yyyy-MM-dd').format(DateTime.now());
                 final todayActivities =
-                    activities
-                        .where((a) => a.rawDate.startsWith(today))
-                        .map((a) => a.toActivityModel())
-                        .toList();
+                    activities.map((a) => a.toActivityModel()).toList();
                 context.pushNamed(
                   ActivitiesListPage.routeName,
                   extra: todayActivities,

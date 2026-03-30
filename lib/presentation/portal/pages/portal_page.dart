@@ -11,6 +11,7 @@ import 'package:maelys_imo/core/domain/models/index.dart';
 import 'package:maelys_imo/core/domain/requests/index.dart';
 import 'package:maelys_imo/core/extensions/index.dart';
 import 'package:maelys_imo/core/manager/state/estate/estate_bloc.dart';
+import 'package:maelys_imo/core/utils/index.dart';
 import 'package:maelys_imo/presentation/auth/pages/login_page.dart';
 import 'package:maelys_imo/presentation/portal/pages/portal_detail_page.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
@@ -19,9 +20,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 class PortalPage extends StatefulWidget {
   static const String routeName = 'portal';
   static const String routePath = '/portal';
-
   const PortalPage({super.key});
-
   @override
   State<PortalPage> createState() => _PortalPageState();
 }
@@ -31,15 +30,41 @@ class _PortalPageState extends State<PortalPage> {
   List<EstateModel> _properties = [];
   EstateTypeModel? _selected;
   bool _isLoading = false;
+  bool _autoSelected = false;
   Timer? _debounce;
   final TextEditingController _searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     final state = context.select((EstateBloc state) => state.state);
-    _categories = state.estatesType ?? [];
+
+    final List<EstateTypeModel> allCategories = state.estatesType ?? [];
+    final Set<String> seenTypes = {};
+    _categories =
+        allCategories.where((category) {
+          if (category.type == null) return false;
+          return seenTypes.add(category.type!);
+        }).toList();
+
     _properties = state.estates ?? [];
     _isLoading = state.isLoading ?? false;
+    final failure = state.failure;
+
+    // Auto-selection de la première catégorie
+    if (!_autoSelected && _categories.isNotEmpty) {
+      _selected = _categories.first;
+      _autoSelected = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        context.read<EstateBloc>().add(
+          FetchEstateEvent(
+            dto: FilterEstateRequest(
+              type: _selected?.type,
+              commune: _searchController.text,
+            ),
+          ),
+        );
+      });
+    }
 
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(
@@ -51,12 +76,13 @@ class _PortalPageState extends State<PortalPage> {
         headerBackgroundColor: AppColors.orange,
         bodyPadding: EdgeInsets.only(top: 16.sp),
         headerContent: _buildHeaderContent(),
-        bodyContent: _buildPageContent(),
+        bodyContent: _buildPageContent(failure),
         onRefresh: () async {
           final completer = Completer<void>();
 
           // Écouter les changements d'état pour savoir quand le chargement est terminé
           late StreamSubscription subscription;
+
           subscription = context.read<EstateBloc>().stream.listen((state) {
             if (!(state.isLoading ?? false)) {
               subscription.cancel();
@@ -66,7 +92,14 @@ class _PortalPageState extends State<PortalPage> {
 
           // Déclencher le chargement des données
           context.read<EstateBloc>().add(FetchEstateTypesEvent());
-          context.read<EstateBloc>().add(FetchEstateEvent());
+          context.read<EstateBloc>().add(
+            FetchEstateEvent(
+              dto: FilterEstateRequest(
+                type: _selected?.type,
+                commune: _searchController.text,
+              ),
+            ),
+          );
 
           // Attendre que le chargement soit terminé
           return completer.future;
@@ -75,7 +108,7 @@ class _PortalPageState extends State<PortalPage> {
     );
   }
 
-  Widget _buildPageContent() {
+  Widget _buildPageContent(Failure? failure) {
     return Column(
       children: [
         CategoryList(
@@ -100,7 +133,29 @@ class _PortalPageState extends State<PortalPage> {
         ),
         CustomSpacer(),
 
-        if (_properties.isEmpty && !_isLoading)
+        if (failure != null && _properties.isEmpty && !_isLoading)
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.6,
+            child: EmptyStateWidget(
+              icon: Icons.error_outline_rounded,
+              title: 'Une erreur est survenue',
+              subtitle: failure.message,
+              mainAxisAlignment: MainAxisAlignment.start,
+              buttonText: 'Réessayer',
+              onButtonPressed: () {
+                context.read<EstateBloc>().add(FetchEstateTypesEvent());
+                context.read<EstateBloc>().add(
+                  FetchEstateEvent(
+                    dto: FilterEstateRequest(
+                      type: _selected?.type,
+                      commune: _searchController.text,
+                    ),
+                  ),
+                );
+              },
+            ),
+          )
+        else if (_properties.isEmpty && !_isLoading && _categories.isNotEmpty)
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.6,
             child: EmptyStateWidget(
@@ -111,23 +166,52 @@ class _PortalPageState extends State<PortalPage> {
               mainAxisAlignment: MainAxisAlignment.start,
             ),
           )
+        else if (_properties.isEmpty && !_isLoading && _categories.isEmpty)
+          const SizedBox.shrink()
         else
-          ...List.generate(
-            _properties.length,
-            (index) => Padding(
-              padding: EdgeInsets.only(
-                left: 16.sp,
-                right: 16.sp,
-                bottom: index < _properties.length - 1 ? 16.h : 0,
-              ),
-              child: Skeletonizer(
-                enabled: _isLoading,
-                child: PropertyCard(
-                  property: _properties[index],
-                  onPressed:
-                      () => _navigateToPropertyDetails(_properties[index]),
-                ),
-              ),
+          Skeletonizer(
+            enabled: _isLoading,
+            child: Column(
+              children: (_isLoading && _properties.isEmpty)
+                  ? List.generate(
+                      3,
+                      (index) => Padding(
+                        padding: EdgeInsets.only(
+                          left: 16.sp,
+                          right: 16.sp,
+                          bottom: 16.h,
+                        ),
+                        child: PropertyCard(
+                          property: EstateModel(
+                            id: 1,
+                            type: 'APPARTEMENT',
+                            commune: 'Cocody, Abidjan',
+                            superficie: '150',
+                            nombreChambres: '3',
+                            nombreDeToilettes: '2',
+                            prix: '500 000',
+                            images: ['placeholder.jpg'],
+                            description: 'Chargement des détails...',
+                          ),
+                          onPressed: () {},
+                        ),
+                      ),
+                    )
+                  : List.generate(
+                      _properties.length,
+                      (index) => Padding(
+                        padding: EdgeInsets.only(
+                          left: 16.sp,
+                          right: 16.sp,
+                          bottom: index < _properties.length - 1 ? 16.h : 0,
+                        ),
+                        child: PropertyCard(
+                          property: _properties[index],
+                          onPressed: () =>
+                              _navigateToPropertyDetails(_properties[index]),
+                        ),
+                      ),
+                    ),
             ),
           ),
       ],

@@ -29,8 +29,8 @@ class ApiClient {
   ApiClient({
     required String baseUrl,
     Map<String, dynamic>? headers,
-    int connectTimeout = 30000,
-    int receiveTimeout = 30000,
+    int connectTimeout = 60000,
+    int receiveTimeout = 60000,
     bool enableLogging = kDebugMode,
     TokenManager? tokenManager,
     this.logoutRedirectConfig,

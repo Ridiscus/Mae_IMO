@@ -176,8 +176,8 @@ class _CreateOwnerPropertyPageState extends State<CreateOwnerPropertyPage> {
           type: _selectedPropertyType ?? '',
           utilisation:
               _utilizationType == 'Autre'
-                   ? _customUtilizationController.text
-                   : (_utilizationType ?? ''),
+                  ? _customUtilizationController.text
+                  : (_utilizationType ?? ''),
           description: _descriptionController.text,
           superficie: double.tryParse(_superficieController.text) ?? 0,
           avance: int.tryParse(_avanceController.text) ?? 0,
@@ -226,7 +226,7 @@ class _CreateOwnerPropertyPageState extends State<CreateOwnerPropertyPage> {
                   _buildSectionTitle('Information du bien'),
                   SizedBox(height: 16.h),
 
-                  CustomDropdown<OwnerModel?>(
+                  CustomSearchableDropdown<OwnerModel?>(
                     labelText: 'Sélectionnez le propriétaire',
                     hintText: 'Choisir un propriétaire',
                     value: _selectedOwner,
@@ -240,17 +240,16 @@ class _CreateOwnerPropertyPageState extends State<CreateOwnerPropertyPage> {
                         _ownerError = null;
                       });
                     },
-                    itemLabelBuilder:
-                        (val) =>
-                            "${val?.lastName ?? ""} ${val?.firstName ?? ""}",
+                    itemLabelBuilder: (val) => val?.fullName ?? "",
                   ),
                   CustomSpacer(),
 
-                  CustomDropdown<String?>(
+                  CustomSearchableDropdown<String?>(
                     labelText: 'Type de bien',
                     hintText: 'Choisir le type',
                     value: _selectedPropertyType,
                     items: _propertyTypes,
+                    showSearch: false,
                     errorText: state.formErrors?['type'],
                     onChanged:
                         (val) => setState(() => _selectedPropertyType = val),
@@ -267,11 +266,12 @@ class _CreateOwnerPropertyPageState extends State<CreateOwnerPropertyPage> {
                   ),
                   CustomSpacer(),
 
-                  CustomDropdown<String?>(
+                  CustomSearchableDropdown<String?>(
                     labelText: 'Commune',
                     hintText: 'Choisir la commune',
                     value: _selectedCommune,
                     items: _communesAbidjan,
+                    showSearch: true,
                     errorText: state.formErrors?['commune'],
                     onChanged: (val) => setState(() => _selectedCommune = val),
                     itemLabelBuilder: (val) => val ?? '',
@@ -300,21 +300,24 @@ class _CreateOwnerPropertyPageState extends State<CreateOwnerPropertyPage> {
                   ),
                   CustomSpacer(),
 
-                  CustomDropdown<bool>(
+                  CustomSearchableDropdown<bool>(
                     labelText: 'Garage',
+                    hintText: 'Possède un garage ?',
                     value: _hasGarage,
                     items: const [false, true],
+                    showSearch: false,
                     onChanged:
                         (val) => setState(() => _hasGarage = val ?? false),
                     itemLabelBuilder: (val) => val ? 'Oui' : 'Non',
                   ),
                   CustomSpacer(),
 
-                  CustomDropdown<String?>(
+                  CustomSearchableDropdown<String?>(
                     labelText: 'Disponibilité',
                     hintText: 'Disponibilité du bien',
                     value: _selectedDisponibilite,
                     items: _disponibilites,
+                    showSearch: false,
                     errorText: state.formErrors?['disponibilite'],
                     onChanged:
                         (val) => setState(() => _selectedDisponibilite = val),
@@ -322,11 +325,12 @@ class _CreateOwnerPropertyPageState extends State<CreateOwnerPropertyPage> {
                   ),
                   CustomSpacer(),
 
-                  CustomDropdown<String?>(
+                  CustomSearchableDropdown<String?>(
                     labelText: 'Type d\'utilisation',
                     hintText: 'Choisir l\'utilisation',
                     value: _utilizationType,
                     items: _utilizationTypes,
+                    showSearch: false,
                     errorText: state.formErrors?['utilisation'],
                     onChanged: (val) => setState(() => _utilizationType = val),
                     itemLabelBuilder: (val) => val ?? '',

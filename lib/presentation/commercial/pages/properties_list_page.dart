@@ -80,7 +80,7 @@ class _PropertiesListPageState extends State<PropertiesListPage> {
   }
 
   Widget _buildPropertyCard(PropertyModel property) {
-    final bool isAgency = property.owner?.gestion?.toLowerCase() == "agence";
+    final bool isAgency = property.isAgency;
 
     return Container(
       decoration: BoxDecoration(
@@ -168,7 +168,7 @@ class _PropertiesListPageState extends State<PropertiesListPage> {
                     borderRadius: BorderRadius.circular(4.r),
                   ),
                   child: Text(
-                    isAgency ? 'AGENCE' : 'PROPRIO',
+                    property.ownerTypeLabel,
                     style:
                         TextStyle(
                           fontSize: 10.sp,
@@ -181,7 +181,7 @@ class _PropertiesListPageState extends State<PropertiesListPage> {
                 SizedBox(width: 12.w),
                 Expanded(
                   child: Text(
-                    property.owner?.fullName ?? '---',
+                    property.ownerName,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style:

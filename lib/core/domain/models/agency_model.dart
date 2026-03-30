@@ -46,8 +46,6 @@ class AgencyModel {
     String? email,
     String? commune,
     String? password,
-    dynamic passwordResetToken,
-    dynamic passwordResetExpires,
     String? contact,
     String? adresse,
     String? rccm,

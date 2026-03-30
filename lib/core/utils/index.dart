@@ -10,6 +10,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../constants/app_colors.dart';
+import '../extensions/index.dart';
 
 part 'core_helper.dart';
 part 'failure.dart';

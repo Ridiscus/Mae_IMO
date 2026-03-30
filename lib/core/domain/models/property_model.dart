@@ -35,6 +35,7 @@ class PropertyModel {
   final String? description;
 
   final OwnerModel? owner; // Informations complètes du propriétaire
+  final AgencyModel? agency; // Informations complètes de l'agence
   final DateTime? createdAt;
   final bool isAvailable;
 
@@ -66,6 +67,7 @@ class PropertyModel {
     this.videoUrl,
     this.description,
     this.owner,
+    this.agency,
     this.createdAt,
     this.isAvailable = true,
   });
@@ -80,6 +82,13 @@ class PropertyModel {
         image4,
         image5,
       ].whereType<String>().where((s) => s.isNotEmpty).toList();
+
+  bool get isAgency => agency != null;
+
+  String get ownerName =>
+      isAgency ? (agency?.name ?? "---") : (owner?.fullName ?? "---");
+
+  String get ownerTypeLabel => isAgency ? "AGENCE" : "PROPRIO";
 
   PropertyModel copyWith({
     int? id,
@@ -109,6 +118,7 @@ class PropertyModel {
     String? videoUrl,
     String? description,
     OwnerModel? owner,
+    AgencyModel? agency,
     DateTime? createdAt,
     bool? isAvailable,
   }) => PropertyModel(
@@ -139,6 +149,7 @@ class PropertyModel {
     videoUrl: videoUrl ?? this.videoUrl,
     description: description ?? this.description,
     owner: owner ?? this.owner,
+    agency: agency ?? this.agency,
     createdAt: createdAt ?? this.createdAt,
     isAvailable: isAvailable ?? this.isAvailable,
   );
@@ -179,6 +190,8 @@ class PropertyModel {
           json["proprietaire"] != null
               ? OwnerModel.fromMap(json["proprietaire"])
               : null,
+      agency:
+          json["agence"] != null ? AgencyModel.fromMap(json["agence"]) : null,
       createdAt:
           (json["created_at"] != null && json["created_at"] != "")
               ? DateTime.tryParse(json["created_at"])
@@ -215,6 +228,7 @@ class PropertyModel {
     "video_url": videoUrl,
     "description": description,
     "proprietaire": owner?.toMap(),
+    "agence": agency?.toMap(),
     "created_at": createdAt?.toIso8601String(),
     "is_available": isAvailable,
   };

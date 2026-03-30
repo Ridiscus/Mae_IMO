@@ -150,24 +150,30 @@ class _FilePickerWidgetState extends State<FilePickerWidget> {
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      IconButton(
-                        icon: Icon(
-                          Icons.edit_outlined,
-                          color: AppColors.primary,
+                      GestureDetector(
+                        onTap: _pickFile,
+                        behavior: HitTestBehavior.opaque,
+                        child: Padding(
+                          padding: EdgeInsets.all(4.sp),
+                          child: Icon(
+                            Icons.edit_outlined,
+                            color: AppColors.primary,
+                            size: 20.sp,
+                          ),
                         ),
-                        onPressed: _pickFile,
-                        padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints(),
                       ),
-                      SizedBox(width: 12.w),
-                      IconButton(
-                        icon: const Icon(
-                          Icons.delete_outline,
-                          color: Colors.red,
+                      SizedBox(width: 4.w),
+                      GestureDetector(
+                        onTap: _clearFile,
+                        behavior: HitTestBehavior.opaque,
+                        child: Padding(
+                          padding: EdgeInsets.all(4.sp),
+                          child: Icon(
+                            Icons.delete_outline,
+                            color: Colors.red,
+                            size: 20.sp,
+                          ),
                         ),
-                        onPressed: _clearFile,
-                        padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints(),
                       ),
                     ],
                   )

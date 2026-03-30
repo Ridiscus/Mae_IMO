@@ -47,7 +47,7 @@ class OwnerModel {
     this.hasManagementAgents = false,
   });
 
-  String get fullName => " ${lastName ?? ''} ${firstName ?? ''}".trim();
+  String? get fullName => " ${lastName ?? ''} ${firstName ?? ''}".trim();
 
   OwnerModel copyWith({
     int? id,

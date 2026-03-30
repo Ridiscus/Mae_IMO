@@ -112,7 +112,7 @@ class _OwnersListPageState extends State<OwnersListPage> {
           ),
         ),
         title: Text(
-          owner.fullName,
+          owner.fullName ?? '',
           style:
               TextStyle(
                 fontSize: 16.sp,

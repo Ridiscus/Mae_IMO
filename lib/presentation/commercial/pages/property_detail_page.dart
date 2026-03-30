@@ -249,7 +249,7 @@ class _PropertyDetailPageState extends State<PropertyDetailPage> {
             ) ??
             widget.property;
 
-        final bool isAgency = p.owner?.gestion?.toLowerCase() == "agence";
+        final bool isAgency = p.isAgency;
         return PageWithHeaderLayout(
           headerHeight: MediaQuery.of(context).size.height * 0.20,
           headerContent: Row(
@@ -317,13 +317,15 @@ class _PropertyDetailPageState extends State<PropertyDetailPage> {
                       'Détenteur',
                       isAgency ? 'Agence' : 'Propriétaire',
                     ),
+                    if (p.agency != null) ...[
+                      _buildDetailRow('Nom', p.agency!.name ?? '---'),
+                      _buildDetailRow('Contact', p.agency!.contact ?? '---'),
+                      if (p.agency!.email != null &&
+                          p.agency!.email!.isNotEmpty)
+                        _buildDetailRow('Email', p.agency!.email!),
+                    ],
                     if (p.owner != null) ...[
-                      _buildDetailRow(
-                        'Nom',
-                        p.owner!.fullName.isNotEmpty
-                            ? p.owner!.fullName
-                            : '---',
-                      ),
+                      _buildDetailRow('Nom', p.owner!.fullName ?? '---'),
                       _buildDetailRow('Contact', p.owner!.contact ?? '---'),
                       if (p.owner!.email != null && p.owner!.email!.isNotEmpty)
                         _buildDetailRow('Email', p.owner!.email!),
@@ -560,11 +562,12 @@ class _PropertyDetailPageState extends State<PropertyDetailPage> {
                   _buildInfoCard([
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: 8.h),
-                      child: CustomDropdown<String?>(
+                      child: CustomSearchableDropdown<String?>(
                         labelText: 'Type de bien',
                         hintText: 'Choisir le type',
                         value: _selectedPropertyType,
                         items: _propertyTypes,
+                        showSearch: false,
                         onChanged:
                             (val) =>
                                 setState(() => _selectedPropertyType = val),
@@ -584,11 +587,12 @@ class _PropertyDetailPageState extends State<PropertyDetailPage> {
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: 8.h),
-                      child: CustomDropdown<String?>(
+                      child: CustomSearchableDropdown<String?>(
                         labelText: 'Commune',
                         hintText: 'Choisir la commune',
                         value: _selectedCommune,
                         items: _communesAbidjan,
+                        showSearch: true,
                         onChanged:
                             (val) => setState(() => _selectedCommune = val),
                         itemLabelBuilder: (val) => val ?? '',
@@ -621,10 +625,12 @@ class _PropertyDetailPageState extends State<PropertyDetailPage> {
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: 8.h),
-                      child: CustomDropdown<bool>(
+                      child: CustomSearchableDropdown<bool>(
                         labelText: 'Garage',
+                        hintText: 'Possède un garage ?',
                         value: _hasGarage,
                         items: const [false, true],
+                        showSearch: false,
                         onChanged:
                             (val) => setState(() => _hasGarage = val ?? false),
                         itemLabelBuilder: (val) => val ? 'Oui' : 'Non',
@@ -632,11 +638,12 @@ class _PropertyDetailPageState extends State<PropertyDetailPage> {
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: 8.h),
-                      child: CustomDropdown<String?>(
+                      child: CustomSearchableDropdown<String?>(
                         labelText: 'Type d\'utilisation',
                         hintText: 'Choisir l\'utilisation',
                         value: _selectedUtilizationType,
                         items: _utilizationTypes,
+                        showSearch: false,
                         onChanged:
                             (val) =>
                                 setState(() => _selectedUtilizationType = val),
@@ -646,11 +653,12 @@ class _PropertyDetailPageState extends State<PropertyDetailPage> {
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: 8.h),
-                      child: CustomDropdown<String?>(
+                      child: CustomSearchableDropdown<String?>(
                         labelText: 'Disponibilité',
                         hintText: 'Disponibilité du bien',
                         value: _selectedDisponibilite,
                         items: _disponibilites,
+                        showSearch: false,
                         onChanged:
                             (val) =>
                                 setState(() => _selectedDisponibilite = val),

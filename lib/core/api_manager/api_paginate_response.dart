@@ -61,25 +61,27 @@ class ApiPaginateResponse<T> {
 
   String toJson() => json.encode(toMap());
 
-  factory ApiPaginateResponse.fromMap(Map<String, dynamic> json) =>
-      ApiPaginateResponse(
-        currentPage: json["current_page"],
-        data:
-            json["data"] == null
-                ? []
-                : List<T>.from(
-                  json["data"]!.map((x) => castToObjectModel(x, T)),
-                ),
-        firstPageUrl: json["first_page_url"],
-        from: json["from"],
-        lastPage: json["last_page"],
-        lastPageUrl: json["last_page_url"],
-        nextPageUrl: json["next_page_url"],
-        perPage: json["per_page"],
-        prevPageUrl: json["prev_page_url"],
-        to: json["to"],
-        total: json["total"],
-      );
+  factory ApiPaginateResponse.fromMap(Map<String, dynamic> json) {
+    // Robustness: check if 'data' is nested or if json itself is the data
+    final dynamic dataRaw = json.containsKey('data') ? json['data'] : json;
+
+    return ApiPaginateResponse(
+      currentPage: json["current_page"],
+      data:
+          dataRaw is List
+              ? dataRaw.map((x) => castToObjectModel<T>(x)).toList()
+              : [],
+      firstPageUrl: json["first_page_url"],
+      from: json["from"],
+      lastPage: json["last_page"],
+      lastPageUrl: json["last_page_url"],
+      nextPageUrl: json["next_page_url"],
+      perPage: json["per_page"],
+      prevPageUrl: json["prev_page_url"],
+      to: json["to"],
+      total: json["total"],
+    );
+  }
 
   Map<String, dynamic> toMap() => {
     "current_page": currentPage,
@@ -95,12 +97,13 @@ class ApiPaginateResponse<T> {
     "total": total,
   };
 
-  static castToObjectModel(dynamic x, Type t) {
-    console.log(t.toString(), name: "castToObjectModel");
-    switch (t.toString()) {
-      case "EstateModel":
-        return EstateModel.fromMap(x);
+  static T castToObjectModel<T>(dynamic x) {
+    if (T == EstateModel) {
+      return EstateModel.fromMap(x) as T;
     }
-    return x;
+    if (T == EstateTypeModel) {
+      return EstateTypeModel.fromMap(x) as T;
+    }
+    return x as T;
   }
 }
