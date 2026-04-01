@@ -13,6 +13,7 @@ import 'package:maelys_imo/core/manager/state/auth/auth_bloc.dart';
 import 'package:maelys_imo/presentation/commercial/pages/update_email_commercial_page.dart';
 import 'package:maelys_imo/presentation/commercial/pages/update_password_commercial_page.dart';
 import 'package:maelys_imo/shared/widgets/index.dart';
+import 'package:maelys_imo/presentation/auth/pages/login_page.dart';
 import 'package:maelys_imo/core/api_manager/endpoints.dart';
 import 'package:maelys_imo/core/utils/index.dart';
 
@@ -325,6 +326,10 @@ class _ProfileCommercialPageState extends State<ProfileCommercialPage> {
           (previous, current) => current.updatedImage != previous.updatedImage,
       listener: (context, state) {
         setState(() => _isUploadingImage = false);
+        if (state.userModel == null) {
+          context.goNamed(LoginPage.routeName);
+          return;
+        }
         if (state.updatedImage == true) {
           setState(() => _pendingImage = null);
         } else if (state.updatedImage == false) {
@@ -781,15 +786,21 @@ class _ProfileCommercialPageState extends State<ProfileCommercialPage> {
         borderRadius: BorderRadius.circular(16.r),
         child: Ink(
           decoration: BoxDecoration(
-            color: Colors.red.withValues(alpha: 0.05),
+            color: Colors.redAccent,
             borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: Colors.red.withValues(alpha: 0.15)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.redAccent.withValues(alpha: 0.2),
+                blurRadius: 8,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
           padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 20.w),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.logout_rounded, color: Colors.red[400], size: 20.sp),
+              Icon(Icons.logout_rounded, color: Colors.white, size: 20.sp),
               SizedBox(width: 10.w),
               Text(
                 'Se déconnecter',
@@ -797,7 +808,7 @@ class _ProfileCommercialPageState extends State<ProfileCommercialPage> {
                     TextStyle(
                       fontSize: 15.sp,
                       fontWeight: FontWeight.bold,
-                      color: Colors.red[400],
+                      color: Colors.white,
                     ).sourceSansProBold,
               ),
             ],

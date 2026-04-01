@@ -41,6 +41,8 @@ class FormWithHeaderLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double screenHeight = MediaQuery.of(context).size.height;
+
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(
         statusBarColor: AppColors.primary,
@@ -48,13 +50,20 @@ class FormWithHeaderLayout extends StatelessWidget {
       ),
       child: Scaffold(
         backgroundColor: AppColors.scaffold,
+        resizeToAvoidBottomInset: false,
         body: Stack(
           children: [
             // Header
-            Positioned(top: 0, left: 0, right: 0, child: _buildHeader(context)),
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: _buildHeader(context, screenHeight),
+            ),
             // Form Content
             Positioned.fill(
-              top: (MediaQuery.of(context).size.height * .18).sp,
+              top: (screenHeight * .22).sp,
+              bottom: MediaQuery.of(context).viewInsets.bottom,
               child: _buildFormContainer(),
             ),
           ],
@@ -64,9 +73,9 @@ class FormWithHeaderLayout extends StatelessWidget {
   }
 
   /// Builds the colored header section with a back button and title.
-  Widget _buildHeader(BuildContext context) {
+  Widget _buildHeader(BuildContext context, double screenHeight) {
     return AppHeaderLayout(
-      height: (MediaQuery.of(context).size.height * .25).sp,
+      height: (screenHeight * .28).sp,
       bottomRadius: 30.sp,
       alignRight: true,
       content: SafeArea(
@@ -77,7 +86,7 @@ class FormWithHeaderLayout extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CircularBackButton(onPressed: onBackPressed),
-              const Spacer(),
+              SizedBox(height: 32.sp),
               Flexible(
                 child: Text(
                   headerTitle,

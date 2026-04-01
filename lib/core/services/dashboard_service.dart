@@ -635,7 +635,7 @@ class DashboardServiceImpl implements DashboardService {
     };
 
     if (profileImage != null) {
-      fields['profile_image'] = await MultipartFile.fromFile(
+      fields['profil_image'] = await MultipartFile.fromFile(
         profileImage.path,
         filename: profileImage.path.split('/').last,
       );

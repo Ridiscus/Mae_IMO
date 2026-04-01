@@ -88,6 +88,7 @@ class _DashboardCommercialPageState extends State<DashboardCommercialPage> {
         statusBarIconBrightness: Brightness.light,
       ),
       child: Scaffold(
+        backgroundColor: Colors.white,
         body: Stack(
           children: [
             Positioned(
@@ -97,7 +98,7 @@ class _DashboardCommercialPageState extends State<DashboardCommercialPage> {
               child: _buildHeader(displayName, codeId),
             ),
             Positioned.fill(
-              top: (MediaQuery.of(context).size.height * .24).sp,
+              top: (MediaQuery.of(context).size.height * .28).sp,
               child: _buildContent(),
             ),
           ],
@@ -110,7 +111,7 @@ class _DashboardCommercialPageState extends State<DashboardCommercialPage> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.sp),
       width: double.infinity,
-      height: (MediaQuery.of(context).size.height * .28).sp,
+      height: (MediaQuery.of(context).size.height * .32).sp,
       decoration: BoxDecoration(
         color: AppColors.primary,
         borderRadius: BorderRadius.only(
@@ -220,6 +221,7 @@ class _DashboardCommercialPageState extends State<DashboardCommercialPage> {
                         color: Colors.white.withValues(alpha: 0.8),
                       ).sourceSansProRegular,
                 ),
+                SizedBox(height: 25.h),
               ],
             ),
           ),
@@ -243,7 +245,7 @@ class _DashboardCommercialPageState extends State<DashboardCommercialPage> {
           width: double.infinity,
           clipBehavior: Clip.antiAlias,
           decoration: BoxDecoration(
-            color: AppColors.scaffold,
+            color: Colors.white,
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(30.r),
               topRight: Radius.circular(30.r),
@@ -273,6 +275,7 @@ class _DashboardCommercialPageState extends State<DashboardCommercialPage> {
                     _buildQuickActionsSection(),
                     SizedBox(height: 16.h),
                     _buildRecentActivitySection(activities),
+                    SizedBox(height: 100.h),
                   ],
                 ],
               ),

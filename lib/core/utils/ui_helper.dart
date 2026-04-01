@@ -12,25 +12,14 @@ class UIHelper {
       height: height.h,
       width: height.h,
       fit: fit ?? BoxFit.contain,
-
       errorWidget:
           (context, url, error) => Icon(Icons.error, color: Colors.red),
-      placeholder: (context, url) {
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              alignment: Alignment.center,
-              width: 20.sp,
-              height: 20.sp,
-              child: CircularProgressIndicator.adaptive(
-                strokeCap: StrokeCap.round,
-              ),
-            ),
-          ],
-        );
-      },
+      placeholder:
+          (context, url) => Container(
+            width: double.infinity,
+            height: double.infinity,
+            color: Colors.grey[200],
+          ),
     );
   }
 
@@ -55,19 +44,10 @@ class UIHelper {
           (context, child, loadingProgress) =>
               loadingProgress == null
                   ? child
-                  : Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        alignment: Alignment.center,
-                        width: 20.sp,
-                        height: 20.sp,
-                        child: CircularProgressIndicator.adaptive(
-                          strokeCap: StrokeCap.round,
-                        ),
-                      ),
-                    ],
+                  : Container(
+                    width: double.infinity,
+                    height: double.infinity,
+                    color: Colors.grey[200],
                   ),
     );
   }
@@ -183,7 +163,6 @@ class UIHelper {
             break;
           }
         }
-
       } else if (source == 'camera') {
         // Vérifier les permissions pour la caméra
         final cameraPermission = await Permission.camera.request();

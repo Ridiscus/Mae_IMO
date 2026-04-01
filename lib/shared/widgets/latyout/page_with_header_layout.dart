@@ -60,9 +60,9 @@ class PageWithHeaderLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double computedHeaderHeight =
-        headerHeight ?? (MediaQuery.of(context).size.height * .25).sp;
-    final double bodyTopOffset = (computedHeaderHeight * 0.8).sp;
+    final double screenHeight = MediaQuery.of(context).size.height;
+    final double computedHeaderHeight = headerHeight ?? (screenHeight * .28);
+    final double bodyTopOffset = (computedHeaderHeight * 0.85);
 
     return Scaffold(
       backgroundColor: bodyBackgroundColor ?? AppColors.scaffold,

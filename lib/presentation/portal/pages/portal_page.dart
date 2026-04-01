@@ -74,7 +74,7 @@ class _PortalPageState extends State<PortalPage> {
       child: PageWithHeaderLayout(
         // headerBackgroundColor: AppColors.orange2,
         headerBackgroundColor: AppColors.orange,
-        bodyPadding: EdgeInsets.only(top: 16.sp),
+        bodyPadding: EdgeInsets.fromLTRB(0, 16.sp, 0, 30.h),
         headerContent: _buildHeaderContent(),
         bodyContent: _buildPageContent(failure),
         onRefresh: () async {
@@ -172,46 +172,49 @@ class _PortalPageState extends State<PortalPage> {
           Skeletonizer(
             enabled: _isLoading,
             child: Column(
-              children: (_isLoading && _properties.isEmpty)
-                  ? List.generate(
-                      3,
-                      (index) => Padding(
-                        padding: EdgeInsets.only(
-                          left: 16.sp,
-                          right: 16.sp,
-                          bottom: 16.h,
-                        ),
-                        child: PropertyCard(
-                          property: EstateModel(
-                            id: 1,
-                            type: 'APPARTEMENT',
-                            commune: 'Cocody, Abidjan',
-                            superficie: '150',
-                            nombreChambres: '3',
-                            nombreDeToilettes: '2',
-                            prix: '500 000',
-                            images: ['placeholder.jpg'],
-                            description: 'Chargement des détails...',
+              children:
+                  (_isLoading && _properties.isEmpty)
+                      ? List.generate(
+                        3,
+                        (index) => Padding(
+                          padding: EdgeInsets.only(
+                            left: 16.sp,
+                            right: 16.sp,
+                            bottom: 16.h,
                           ),
-                          onPressed: () {},
+                          child: PropertyCard(
+                            property: EstateModel(
+                              id: 1,
+                              type: 'APPARTEMENT',
+                              commune: 'Cocody, Abidjan',
+                              superficie: '150',
+                              nombreChambres: '3',
+                              nombreDeToilettes: '2',
+                              prix: '500 000',
+                              images: ['placeholder.jpg'],
+                              description: 'Chargement des détails...',
+                            ),
+                            onPressed: () {},
+                          ),
+                        ),
+                      )
+                      : List.generate(
+                        _properties.length,
+                        (index) => Padding(
+                          padding: EdgeInsets.only(
+                            left: 16.sp,
+                            right: 16.sp,
+                            bottom: 16.h,
+                          ),
+                          child: PropertyCard(
+                            property: _properties[index],
+                            onPressed:
+                                () => _navigateToPropertyDetails(
+                                  _properties[index],
+                                ),
+                          ),
                         ),
                       ),
-                    )
-                  : List.generate(
-                      _properties.length,
-                      (index) => Padding(
-                        padding: EdgeInsets.only(
-                          left: 16.sp,
-                          right: 16.sp,
-                          bottom: index < _properties.length - 1 ? 16.h : 0,
-                        ),
-                        child: PropertyCard(
-                          property: _properties[index],
-                          onPressed: () =>
-                              _navigateToPropertyDetails(_properties[index]),
-                        ),
-                      ),
-                    ),
             ),
           ),
       ],

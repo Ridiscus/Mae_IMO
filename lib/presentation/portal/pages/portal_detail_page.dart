@@ -72,48 +72,54 @@ class _PortalDetailPageState extends State<PortalDetailPage> {
                     Expanded(
                       child: Padding(
                         padding: EdgeInsets.all(16.sp),
-
                         child: SingleChildScrollView(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               _buildTitleAndPrice(),
                               CustomSpacer(),
-                              // _buildPropertyInfo(),
-                              // CustomSpacer(),
                               AmenityChip(
                                 amenities: _property?.amenities ?? [],
                               ),
                               CustomSpacer(),
                               _buildDescription(),
-                              CustomSpacer(space: 3),
-                              if (widget.type?.toLowerCase() == 'prospect') ...[
-                                _buildVisitButton(
-                                  text: 'Visiter',
-                                  onPressed: () {
-                                    context.pushNamed(
-                                      VisitRequestPage.routeName,
-                                    );
-                                  },
-                                ),
-                                SpacerPlatform(),
-                              ],
-                              if (widget.type?.toLowerCase() == 'tenant') ...[
-                                _buildVisitButton(
-                                  text: 'Télécharger mon contrat',
-                                  onPressed: () {
-                                    final contrat = context.read<AuthBloc>().state.userModel?.asTenant()?.contrat;
-                                    CoreHelper.launchLink(CoreHelper.fullLink(contrat));
-                                  },
-                                  assetPath: Assets.cloudDownload,
-                                ),
-                                SpacerPlatform(),
-                              ],
                             ],
                           ),
                         ),
                       ),
                     ),
+                    if (widget.type?.toLowerCase() == 'prospect') ...[
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16.sp),
+                        child: _buildVisitButton(
+                          text: 'Visiter',
+                          onPressed: () {
+                            context.pushNamed(VisitRequestPage.routeName);
+                          },
+                        ),
+                      ),
+                      const SpacerPlatform(),
+                    ],
+                    if (widget.type?.toLowerCase() == 'tenant') ...[
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16.sp),
+                        child: _buildVisitButton(
+                          text: 'Télécharger mon contrat',
+                          onPressed: () {
+                            final contrat =
+                                context
+                                    .read<AuthBloc>()
+                                    .state
+                                    .userModel
+                                    ?.asTenant()
+                                    ?.contrat;
+                            CoreHelper.launchLink(CoreHelper.fullLink(contrat));
+                          },
+                          assetPath: Assets.cloudDownload,
+                        ),
+                      ),
+                      const SpacerPlatform(),
+                    ],
                   ],
                 ),
               ),
@@ -200,30 +206,6 @@ class _PortalDetailPageState extends State<PortalDetailPage> {
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
               ).sourceSansProBold,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildPropertyInfo() {
-    return Wrap(
-      direction: Axis.horizontal,
-      children: [],
-    );
-  }
-
-  Widget _buildInfoItem(String text, IconData icon) {
-    return Row(
-      children: [
-        Icon(icon, size: 16.r, color: Colors.grey),
-        SizedBox(width: 4.r),
-        Text(
-          text,
-          style:
-              TextStyle(
-                fontSize: 14.r,
-                color: Colors.grey[700],
-              ).sourceSansProRegular,
         ),
       ],
     );

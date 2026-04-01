@@ -33,9 +33,7 @@ void main() async {
   final binding = WidgetsFlutterBinding.ensureInitialized();
   binding.deferFirstFrame();
 
-  TokenManager.init();
-  appRouter = AppRoute().router;
-  await initDependencies();
+  await TokenManager.init();
 
   HydratedBloc.storage = await HydratedStorage.build(
     storageDirectory:
@@ -43,6 +41,8 @@ void main() async {
             ? HydratedStorageDirectory.web
             : HydratedStorageDirectory((await getTemporaryDirectory()).path),
   );
+  await initDependencies();
+  appRouter = AppRoute().router;
   Bloc.observer = TalkerBlocObserver(
     settings: TalkerBlocLoggerSettings(
       enabled: kDebugMode,
