@@ -155,19 +155,19 @@ class _PortalPageState extends State<PortalPage> {
               },
             ),
           )
-        else if (_properties.isEmpty && !_isLoading && _categories.isNotEmpty)
+        else if (_properties.isEmpty && !_isLoading)
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.6,
             child: EmptyStateWidget(
               icon: Icons.search_off_rounded,
-              title: 'Aucun résultat trouvé',
+              title: 'Aucune propriété disponible',
               subtitle:
-                  'Aucune propriété ne correspond à vos critères de recherche.',
+                  _categories.isEmpty
+                      ? 'La base de données est actuellement vide. Revenez plus tard !'
+                      : 'Aucune propriété ne correspond à vos critères de recherche.',
               mainAxisAlignment: MainAxisAlignment.start,
             ),
           )
-        else if (_properties.isEmpty && !_isLoading && _categories.isEmpty)
-          const SizedBox.shrink()
         else
           Skeletonizer(
             enabled: _isLoading,

@@ -45,7 +45,15 @@ class CircularBackButton extends StatelessWidget {
         color: iconColor,
         size: iconSize ?? 22.sp,
       ),
-      onPressed: onPressed ?? () => Navigator.of(context).pop(),
+      onPressed:
+          onPressed ??
+          () {
+            if (Navigator.of(context).canPop()) {
+              Navigator.of(context).pop();
+            } else {
+              context.go(PortalPage.routePath);
+            }
+          },
     );
   }
 }

@@ -52,7 +52,9 @@ class _PropertyInspectionDetailPageState
     return BlocListener<InventoriesBloc, InventoriesState>(
       listener: (context, state) {
         // 1. Gestion existante du chargement des détails
-        if (state.isLoading == false && state.inventoryDetail == null && state.failure == null) {
+        if (state.isLoading == false &&
+            state.inventoryDetail == null &&
+            state.failure == null) {
           context.pop();
         }
 
@@ -138,12 +140,11 @@ class _PropertyInspectionDetailPageState
         children: [
           Text(
             title,
-            style:
-                TextStyle(
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ).sourceSansProBold,
+            style: TextStyle(
+              fontSize: 18.sp,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ).sourceSansProBold,
           ),
           CustomSpacer(space: .5),
           Container(
@@ -179,28 +180,22 @@ class _PropertyInspectionDetailPageState
         Expanded(
           child: Text(
             text,
-            style:
-                TextStyle(
-                  fontSize: 16.sp,
-                  color: textColor ?? Colors.black87,
-                  fontWeight: fontWeight ?? FontWeight.normal,
-                ).sourceSansProRegular,
+            style: TextStyle(
+              fontSize: 16.sp,
+              color: textColor ?? Colors.black87,
+              fontWeight: fontWeight ?? FontWeight.normal,
+            ).sourceSansProRegular,
           ),
         ),
       ],
     );
   }
 
-
-
-
-
-
-
-
   Widget _buildStartInspectionButton(BuildContext context) {
     // On récupère l'état pour savoir si ça charge (pour le spinner sur le bouton)
-    final isLoading = context.select((InventoriesBloc bloc) => bloc.state.isLoading ?? false);
+    final isLoading = context.select(
+      (InventoriesBloc bloc) => bloc.state.isLoading ?? false,
+    );
 
     return CustomButton(
       text: 'Démarrer l\'état des lieux',
@@ -215,7 +210,9 @@ class _PropertyInspectionDetailPageState
         } else {
           // Sécurité si pas de locataire
           ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("Impossible de trouver l'ID du locataire"))
+            const SnackBar(
+              content: Text("Impossible de trouver l'ID du locataire"),
+            ),
           );
         }
       },
@@ -223,6 +220,4 @@ class _PropertyInspectionDetailPageState
       buttonVariant: ButtonVariant.primary,
     );
   }
-
-
 }

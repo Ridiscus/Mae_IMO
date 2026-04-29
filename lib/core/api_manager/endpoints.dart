@@ -26,7 +26,8 @@ class Endpoints {
   static String commercialProperties = "/commercial/biens";
   static String updateProperty(dynamic id) => "/commercial/biens/$id/update";
   static String updateAgency(dynamic id) => "/commercial/agences/$id/update";
-  static String updateOwner(dynamic id) => "/commercial/proprietaires/$id/update";
+  static String updateOwner(dynamic id) =>
+      "/commercial/proprietaires/$id/update";
 
   static String deleteProperty(dynamic id) => "/commercial/biens/$id";
   static String deleteOwner(dynamic id) => "/commercial/proprietaires/$id";
